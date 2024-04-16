@@ -14,7 +14,8 @@ RUN set -eux; \
   apk add --no-cache \
   ffmpeg \
   jellyfin \
-  jellyfin-web \; \
+  jellyfin-web \
+  mesa-va-gallium; \
   \
   # Make dir for config and data
   mkdir -p /config; \
