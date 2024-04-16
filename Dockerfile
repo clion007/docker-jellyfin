@@ -25,7 +25,8 @@ RUN set -eux; \
   chown jellyfin:jellyfin /config; \
   \
   # guarantee correct ffmpeg for jellyfin web client player
-  
+  rm -f  /usr/lib/jellyfin-ffmpeg/ffmpeg \
+  ln -f /usr/bin/ffmpeg /usr/lib/jellyfin-ffmpeg/ffmpeg \
   \
   # configure jellyfin
   sed -i "s#;error_log = log/php7/error.log.*#error_log = /config/log/php/php73/error.log#g" \
