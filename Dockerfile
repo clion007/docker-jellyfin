@@ -37,7 +37,7 @@ COPY  --chmod=755 root/ /usr/local/bin
 ENTRYPOINT ["init"]
 
 # ports and volumes
-EXPOSE 9000
+EXPOSE 8096 8920
 VOLUME /config
 
 CMD ["--ffmpeg  /usr/bin/ffmpeg"]
