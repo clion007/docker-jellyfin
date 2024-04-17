@@ -37,7 +37,7 @@ RUN set -eux; \
 #COPY  --chmod=755 root/ /usr/local/bin
 
 # set entrypoint
-ENTRYPOINT ["jellyfin"]
+ENTRYPOINT ["/etc/init.d/jellyfin"]
 
 # ports and volumes
 EXPOSE 8096 8920
