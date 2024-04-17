@@ -30,7 +30,7 @@ do
         fi
         usermod -a -G "$VIDEO_NAME" jellyfin
         if [ $(stat -c '%A' "${i}" | cut -b 5,6) != "rw" ]; then
-            echo -e "**** The device ${i} does not have group read/write permissions, which might prevent hardware transcode from functioning correctly. To fix it, you can run the following on your docker host: ****\nsudo chmod g+rw ${i}\n"
+            echo -e "**** The device ${i} does not have group read/write permissions, which might prevent hardware transcode from functioning correctly. To fix it, you can run the following on your docker host: ****\chmod g+rw ${i}\n"
         fi
     fi
 done
