@@ -12,7 +12,7 @@ LABEL maintainer="Clion Nieh <76857061@qq.com>"
 RUN set -eux; \
   #install build packages
   apk add --no-cache \
-  openrc
+  openrc \
   ffmpeg \
   jellyfin \
   jellyfin-web \
@@ -32,10 +32,8 @@ RUN set -eux; \
 COPY  --chmod=755 root/ /
 
 # set entrypoint
-ENTRYPOINT ["jellyfin"]
+ENTRYPOINT ["/etc/init.d/jellyfin"]
 
 # ports and volumes
 EXPOSE 8096 8920
 VOLUME /config
-
-CMD ["--ffmpeg=/usr/bin/ffmpeg"]
