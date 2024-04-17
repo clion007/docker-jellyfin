@@ -30,6 +30,8 @@ RUN set -eux; \
   # configure jellyfin
   sed -i "s#\/var\/log#\/config\/log#g" \
     /etc/conf.d/jellyfin; \
+  sed -i "s#\/var\/lib\/jellyfin#\/config\/data#g" \
+    /etc/conf.d/jellyfin; \
   sed -i "s#--nowebclient##g" \
     /etc/conf.d/jellyfin
 
