@@ -22,7 +22,7 @@ RUN set -eux; \
   mkdir -p /config; \
   \
   # Add user for php process
-  adduser -u 1000 -D -S -G jellyfin jellyfin; \
+  #adduser -u 1000 -D -S -G jellyfin jellyfin; \
   \
   chown jellyfin:jellyfin /config; \
   \
