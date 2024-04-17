@@ -28,9 +28,9 @@ RUN set -eux; \
   chown jellyfin:jellyfin /config; \
   \
   # configure jellyfin
-  sed -i "s#\/var\/log\/jellyfin.*#\/config\/log\/jellyfin\"#g" \
+  sed -i "s#\/var\/log#\/config\/log#g" \
     /etc/conf.d/jellyfin; \
-  sed -i "s#--nowebclient.*#\"#g" \
+  sed -i "s#--nowebclient##g" \
     /etc/conf.d/jellyfin
 
 # add local files
