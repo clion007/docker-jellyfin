@@ -50,4 +50,4 @@ ENTRYPOINT ["init"]
 EXPOSE 9000
 VOLUME /config
 
-CMD ["-F"]
+CMD ["jellyfin"]
