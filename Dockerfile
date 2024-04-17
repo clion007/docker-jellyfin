@@ -15,7 +15,8 @@ RUN set -eux; \
   ffmpeg \
   jellyfin \
   jellyfin-web \
-  mesa-va-gallium; \
+  mesa-va-gallium \
+  font-noto-cjk-extra; \
   \
   # Make dir for config and data
   mkdir -p /config; \
