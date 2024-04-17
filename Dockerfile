@@ -12,7 +12,7 @@ LABEL maintainer="Clion Nieh <76857061@qq.com>"
 RUN set -eux; \
   #install build packages
   apk add --no-cache \
-  openrc \
+  #openrc \
   ffmpeg \
   jellyfin \
   jellyfin-web \
@@ -21,12 +21,7 @@ RUN set -eux; \
   \
   # Make dir for config and data
   mkdir -p /config; \
-  \
-  # Add user for php process
-  #adduser -u 1000 -D -S -G jellyfin jellyfin; \
-  #\
-  chown jellyfin:jellyfin /config \
-        /usr/bin/jellyfin
+  chown jellyfin:jellyfin /config
 
 # add local files
 COPY  --chmod=755 root/ /
