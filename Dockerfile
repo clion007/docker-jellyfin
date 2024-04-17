@@ -12,12 +12,15 @@ LABEL maintainer="Clion Nieh <76857061@qq.com>"
 RUN set -eux; \
   #install build packages
   apk add --no-cache \
-  #openrc \
+  openrc \
   ffmpeg \
   jellyfin \
   jellyfin-web \
   mesa-va-gallium \
   font-noto-cjk-extra; \
+
+  # set jellyfin start when container run
+  rc-update add jellyfin; \
   \
   # Make dir for config and data
   mkdir -p /config; \
@@ -27,8 +30,10 @@ RUN set -eux; \
 COPY  --chmod=755 root/ /
 
 # set entrypoint
-ENTRYPOINT ["/etc/init.d/jellyfin"]
+ENTRYPOINT ["/init"]
 
 # ports and volumes
 EXPOSE 8096 8920
 VOLUME /config
+
+CMD ["rc-service"]
