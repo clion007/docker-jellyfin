@@ -12,6 +12,7 @@ LABEL maintainer="Clion Nieh <76857061@qq.com>"
 RUN set -eux; \
   #install build packages
   apk add --no-cache \
+  openrc
   ffmpeg \
   jellyfin \
   jellyfin-web \
