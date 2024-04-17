@@ -31,10 +31,10 @@ RUN set -eux; \
   #  /etc/conf.d/jellyfin
 
 # add local files
-COPY  --chmod=755 root/ /usr/local/bin
+#COPY  --chmod=755 root/ /usr/local/bin
 
 # set entrypoint
-ENTRYPOINT ["init"]
+ENTRYPOINT ["jellyfin"]
 
 # ports and volumes
 EXPOSE 8096 8920
