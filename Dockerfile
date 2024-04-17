@@ -25,11 +25,13 @@ RUN set -eux; \
   # Add user for php process
   #adduser -u 1000 -D -S -G jellyfin jellyfin; \
   #\
-  chown jellyfin:jellyfin /config
-  #\
+  chown jellyfin:jellyfin /config; \
+  \
   # configure jellyfin
-  #sed -i "s#;error_log = log/php7/error.log.*#error_log = /config/log/php/php73/error.log#g" \
-  #  /etc/conf.d/jellyfin
+  sed -i "s#\/var\/log\/jellyfin.*#\/config\/log\/jellyfin\"#g" \
+    /etc/conf.d/jellyfin; \
+  sed -i "s#--nowebclient.*#\"#g" \
+    /etc/conf.d/jellyfin
 
 # add local files
 #COPY  --chmod=755 root/ /usr/local/bin
