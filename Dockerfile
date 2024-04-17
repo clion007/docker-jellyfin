@@ -24,7 +24,7 @@ RUN set -eux; \
   # Add user for php process
   #adduser -u 1000 -D -S -G jellyfin jellyfin; \
   \
-  chown jellyfin:jellyfin /config; \
+  chown jellyfin:jellyfin /config \
   #\
   # configure jellyfin
   #sed -i "s#;error_log = log/php7/error.log.*#error_log = /config/log/php/php73/error.log#g" \
