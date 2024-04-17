@@ -15,6 +15,7 @@ RUN set -eux; \
   ffmpeg \
   jellyfin \
   jellyfin-web \
+  jellyfin-openrc \
   mesa-va-gallium \
   font-noto-cjk-extra; \
   \
