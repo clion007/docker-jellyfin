@@ -24,7 +24,7 @@ fi
 # allow the container to be started with `--user`
 if [ "$(id -u)" = '0' ]; then
     find . \! -user jellyfin -exec chown jellyfin '{}' +
-    exec gosu jellyfin "$0" "$@"
+    exec su-exec jellyfin "$0" "$@"
 fi
 
 exec "$@"
