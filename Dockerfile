@@ -9,6 +9,7 @@ RUN set -eux; \
   #install build packages
   apk add --no-cache \
   ffmpeg \
+  su-exec \
   jellyfin \
   jellyfin-web \
   mesa-va-gallium \
