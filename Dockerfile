@@ -1,12 +1,8 @@
 # syntax=docker/dockerfile:1
-
 FROM alpine
 
 # set version label
 LABEL maintainer="Clion Nieh <76857061@qq.com>"
-
-# environment settings
-# ENV BRANCH v3.12 
 
 # install packages
 RUN set -eux; \
@@ -36,4 +32,4 @@ ENTRYPOINT ["/init"]
 EXPOSE 8096 8920
 VOLUME /config
 
-CMD ["jellyfin"]
+CMD ["openrc"]
