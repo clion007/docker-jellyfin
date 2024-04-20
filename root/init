@@ -6,9 +6,8 @@ mkdir -p \
     /config/{log,data/plugins/configurations,data/transcodes,cache} \
     /data \
     /transcode
-
 # permissions
-lsiown abc:abc \
+chown jellyfin:jellyfin \
     /config \
     /config/* \
     /config/data/plugins \
