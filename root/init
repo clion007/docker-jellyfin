@@ -34,10 +34,5 @@ do
         fi
     fi
 done
-    
-# first arg is `-f` or `--some-option` or `something.conf`
-if [ "${1#-}" != "$1" ]; then
-	set -- rc-service "$@"
-fi
 
-exec "$@"
+exec rc-service "$@" start
