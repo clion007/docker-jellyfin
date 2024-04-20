@@ -35,4 +35,9 @@ do
     fi
 done
 
-exec rc-service "$@" start
+# first arg is `-f` or `--some-option` or `something.conf`
+if [ "${1#-}" != "$1" ]; then
+	set -- openrc "$@"
+fi
+
+exec "$@"
