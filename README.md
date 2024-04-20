@@ -14,7 +14,7 @@ For Intel/ATI/AMD to leverage hardware acceleration you will need to mount /dev/
 ```
 --device=/dev/dri:/dev/dri
 ```
-We will automatically ensure the jellyfin user inside of the container has the proper permissions to access this device.
+I will automatically ensure the jellyfin user inside of the container has the proper permissions to access this device.
 
 ## Usage
 To help you get started creating a container from this image you can either use docker-compose or the docker cli.
