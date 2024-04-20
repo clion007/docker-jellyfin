@@ -10,7 +10,6 @@ command_args="--datadir ${datadir} --cachedir ${cachedir} --logdir ${logdir} ${o
 depend() {
         use logger dns
         need net
-        after firewall
 }
 
 start_pre() {
