@@ -20,7 +20,7 @@ RUN set -eux; \
   font-noto-cjk-extra; \
 
   # set jellyfin start when container run
-  rc-update add jellyfin; \
+  rc-update add jellyfin default; \
   \
   # Make dir for config and data
   mkdir -p /config; \
