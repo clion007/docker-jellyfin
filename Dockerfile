@@ -8,15 +8,14 @@ LABEL maintainer="Clion Nieh <76857061@qq.com>"
 RUN set -eux; \
   #install build packages
   apk add --no-cache \
-  openrc \
   ffmpeg \
   jellyfin \
   jellyfin-web \
   mesa-va-gallium \
   font-noto-cjk-extra; \
 
-  # set jellyfin start when container run
-  #rc-update add jellyfin default; \
+  # set jellyfin process user and group
+  chown jellyfin:jellyfin /usr/bin/jellyfin; \
   \
   # Make dir for config and data
   mkdir -p /config; \
