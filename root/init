@@ -37,7 +37,7 @@ done
     
 # first arg is `-f` or `--some-option` or `something.conf`
 if [ "${1#-}" != "$1" ]; then
-	set -- jellyfin "$@"
+	set -- rc-service "$@"
 fi
 
 exec "$@"
