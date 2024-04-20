@@ -35,9 +35,4 @@ do
     fi
 done
 
-# first arg is `some-option`
-if [ "$1" != "openrc" ]; then
-	set -- openrc "$@"
-fi
-
-exec "$@"
+exec rc-service "$@" start
