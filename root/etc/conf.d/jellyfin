@@ -1,5 +1,5 @@
 supervisor=supervise-daemon
-configdir="config"
+configdir="/config"
 datadir="/config/data"
 cachedir="/config/cache"
 logdir="/config/log"
