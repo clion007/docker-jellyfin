@@ -31,4 +31,4 @@ ENTRYPOINT ["/init"]
 EXPOSE 8096 8920
 VOLUME /config
 
-CMD ["jellyfin"]
+CMD ["--ffmpeg=/usr/bin/ffmpeg"]
