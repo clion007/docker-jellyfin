@@ -17,7 +17,6 @@ RUN set -eux; \
 
   # set jellyfin start when container run
   rc-update add jellyfin default; \
-  chmod +x /etc/local.d/jellyfin.start; \
   \
   # Make dir for config and data
   mkdir -p /config; \
