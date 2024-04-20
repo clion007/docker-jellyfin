@@ -35,9 +35,16 @@ do
     fi
 done
 
+export \
+    JELLYFIN_CONFIG_DIR="/config" \
+    JELLYFIN_LOG_DIR="/config/log" \
+    JELLYFIN_DATA_DIR="/config/data" \
+    JELLYFIN_CACHE_DIR="/config/cache" \
+    JELLYFIN_WEB_DIR="/usr/lib/jellyfin/jellyfin-web"
+
 # first arg is `--some-option`
 if [ "${1#-}" != "$1" ]; then
 	set -- jellyfin "$@"
 fi
-echo "@"
+
 exec "$@"
