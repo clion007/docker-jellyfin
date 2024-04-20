@@ -31,11 +31,9 @@ ENTRYPOINT ["/init"]
 EXPOSE 8096 8920
 VOLUME /config
 
-CMD [ \
-"--ffmpeg=/usr/bin/ffmpeg", \
+CMD ["--ffmpeg=/usr/bin/ffmpeg", \
 "--configdir=/config", \
 "--logdir=/config/log", \
 "--datadir=/config/data", \
 "--cachedir=/config/cache", \
-"--webdir=/usr/lib/jellyfin/jellyfin-web" \
-]
+"--webdir=/usr/lib/jellyfin/jellyfin-web"]
