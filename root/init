@@ -1,6 +1,21 @@
 #!/bin/sh
 set -e
 
+# create directories
+mkdir -p \
+    /config/{log,data/plugins/configurations,data/transcodes,cache} \
+    /data \
+    /transcode
+
+# permissions
+lsiown abc:abc \
+    /config \
+    /config/* \
+    /config/data/plugins \
+    /config/data/plugins/configurations \
+    /config/data/transcodes \
+    /transcode
+
 # first arg is `--some-option`
 if [ "${1#-}" != "$1" ]; then
 	set -- jellyfin "$@"
