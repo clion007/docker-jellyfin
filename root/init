@@ -6,6 +6,7 @@ mkdir -p \
     /config/{log,data/plugins/configurations,data/transcodes,cache} \
     /data \
     /transcode
+
 # permissions
 chown jellyfin:jellyfin \
     /config \
