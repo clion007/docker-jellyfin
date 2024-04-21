@@ -53,3 +53,8 @@ Containers are configured using parameters passed at runtime (such as those abov
 
 ## Umask for running applications
 For all of my images I provide the ability to override the default umask settings for services started within the containers using the optional -e UMASK=022 setting. Keep in mind umask is not chmod it subtracts from permissions based on it's value it does not add.
+
+## User / Group Identifiers
+When using volumes (-v flags), permissions issues can arise between the host OS and the container, we avoid this issue by allowing you to specify the user PUID and group PGID.
+
+Ensure any volume directories on the host are owned by the same user you specify and any permissions issues will vanish like magic.
