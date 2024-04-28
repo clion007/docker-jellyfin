@@ -25,7 +25,7 @@ RUN set -eux; \
 # add local files
 COPY --chmod=755 root/ /
 
-User jellyfin
+USER jellyfin
 
 # set entrypoint
 ENTRYPOINT ["/init"]
