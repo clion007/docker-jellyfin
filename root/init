@@ -23,7 +23,7 @@ fi
 
 # allow the container to be started with `--user`
 if [ "$1" = 'jellyfin' -a "$(id -u)" = '0' ]; then
-    find . \! -user jellyfin -exec chown jellyfin --exclude=./sys '{}' +
+    find . \! -user jellyfin -exec chown jellyfin -R --exclude=./sys '{}' +
     exec su-exec jellyfin "$0" "$@"
 fi
 
