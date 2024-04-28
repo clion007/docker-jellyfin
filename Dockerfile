@@ -9,7 +9,7 @@ RUN set -eux; \
   #install build packages
   apk add --no-cache \
   ffmpeg \
-  su-exec \
+  #su-exec \
   jellyfin \
   jellyfin-web \
   mesa-va-gallium \
@@ -23,7 +23,9 @@ RUN set -eux; \
   chown jellyfin:jellyfin /config
 
 # add local files
-COPY  --chmod=755 root/ /
+COPY --chmod=755 root/ /
+
+User jellyfin
 
 # set entrypoint
 ENTRYPOINT ["/init"]
