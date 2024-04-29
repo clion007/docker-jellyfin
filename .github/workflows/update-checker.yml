@@ -1,10 +1,9 @@
 # Description: jellyfin version update checker
 
-name: Update Checker
+name: Jellyfin Update Checker
 
 env:
-  REPO_URL: https://github.com/openwrt/openwrt
-  REPO_BRANCH: openwrt-23.05
+  BRANCH: edge
 
 on:
   workflow_dispatch:
@@ -16,31 +15,36 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
-    - name: Get Commit Hash
-      id: getHash
-      run: |
-        git clone --depth 1 $REPO_URL -b $REPO_BRANCH .
-        echo "commitHash=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
-
-    - name: Compare Commit Hash
-      id: cacheHash
-      uses: actions/cache@v4.0.2
+    
+    - name: Setup latest Alpine Linux
+      uses: jirutka/setup-alpine@v1
       with:
-        path: .commitHash
-        key: commitHash_${{ steps.getHash.outputs.commitHash }}
+        branch: ${{env.BRANCH}}
 
-    - name: Save New Commit Hash
-      if: steps.cacheHash.outputs.cache-hit != 'true'
+    - name: Get latest version of jellyfin
+      id: getVersion
       run: |
-        echo ${{ steps.getHash.outputs.commitHash }} | tee .commitHash
+        version=apk info --no-cache jellyfin | grep 'jellyfin' | awk '{print $1}' | awk 'NR==1'
+        echo "$version" >> $GITHUB_OUTPUT
+
+    - name: Compare jellyfin version
+      id: cacheVersion
+      uses: actions/cache@v4
+      with:
+        path: .curentVersion
+        key: ${{ steps.getVersion.outputs.version }}
+
+    - name: Save New Curent Version
+      if: steps.cacheVersion.outputs.cache-hit != 'true'
+      run: |
+        echo ${{ steps.getVersion.outputs.version }} | tee .curentVersion
 
     - name: Trigger build
-      if: steps.cacheHash.outputs.cache-hit != 'true'
+      if: steps.cacheVersion.outputs.cache-hit != 'true'
       uses: peter-evans/repository-dispatch@v3
       with:
         token: ${{ secrets.ACTIONS_TRIGGER_PAT }}
-        event-type: Source Code Update
+        event-type: Jellyfin Image Update
         
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@v2
