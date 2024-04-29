@@ -4,10 +4,14 @@ FROM alpine
 # set version label
 LABEL maintainer="Clion Nieh <76857061@qq.com>"
 
+ENV BRANCH edge
+
 # install packages
 RUN set -eux; \
   #install build packages
   apk add --no-cache \
+    --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/main \
+    --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/community \
   ffmpeg \
   su-exec \
   jellyfin \
