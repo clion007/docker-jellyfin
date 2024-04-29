@@ -44,7 +44,7 @@ jobs:
       if: steps.cacheVersion.outputs.cache-hit != 'true'
       uses: peter-evans/repository-dispatch@v3
       with:
-        token: ${{ secrets.ACTIONS_TRIGGER_PAT }}
+        token: ${{ github.token }}
         event-type: Jellyfin Image Update
         
     - name: Delete workflow runs
