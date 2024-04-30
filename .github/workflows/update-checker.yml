@@ -2,9 +2,6 @@
 
 name: Jellyfin Update Checker
 
-env:
-  BRANCH: edge
-
 on:
   workflow_dispatch:
   schedule:
@@ -19,7 +16,7 @@ jobs:
     - name: Setup latest Alpine Linux
       uses: jirutka/setup-alpine@v1
       with:
-        branch: ${{env.BRANCH}}
+        branch: edge
 
     - name: Get latest version of jellyfin
       id: getVersion
