@@ -25,7 +25,7 @@ jobs:
       id: getVersion
       run: |
         version="apk info --no-cache jellyfin | grep 'jellyfin' | awk '{print $1}' | awk 'NR==1'"
-        echo "$version" >> $GITHUB_OUTPUT
+        echo "curentVersion=$version" >> $GITHUB_OUTPUT
       shell: alpine.sh --root {0}
 
     - name: Compare jellyfin version
@@ -33,12 +33,12 @@ jobs:
       uses: actions/cache@v4
       with:
         path: .curentVersion
-        key: curentVersion_${{ steps.getVersion.outputs.version }}
+        key: ${{ steps.getVersion.outputs.curentVersion }}
 
     - name: Save New Curent Version
       if: steps.cacheVersion.outputs.cache-hit != 'true'
       run: |
-        echo ${{ steps.getVersion.outputs.version }} | tee .curentVersion
+        echo ${{ steps.getVersion.outputs.curentVersion }} | tee .curentVersion
 
     - name: Trigger build
       if: steps.cacheVersion.outputs.cache-hit != 'true'
