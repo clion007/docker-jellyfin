@@ -23,6 +23,7 @@ jobs:
       run: |
         version=${{apk info --no-cache jellyfin | grep 'jellyfin' | awk '{print $1}' | awk 'NR==1'}}
         echo "curentVersion=$version" >> $GITHUB_OUTPUT
+      shell: alpine.sh
 
     - name: Compare jellyfin version
       id: cacheVersion
