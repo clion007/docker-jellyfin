@@ -21,7 +21,7 @@ jobs:
     - name: Get latest version of jellyfin
       id: getVersion
       run: |
-        version=apk info --no-cache jellyfin | grep 'jellyfin' | awk '{print $1}' | awk 'NR==1'
+        version=${{apk info --no-cache jellyfin | grep 'jellyfin' | awk '{print $1}' | awk 'NR==1'}}
         echo "curentVersion=$version" >> $GITHUB_OUTPUT
 
     - name: Compare jellyfin version
@@ -29,7 +29,7 @@ jobs:
       uses: actions/cache@v4
       with:
         path: .curentVersion
-        key: ${{ steps.getVersion.outputs.curentVersion }}
+        key: curentVersion_${{ steps.getVersion.outputs.curentVersion }}
 
     - name: Save New Curent Version
       if: steps.cacheVersion.outputs.cache-hit != 'true'
