@@ -30,7 +30,7 @@ jobs:
       uses: actions/cache@v4
       with:
         path: .curentVersion
-        key: curentVersion_${{ steps.getVersion.outputs.curentVersion }}
+        key: ${{ steps.getVersion.outputs.curentVersion }}
 
     - name: Save New Curent Version
       if: steps.cacheVersion.outputs.cache-hit != 'true'
