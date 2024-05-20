@@ -41,4 +41,4 @@ CMD ["--ffmpeg=/usr/bin/ffmpeg", \
 "--logdir=/config/log", \
 "--datadir=/config/data", \
 "--cachedir=/config/cache", \
-"--webdir=/usr/lib/jellyfin/jellyfin-web"]
+"--webdir=/usr/share/webapps/jellyfin-web"]
