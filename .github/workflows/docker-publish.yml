@@ -11,6 +11,11 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+    
+    - name: Setup latest Alpine Linux
+      uses: jirutka/setup-alpine@v1
+      with:
+        branch: edge
 
     - name: Get latest version of jellyfin
       id: getVersion
