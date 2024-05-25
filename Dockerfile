@@ -1,8 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM alpine
-
-# set version label
-LABEL maintainer="Clion Nieh <76857061@qq.com>"
+FROM clion007/alpine
 
 ENV BRANCH edge
 
@@ -29,12 +26,8 @@ RUN set -eux; \
 # add local files
 COPY --chmod=755 root/ /
 
-# set entrypoint
-ENTRYPOINT ["/init"]
-
-# ports and volumes
+# ports
 EXPOSE 8096 8920
-VOLUME /config
 
 CMD ["--ffmpeg=/usr/bin/ffmpeg", \
 "--configdir=/config", \
