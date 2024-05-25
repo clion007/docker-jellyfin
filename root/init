@@ -11,12 +11,8 @@ mkdir -p \
     /transcode
 
 # permissions
-chown jellyfin:jellyfin \
+chown -R jellyfin:jellyfin \
     /config \
-    /config/* \
-    /config/data/plugins \
-    /config/data/plugins/configurations \
-    /config/data/transcodes \
     /transcode
 
 # first arg is `--some-option`
