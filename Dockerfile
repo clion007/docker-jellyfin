@@ -14,6 +14,9 @@ RUN set -eux; \
   jellyfin \
   jellyfin-web \
   mesa-va-gallium \
+  mesa-dri-gallium \
+  libva-intel-driver \
+  intel-media-driver \
   font-noto-cjk-extra; \
 
   # set jellyfin process user and group
