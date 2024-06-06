@@ -14,7 +14,6 @@ RUN set -eux; \
   jellyfin \
   jellyfin-web \
   mesa-va-gallium \
-  mesa-dri-gallium \
   intel-media-driver \
   libva-intel-driver \
   font-noto-cjk-extra; \
