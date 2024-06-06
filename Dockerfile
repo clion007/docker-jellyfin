@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 FROM clion007/alpine
 
-ENV BRANCH edge
+ENV BRANCH="edge"
 
 # install packages
 RUN set -eux; \
