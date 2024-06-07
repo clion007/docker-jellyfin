@@ -15,9 +15,7 @@ RUN set -eux; \
   jellyfin-web \
   jellyfin-ffmpeg \
   mesa-va-gallium \
-  mesa-dir-gallium \
-  # intel-media-driver \
-  # libva-intel-driver \
+  libva-intel-driver \
   font-noto-cjk-extra; \
 
   # set jellyfin process user and group
