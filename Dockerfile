@@ -8,14 +8,16 @@ RUN set -eux; \
   #install build packages
   apk add --no-cache \
     --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/main \
+    --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/testing \
     --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/community \
-  ffmpeg \
+  # ffmpeg \
   su-exec \
   jellyfin \
   jellyfin-web \
-  mesa-va-gallium \
-  intel-media-driver \
-  libva-intel-driver \
+  jellyfin-ffmpeg \
+  # mesa-va-gallium \
+  # intel-media-driver \
+  # libva-intel-driver \
   font-noto-cjk-extra; \
 
   # set jellyfin process user and group
