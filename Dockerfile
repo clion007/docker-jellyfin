@@ -10,12 +10,12 @@ RUN set -eux; \
     --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/main \
     --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/testing \
     --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/community \
-  # ffmpeg \
   su-exec \
   jellyfin \
   jellyfin-web \
   jellyfin-ffmpeg \
-  # mesa-va-gallium \
+  mesa-va-gallium \
+  mesa-dir-gallium \
   # intel-media-driver \
   # libva-intel-driver \
   font-noto-cjk-extra; \
@@ -33,8 +33,7 @@ COPY --chmod=755 root/ /
 # ports
 EXPOSE 8096 8920
 
-CMD ["--ffmpeg=/usr/lib/jellyfin-ffmpeg/ffmpeg", \
-"--configdir=/config", \
+CMD ["--configdir=/config", \
 "--logdir=/config/log", \
 "--datadir=/config/data", \
 "--cachedir=/config/cache", \
