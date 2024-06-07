@@ -14,13 +14,14 @@ RUN set -eux; \
   jellyfin \
   jellyfin-web \
   jellyfin-ffmpeg \
+  mesa-dir-gallium \
   mesa-va-gallium \
   libva-intel-driver \
   font-noto-cjk-extra; \
 
   # set jellyfin process user and group
   chown jellyfin:jellyfin /usr/bin/jellyfin; \
-  \
+  
   # Make dir for config and data
   mkdir -p /config; \
   chown jellyfin:jellyfin /config;
