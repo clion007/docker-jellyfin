@@ -33,7 +33,7 @@ COPY --chmod=755 root/ /
 # ports
 EXPOSE 8096 8920
 
-CMD ["--ffmpeg=/usr/bin/ffmpeg", \
+CMD ["--ffmpeg=/usr/lib/jellyfin-ffmpeg/ffmpeg", \
 "--configdir=/config", \
 "--logdir=/config/log", \
 "--datadir=/config/data", \
