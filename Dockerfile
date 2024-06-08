@@ -37,4 +37,5 @@ COPY --chmod=755 root/ /
 # ports
 EXPOSE 8096 8920 7359/udp 1900/udp
 
+# entrypoint /init set in clion007/alpine base image
 CMD ["--ffmpeg=/usr/bin/ffmpeg"]
