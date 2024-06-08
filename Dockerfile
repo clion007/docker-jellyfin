@@ -8,13 +8,13 @@ RUN set -eux; \
   #install build packages
   apk add --no-cache \
     --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/main \
-    # --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/testing \
+    --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/testing \
     --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/community \
   su-exec \
   jellyfin \
   jellyfin-web \
-  # jellyfin-ffmpeg \
-  mesa-va-gallium \
+  jellyfin-ffmpeg \
+  # mesa-va-gallium \
   # libva-intel-driver \
   font-noto-cjk-extra; \
 
@@ -35,4 +35,5 @@ CMD ["--configdir=/config", \
 "--logdir=/config/log", \
 "--datadir=/config/data", \
 "--cachedir=/config/cache", \
-"--webdir=/usr/share/webapps/jellyfin-web"]
+"--webdir=/usr/share/webapps/jellyfin-web", \
+"--ffmpeg=/usr/lib/jellyfin-ffmpeg/ffmpeg"]
