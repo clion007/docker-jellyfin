@@ -4,7 +4,7 @@ Jellyfin is a Free Software Media System that puts you in control of managing an
 This clion/jellyfin docker image supply you a better choice for the jellyfin container than offical image. It is builded base on latest alpine, with smaller size and fix the ffmpg decode, hardware drivers and chinese shown in garbled problems et,al. This image will auto check and update when there is new version of jellyfin exist.
 
 ## Application Setup
-* Webui can be found at http://<your-ip>:8096
+* Webui can be found at http://\<your-ip\>:8096
 * More information can be found on the official documentation.
 
 ## Hardware Acceleration
