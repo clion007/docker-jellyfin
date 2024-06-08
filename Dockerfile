@@ -13,7 +13,7 @@ RUN set -eux; \
   su-exec \
   jellyfin \
   jellyfin-web \
-  jellyfin-ffmpeg \
+  # jellyfin-ffmpeg \
   # mesa-va-gallium \
   # libva-intel-driver \
   font-noto-cjk-extra; \
