@@ -2,6 +2,12 @@
 FROM clion007/alpine
 
 ENV BRANCH="edge"
+ENV JELLYFIN_LOG_DIR="/config/log"
+ENV JELLYFIN_DATA_DIR="/config/data"
+ENV JELLYFIN_CACHE_DIR="/config/cache"
+ENV JELLYFIN_CONFIG_DIR="/config/config"
+ENV JELLYFIN_WEB_DIR="/usr/share/jellyfin-web"
+ENV XDG_CACHE_HOME=${JELLYFIN_CACHE_DIR}
 
 # install packages
 RUN set -eux; \
@@ -13,8 +19,6 @@ RUN set -eux; \
   su-exec \
   jellyfin \
   jellyfin-web \
-  # jellyfin-ffmpeg \
-  # mesa-va-gallium \
   libva-intel-driver \
   intel-media-driver \
   font-noto-cjk-extra; \
@@ -30,11 +34,6 @@ RUN set -eux; \
 COPY --chmod=755 root/ /
 
 # ports
-EXPOSE 8096 8920
+EXPOSE 8096 8920 7359/udp 1900/udp
 
-CMD ["--configdir=/config", \
-"--logdir=/config/log", \
-"--datadir=/config/data", \
-"--cachedir=/config/cache", \
-"--ffmpeg=/usr/bin/ffmpeg", \
-"--webdir=/usr/share/webapps/jellyfin-web"]
+CMD ["--ffmpeg=/usr/bin/ffmpeg"]
