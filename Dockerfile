@@ -27,7 +27,7 @@ RUN set -eux; \
   # set jellyfin process user and group
   chown jellyfin:jellyfin /usr/bin/jellyfin; \
   
-  # Make dir for config and data
+  # make dir for config and data
   mkdir -p /config; \
   chown jellyfin:jellyfin /config;
 
