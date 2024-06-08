@@ -13,9 +13,10 @@ RUN set -eux; \
   su-exec \
   jellyfin \
   jellyfin-web \
-  jellyfin-ffmpeg \
+  # jellyfin-ffmpeg \
   # mesa-va-gallium \
-  # libva-intel-driver \
+  libva-intel-driver \
+  intel-media-driver \
   font-noto-cjk-extra; \
 
   # set jellyfin process user and group
