@@ -36,5 +36,5 @@ CMD ["--configdir=/config", \
 "--logdir=/config/log", \
 "--datadir=/config/data", \
 "--cachedir=/config/cache", \
-"--webdir=/usr/share/webapps/jellyfin-web", \
-"--ffmpeg=/usr/lib/jellyfin-ffmpeg/ffmpeg"]
+"--ffmpeg=/usr/bin/ffmpeg", \
+"--webdir=/usr/share/webapps/jellyfin-web"]
