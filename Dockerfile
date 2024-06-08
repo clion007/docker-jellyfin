@@ -23,7 +23,11 @@ RUN set -eux; \
   
   # Make dir for config and data
   mkdir -p /config; \
-  chown jellyfin:jellyfin /config;
+  chown jellyfin:jellyfin /config; \
+  rm -rf \
+      /var/cache/apk/* \
+      /var/tmp/* \
+      /tmp/*
 
 # add local files
 COPY --chmod=755 root/ /
