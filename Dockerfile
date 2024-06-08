@@ -14,7 +14,7 @@ RUN set -eux; \
   jellyfin \
   jellyfin-web \
   # jellyfin-ffmpeg \
-  # mesa-va-gallium \
+  mesa-va-gallium \
   # libva-intel-driver \
   font-noto-cjk-extra; \
 
