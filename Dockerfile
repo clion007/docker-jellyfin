@@ -1,6 +1,8 @@
 # syntax=docker/dockerfile:1
 FROM clion007/alpine
 
+LABEL mantainer=Clion Nihe Email: clion007@126.com
+
 ENV BRANCH="edge"
 ENV JELLYFIN_LOG_DIR="/config/log"
 ENV JELLYFIN_DATA_DIR="/config/data"
