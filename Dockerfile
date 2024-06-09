@@ -17,9 +17,11 @@ RUN set -eux; \
   apk add --no-cache \
     --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/main \
     --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/community \
+  opencl \
   su-exec \
   jellyfin \
   jellyfin-web \
+  intel-media-sdk \
   libva-intel-driver \
   intel-media-driver \
   font-noto-cjk-extra; \
