@@ -3,13 +3,13 @@ FROM clion007/alpine
 
 LABEL mantainer="Clion Nihe Email: clion007@126.com"
 
-ARG BRANCH="edge"
-ENV JELLYFIN_LOG_DIR="/config/log"
-ENV JELLYFIN_DATA_DIR="/config/data"
-ENV JELLYFIN_CACHE_DIR="/config/cache"
-ENV JELLYFIN_CONFIG_DIR="/config/config"
-ENV JELLYFIN_WEB_DIR="/usr/share/webapps/jellyfin-web"
-ENV XDG_CACHE_HOME=${JELLYFIN_CACHE_DIR}
+ARG BRANCH=edge
+ENV JELLYFIN_LOG_DIR=/config/log \
+    JELLYFIN_DATA_DIR=/config/data \
+    JELLYFIN_CACHE_DIR=/config/cache \
+    JELLYFIN_CONFIG_DIR=/config/config \
+    JELLYFIN_WEB_DIR=/usr/share/webapps/jellyfin-web \
+    XDG_CACHE_HOME=${JELLYFIN_CACHE_DIR}
 
 # install packages
 RUN set -eux; \
