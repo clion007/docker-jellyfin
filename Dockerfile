@@ -102,7 +102,7 @@ COPY --from=web /web /usr/share/jellyfin-web
 COPY --from=ffmpeg /ffmpeg /usr/lib/jellyfin-ffmpeg
 
 # install packages
-RUN set -eux; \
+RUN set -ex; \
   #install build packages
   apk add --no-cache \
     --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/main \
