@@ -35,7 +35,7 @@ FROM node:lts-alpine AS web
 
 ARG JELLYFIN_VERSION
 
-# ENV JELLYFIN_VERSION=${JELLYFIN_VERSION}
+ENV JELLYFIN_VERSION=${JELLYFIN_VERSION}
 
 WORKDIR /tmp/jellyfin-web
 
@@ -71,14 +71,14 @@ RUN set -ex; \
 # build jellyfin-ffmpeg
 FROM alpine as ffmpeg
 
-ARG FFMPEG_URL
+ARG FFMPEG_VERSION
 
-WORKDIR /tmp
+WORKDIR /tmp/jellyfin-ffmpeg
 
-ADD $FFMPEG_URL /tmp/jellyfin-ffmpeg
+ADD https://repo.jellyfin.org/files/ffmpeg/linux/latest-${FFMPEG_VERSION:0:1}.x/amd64/jellyfin-ffmpeg_${FFMPEG_VERSION}_portable_linux64-gpl.tar.xz /tmp/jellyfin-ffmpeg
 
 RUN set -ex; \
-    mv jellyfin-ffmpeg /ffmpeg; \
+    mv ../jellyfin-ffmpeg /ffmpeg; \
     rm -rf \
         /var/tmp/* \
         /tmp/* \
