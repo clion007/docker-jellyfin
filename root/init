@@ -17,7 +17,7 @@ chown -R jellyfin:jellyfin \
 
 # first arg is `--some-option`
 if [ "${1#-}" != "$1" ]; then
-	set -- jellyfin "$@"
+	set -- /urs/lib/jellyfin/jellyfin "$@"
 fi
 
 # allow the container to be started with `--user`
