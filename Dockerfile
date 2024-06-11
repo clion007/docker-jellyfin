@@ -2,12 +2,11 @@
 
 # Docker build arguments
 ARG DOTNET_VERSION
-ARG JELLYFIN_VERSION
-ARG FFMPEG_URL
 
 # build jellyfin server
 FROM mcr.microsoft.com/dotnet/sdk:$DOTNET_VERSION-alpine AS server
 
+ARG JELLYFIN_VERSION
 ARG DOTNET_CLI_TELEMETRY_OPTOUT=1
 
 WORKDIR /tmp/jellyfin
@@ -32,6 +31,8 @@ RUN set -ex; \
 
 # build jellyfin-web client
 FROM node:lts-alpine AS web
+
+ARG JELLYFIN_VERSION
 
 WORKDIR /tmp/jellyfin-web
 
@@ -64,6 +65,8 @@ RUN set -ex; \
 
 # build jellyfin-ffmpeg
 FROM alpine as ffmpeg
+
+ARG FFMPEG_URL
 
 WORKDIR /tmp
 
