@@ -9,11 +9,10 @@ FROM mcr.microsoft.com/dotnet/sdk:$DOTNET_VERSION-alpine AS server
 
 ARG DOTNET_CLI_TELEMETRY_OPTOUT=1
 
-ADD https://github.com/jellyfin/jellyfin/archive/refs/tags/v$JELLYFIN_VERSION.tar.gz /tmp/jellyfin.tar.gz
-
 WORKDIR /tmp/jellyfin
 
 RUN set -ex; \
+    wget --no-check-certificate "https://github.com/jellyfin/jellyfin/archive/refs/tags/v$JELLYFIN_VERSION.tar.gz" /tmp/jellyfin.tar.gz; \
     tar xf /tmp/jellyfin.tar.gz --strip-components=1; \
     dotnet publish \
         Jellyfin.Server \
@@ -32,8 +31,6 @@ RUN set -ex; \
 
 FROM node:lts-alpine AS web
 
-ADD https://github.com/jellyfin/jellyfin-web/archive/refs/tags/v$JELLYFIN_VERSION.tar.gz /tmp/jellyfin-web.tar.gz
-
 WORKDIR /tmp/jellyfin-web
 
 RUN set -ex; \
@@ -51,6 +48,7 @@ RUN set -ex; \
         nasm \
         python3 \
     ; \
+    wget --no-check-certificate "https://github.com/jellyfin/jellyfin-web/archive/refs/tags/v$JELLYFIN_VERSION.tar.gz" /tmp/jellyfin-web.tar.gz; \
     tar xf ../jellyfin-web.tar.gz --strip-components=1; \
     npm ci --no-audit --unsafe-perm; \
     npm run build:production; \
