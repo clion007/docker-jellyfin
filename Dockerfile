@@ -134,7 +134,7 @@ RUN set -ex; \
   groupadd -g 101 jellyfin; \
   useradd -u 100 -s /bin/nologin -M -g 101 jellyfin; \
   ln -s /usr/lib/jellyfin/jellyfin /usr/bin/jellyfin; \
-  chown jellyfin:jellyfin /usr/lib/jellyfin/jellyfin; \
+  chown jellyfin:jellyfin /usr/bin/jellyfin; \
   \
   # make dir for config and data
   mkdir -p /config; \
