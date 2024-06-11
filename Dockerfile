@@ -65,7 +65,9 @@ RUN set -ex; \
 
 FROM alpine as ffmpeg
 
-ADD https://repo.jellyfin.org/files/ffmpeg/linux/latest-${FFMPEG_VERSION:0:1}.x/amd64/jellyfin-ffmpeg_${FFMPEG_VERSION}_portable_linux64-gpl.tar.xz /tmp/jellyfin-ffmpeg.tar.xz
+ARG FFMPEG_URL="https://repo.jellyfin.org/files/ffmpeg/linux/latest-${FFMPEG_VERSION:0:1}.x/amd64/jellyfin-ffmpeg_${FFMPEG_VERSION}_portable_linux64-gpl.tar.xz"
+
+ADD $FFMPEG_URL /tmp/jellyfin-ffmpeg.tar.xz
 
 WORKDIR /tmp
 
