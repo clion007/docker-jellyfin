@@ -42,6 +42,7 @@ WORKDIR /tmp/jellyfin-web
 ADD https://github.com/jellyfin/jellyfin-web/archive/refs/tags/v$JELLYFIN_VERSION.tar.gz /tmp/jellyfin-web
 
 RUN set -ex; \
+    ls -l; \
     apk add --no-cache --virtual .build-deps \
       autoconf \
       g++ \
