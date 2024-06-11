@@ -9,11 +9,11 @@ FROM mcr.microsoft.com/dotnet/sdk:$DOTNET_VERSION-alpine AS server
 ARG JELLYFIN_VERSION
 ARG DOTNET_CLI_TELEMETRY_OPTOUT=1
 
+ADD https://github.com/jellyfin/jellyfin/archive/refs/tags/v$JELLYFIN_VERSION.tar.gz /tmp/jellyfin
+
 WORKDIR /tmp/jellyfin
 
 RUN set -ex; \
-    wget --no-check-certificate "https://github.com/jellyfin/jellyfin/archive/refs/tags/v$JELLYFIN_VERSION.tar.gz" /tmp/jellyfin.tar.gz; \
-    tar xf /tmp/jellyfin.tar.gz --strip-components=1; \
     dotnet publish \
         Jellyfin.Server \
         --self-contained \
@@ -34,6 +34,10 @@ FROM node:lts-alpine AS web
 
 ARG JELLYFIN_VERSION
 
+# ENV JELLYFIN_VERSION=${JELLYFIN_VERSION}
+
+ADD https://github.com/jellyfin/jellyfin-web/archive/refs/tags/v$JELLYFIN_VERSION.tar.gz /tmp/jellyfin-web
+
 WORKDIR /tmp/jellyfin-web
 
 RUN set -ex; \
@@ -51,8 +55,6 @@ RUN set -ex; \
         nasm \
         python3 \
     ; \
-    wget --no-check-certificate "https://github.com/jellyfin/jellyfin-web/archive/refs/tags/v$JELLYFIN_VERSION.tar.gz" /tmp/jellyfin-web.tar.gz; \
-    tar xf ../jellyfin-web.tar.gz --strip-components=1; \
     npm ci --no-audit --unsafe-perm; \
     npm run build:production; \
     apk del --no-network .build-deps; \
@@ -68,11 +70,11 @@ FROM alpine as ffmpeg
 
 ARG FFMPEG_URL
 
+ADD $FFMPEG_URL /tmp/jellyfin-ffmpeg
+
 WORKDIR /tmp
 
 RUN set -ex; \
-    wget --no-check-certificate $FFMPEG_URL -qO jellyfin-ffmpeg.tar.xz; \
-    tar -xvf jellyfin-ffmpeg.tar.xz -C jellyfin-ffmpeg; \
     mv jellyfin-ffmpeg /ffmpeg; \
     rm -rf \
         /var/tmp/* \
