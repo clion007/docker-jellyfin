@@ -5,6 +5,7 @@ ARG DOTNET_VERSION
 ARG JELLYFIN_VERSION
 ARG FFMPEG_VERSION
 
+# build jellyfin server
 FROM mcr.microsoft.com/dotnet/sdk:$DOTNET_VERSION-alpine AS server
 
 ARG DOTNET_CLI_TELEMETRY_OPTOUT=1
@@ -29,6 +30,7 @@ RUN set -ex; \
         /tmp/* \
         ;
 
+# build jellyfin-web client
 FROM node:lts-alpine AS web
 
 WORKDIR /tmp/jellyfin-web
@@ -60,6 +62,7 @@ RUN set -ex; \
         /tmp/* \
         ;
 
+# build jellyfin-ffmpeg
 FROM alpine as ffmpeg
 
 WORKDIR /tmp
@@ -73,6 +76,7 @@ RUN set -ex; \
         /tmp/* \
         ;
 
+# Build the final combined image
 FROM clion007/alpine
 
 LABEL mantainer="Clion Nihe Email: clion007@126.com"
