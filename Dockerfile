@@ -65,13 +65,10 @@ RUN set -ex; \
 
 FROM alpine as ffmpeg
 
-ARG FFMPEG_URL="https://repo.jellyfin.org/files/ffmpeg/linux/latest-${FFMPEG_VERSION:0:1}.x/amd64/jellyfin-ffmpeg_${FFMPEG_VERSION}_portable_linux64-gpl.tar.xz"
-
-ADD $FFMPEG_URL /tmp/jellyfin-ffmpeg.tar.xz
-
 WORKDIR /tmp
 
 RUN set -ex; \
+    wget --no-check-certificate "https://repo.jellyfin.org/files/ffmpeg/linux/latest-${FFMPEG_VERSION:0:1}.x/amd64/jellyfin-ffmpeg_${FFMPEG_VERSION}_portable_linux64-gpl.tar.xz" -qO jellyfin-ffmpeg.tar.xz
     tar -xvf jellyfin-ffmpeg.tar.xz -C jellyfin-ffmpeg; \
     mv jellyfin-ffmpeg /ffmpeg; \
     rm -rf \
