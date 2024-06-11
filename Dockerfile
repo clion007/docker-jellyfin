@@ -5,9 +5,6 @@ ARG DOTNET_VERSION
 ARG JELLYFIN_VERSION
 ARG FFMPEG_URL
 
-ENV FFMPEG_URL=$FFMPEG_URL \
-    JELLYFIN_VERSION=$JELLYFIN_VERSION
-
 # build jellyfin server
 FROM mcr.microsoft.com/dotnet/sdk:$DOTNET_VERSION-alpine AS server
 
