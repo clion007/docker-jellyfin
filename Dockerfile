@@ -42,7 +42,6 @@ WORKDIR /tmp/jellyfin-web
 ADD https://github.com/jellyfin/jellyfin-web/archive/refs/tags/v$JELLYFIN_VERSION.tar.gz /tmp/jellyfin-web
 
 RUN set -ex; \
-    ls -l; \
     apk add --no-cache --virtual .build-deps \
       autoconf \
       g++ \
@@ -72,10 +71,11 @@ RUN set -ex; \
 FROM alpine as ffmpeg
 
 ARG FFMPEG_VERSION
+ARG FFMPEG_BIG_VERSION=${FFMPEG_VERSION:0:1}.x
 
 WORKDIR /tmp/jellyfin-ffmpeg
 
-ADD https://repo.jellyfin.org/files/ffmpeg/linux/latest-${FFMPEG_VERSION:0:1}.x/amd64/jellyfin-ffmpeg_${FFMPEG_VERSION}_portable_linux64-gpl.tar.xz /tmp/jellyfin-ffmpeg
+ADD https://repo.jellyfin.org/files/ffmpeg/linux/latest-${FFMPEG_BIG_VERSION}/amd64/jellyfin-ffmpeg_${FFMPEG_VERSION}_portable_linux64-gpl.tar.xz /tmp/jellyfin-ffmpeg
 
 RUN set -ex; \
     mv ../jellyfin-ffmpeg /ffmpeg; \
