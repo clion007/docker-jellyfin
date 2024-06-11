@@ -43,18 +43,18 @@ ADD https://github.com/jellyfin/jellyfin-web/archive/refs/tags/v$JELLYFIN_VERSIO
 
 RUN set -ex; \
     apk add --no-cache --virtual .build-deps \
-    autoconf \
-    g++ \
-    make \
-    libpng-dev \
-    gifsicle \
-    alpine-sdk \
-    automake \
-    libtool \
-    gcc \
-    musl-dev \
-    nasm \
-    python3
+      autoconf \
+      g++ \
+      make \
+      libpng-dev \
+      gifsicle \
+      alpine-sdk \
+      automake \
+      libtool \
+      gcc \
+      musl-dev \
+      nasm \
+      python3 \
     ; \
     cd src; \
     npm ci --no-audit --unsafe-perm; \
