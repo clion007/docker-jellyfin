@@ -78,7 +78,7 @@ WORKDIR /tmp/jellyfin-ffmpeg
 ADD https://repo.jellyfin.org/files/ffmpeg/linux/latest-${FFMPEG_BIG_VERSION}/amd64/jellyfin-ffmpeg_${FFMPEG_VERSION}_portable_linux64-gpl.tar.xz /tmp/jellyfin-ffmpeg.tar.xz
 
 RUN set -ex; \
-    tar -xvf ../jellyfin-ffmpeg.tar.xz -C ./; \
+    tar -xvf ../jellyfin-ffmpeg.tar.xz -C ../jellyfin-ffmpeg; \
     mv ../jellyfin-ffmpeg /ffmpeg; \
     rm -rf \
         /var/tmp/* \
@@ -127,8 +127,10 @@ RUN set -ex; \
     font-noto-cjk-extra \
   ; \
   \
-  # set jellyfin process user and group
   mv /usr/lib/jellyfin/jellyfin /usr/bin/jellyfin; \
+  # set jellyfin process user and group
+  groupadd -g 101 jellyfin; \
+  useradd -u 100 -s /bin/false -M -g 101 jellyfin; \
   chown jellyfin:jellyfin /usr/bin/jellyfin; \
   \
   # make dir for config and data
