@@ -130,7 +130,6 @@ RUN set -ex; \
     shadow \
   ; \
   \
-  mv /usr/lib/jellyfin/jellyfin /usr/bin/jellyfin; \
   # set jellyfin process user and group
   groupadd -g 101 jellyfin; \
   useradd -u 100 -s /bin/false -M -g 101 jellyfin; \
