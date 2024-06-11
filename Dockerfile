@@ -65,6 +65,8 @@ RUN set -ex; \
 # build jellyfin-ffmpeg
 FROM alpine as ffmpeg
 
+ENV FFMPEG_URL=$FFMPEG_URL
+
 WORKDIR /tmp
 
 RUN set -ex; \
