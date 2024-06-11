@@ -9,9 +9,9 @@ FROM mcr.microsoft.com/dotnet/sdk:$DOTNET_VERSION-alpine AS server
 ARG JELLYFIN_VERSION
 ARG DOTNET_CLI_TELEMETRY_OPTOUT=1
 
-ADD https://github.com/jellyfin/jellyfin/archive/refs/tags/v$JELLYFIN_VERSION.tar.gz /tmp/jellyfin
-
 WORKDIR /tmp/jellyfin
+
+ADD https://github.com/jellyfin/jellyfin/archive/refs/tags/v$JELLYFIN_VERSION.tar.gz /tmp/jellyfin
 
 RUN set -ex; \
     dotnet publish \
@@ -36,9 +36,9 @@ ARG JELLYFIN_VERSION
 
 # ENV JELLYFIN_VERSION=${JELLYFIN_VERSION}
 
-ADD https://github.com/jellyfin/jellyfin-web/archive/refs/tags/v$JELLYFIN_VERSION.tar.gz /tmp/jellyfin-web
-
 WORKDIR /tmp/jellyfin-web
+
+ADD https://github.com/jellyfin/jellyfin-web/archive/refs/tags/v$JELLYFIN_VERSION.tar.gz /tmp/jellyfin-web
 
 RUN set -ex; \
     apk add --no-cache --virtual .build-deps \
@@ -70,9 +70,9 @@ FROM alpine as ffmpeg
 
 ARG FFMPEG_URL
 
-ADD $FFMPEG_URL /tmp/jellyfin-ffmpeg
-
 WORKDIR /tmp
+
+ADD $FFMPEG_URL /tmp/jellyfin-ffmpeg
 
 RUN set -ex; \
     mv jellyfin-ffmpeg /ffmpeg; \
