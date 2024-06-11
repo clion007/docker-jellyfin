@@ -12,18 +12,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    
-    - name: Setup latest Alpine Linux
-      uses: jirutka/setup-alpine@v1
-      with:
-        branch: edge
 
     - name: Get latest version of jellyfin
       id: getVersion
       run: |
-        version=$(apk info --no-cache jellyfin | grep 'jellyfin' | awk '{print $1}' | awk 'NR==1')
+        version=$(wget -qO- -t1 -T2 https://api.github.com/repos/jellyfin/jellyfin/releases/latest | grep "tag_name" | head -n 1 | awk -F "\"" '{printf $4}' | awk -F "v" '{printf $2}')
         echo "curentVersion=$version" >> $GITHUB_OUTPUT
-      shell: alpine.sh {0}
 
     - name: Compare jellyfin version
       id: cacheVersion
