@@ -45,7 +45,8 @@ jobs:
         else
           FFMPEG_VERSION=${{ inputs.FFMPEG_VERSION }}
         fi
-        echo "ffmpegVersion=$FFMPEG_VERSION" >> $GITHUB_OUTPUT
+        FFMPEG_URL=https://repo.jellyfin.org/files/ffmpeg/linux/latest-${FFMPEG_VERSION:0:1}.x/amd64/jellyfin-ffmpeg_${FFMPEG_VERSION}_portable_linux64-gpl.tar.xz;
+        echo "ffmpegUrl=$FFMPEG_URL" >> $GITHUB_OUTPUT
      
     - name: Login to Docker Hub
       uses: docker/login-action@v3
@@ -68,7 +69,7 @@ jobs:
         push: true
         build-args: |
           DOTNET_VERSION=${{ steps.getVersion.outputs.dotnetVersion }}
-          FFMPEG_VERSION=${{ steps.getVersion.outputs.ffmpegVersion }}
+          FFMPEG_URL=${{ steps.getVersion.outputs.ffmpegUrl }}
           JELLYFIN_VERSION=${{ steps.getVersion.outputs.jellyfinVersion }}
         tags: |
           clion007/jellyfin:latest
