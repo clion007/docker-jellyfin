@@ -11,10 +11,10 @@ ARG DOTNET_CLI_TELEMETRY_OPTOUT=1
 
 WORKDIR /tmp/jellyfin
 
-ADD https://github.com/jellyfin/jellyfin/archive/refs/tags/v$JELLYFIN_VERSION.tar.gz /tmp/jellyfin
+ADD https://github.com/jellyfin/jellyfin/archive/refs/tags/v$JELLYFIN_VERSION.tar.gz /tmp/jellyfin.tar.gz
 
 RUN set -ex; \
-    cd src; \
+    tar xf ../jellyfin.tar.gz --strip-components=1; \
     dotnet publish \
         Jellyfin.Server \
         --self-contained \
@@ -39,10 +39,9 @@ ENV JELLYFIN_VERSION=${JELLYFIN_VERSION}
 
 WORKDIR /tmp/jellyfin-web
 
-ADD https://github.com/jellyfin/jellyfin-web/archive/refs/tags/v$JELLYFIN_VERSION.tar.gz /tmp/jellyfin-web
+ADD https://github.com/jellyfin/jellyfin-web/archive/refs/tags/v$JELLYFIN_VERSION.tar.gz /tmp/jellyfin-web.tar.gz
 
 RUN set -ex; \
-    ls -l; \
     apk add --no-cache --virtual .build-deps \
       autoconf \
       g++ \
@@ -57,7 +56,7 @@ RUN set -ex; \
       nasm \
       python3 \
     ; \
-    cd src; \
+    tar xf ../jellyfin-web.tar.gz --strip-components=1; \
     npm ci --no-audit --unsafe-perm; \
     npm run build:production; \
     apk del --no-network .build-deps; \
@@ -74,12 +73,13 @@ FROM alpine as ffmpeg
 ARG FFMPEG_VERSION
 ARG FFMPEG_BIG_VERSION
 
-WORKDIR /tmp/jellyfin-ffmpeg
+WORKDIR /tmp
 
-ADD https://repo.jellyfin.org/files/ffmpeg/linux/latest-${FFMPEG_BIG_VERSION}/amd64/jellyfin-ffmpeg_${FFMPEG_VERSION}_portable_linux64-gpl.tar.xz /tmp/jellyfin-ffmpeg
+ADD https://repo.jellyfin.org/files/ffmpeg/linux/latest-${FFMPEG_BIG_VERSION}/amd64/jellyfin-ffmpeg_${FFMPEG_VERSION}_portable_linux64-gpl.tar.xz /tmp/jellyfin-ffmpeg.tar.xz
 
 RUN set -ex; \
-    mv ../jellyfin-ffmpeg /ffmpeg; \
+    tar -xvf jellyfin-ffmpeg.tar.xz -C jellyfin-ffmpeg; \
+    mv jellyfin-ffmpeg /ffmpeg; \
     rm -rf \
         /var/tmp/* \
         /tmp/* \
@@ -125,7 +125,7 @@ RUN set -ex; \
     libva-intel-driver \
     intel-media-driver \
     font-noto-cjk-extra \
-    ; \
+  ; \
   \
   # set jellyfin process user and group
   mv /usr/lib/jellyfin/jellyfin /usr/bin/jellyfin; \
