@@ -126,6 +126,9 @@ RUN set -ex; \
     intel-media-driver \
     font-noto-cjk-extra \
   ; \
+  apk add --no-cache --virtual .user-deps \
+    shadow \
+  ; \
   \
   mv /usr/lib/jellyfin/jellyfin /usr/bin/jellyfin; \
   # set jellyfin process user and group
@@ -136,7 +139,14 @@ RUN set -ex; \
   # make dir for config and data
   mkdir -p /config; \
   chmod 777 /config; \
-  chown jellyfin:jellyfin /config;
+  chown jellyfin:jellyfin /config; \
+  \
+  apk del --no-network .user-deps; \
+  rm -rf \
+      /var/cache/apk/* \
+      /var/tmp/* \
+      /tmp/* \
+      ;
 
 # add local files
 COPY --chmod=755 root/ /
