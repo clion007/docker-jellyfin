@@ -71,7 +71,7 @@ RUN set -ex; \
 FROM alpine as ffmpeg
 
 ARG FFMPEG_VERSION
-ARG FFMPEG_BIG_VERSION=${FFMPEG_VERSION:0:1}.x
+ARG FFMPEG_BIG_VERSION
 
 WORKDIR /tmp/jellyfin-ffmpeg
 
