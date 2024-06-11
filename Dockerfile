@@ -14,6 +14,7 @@ WORKDIR /tmp/jellyfin
 ADD https://github.com/jellyfin/jellyfin/archive/refs/tags/v$JELLYFIN_VERSION.tar.gz /tmp/jellyfin
 
 RUN set -ex; \
+    cd src; \
     dotnet publish \
         Jellyfin.Server \
         --self-contained \
@@ -42,19 +43,20 @@ ADD https://github.com/jellyfin/jellyfin-web/archive/refs/tags/v$JELLYFIN_VERSIO
 
 RUN set -ex; \
     apk add --no-cache --virtual .build-deps \
-        alpine-sdk \
-        autoconf \
-        automake \
-        g++ \
-        gcc \
-        gifsicle \
-        libpng-dev \
-        libtool \
-        make \
-        musl-dev \
-        nasm \
-        python3 \
+    autoconf \
+    g++ \
+    make \
+    libpng-dev \
+    gifsicle \
+    alpine-sdk \
+    automake \
+    libtool \
+    gcc \
+    musl-dev \
+    nasm \
+    python3
     ; \
+    cd src; \
     npm ci --no-audit --unsafe-perm; \
     npm run build:production; \
     apk del --no-network .build-deps; \
