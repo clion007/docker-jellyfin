@@ -3,7 +3,6 @@
 # Docker build arguments
 ARG DOTNET_VERSION
 ARG JELLYFIN_VERSION
-ARG MEDIASDK_VERSION
 ARG FFMPEG_VERSION
 
 FROM mcr.microsoft.com/dotnet/sdk:$DOTNET_VERSION-alpine AS server
@@ -100,7 +99,6 @@ COPY --from=ffmpeg /ffmpeg /usr/lib/jellyfin-ffmpeg
 
 # install packages
 RUN set -ex; \
-  #install build packages
   apk add --no-cache \
     --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/main \
     --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/testing \
@@ -111,17 +109,17 @@ RUN set -ex; \
     su-exec \
     icu-libs \
     icu-data-full \
-    chromaprint-libs \
     intel-media-sdk \
+    chromaprint-libs \
     libva-intel-driver \
     intel-media-driver \
     font-noto-cjk-extra \
     ; \
-
+  \
   # set jellyfin process user and group
   mv /usr/lib/jellyfin/jellyfin /usr/bin/jellyfin; \
   chown jellyfin:jellyfin /usr/bin/jellyfin; \
-  
+  \
   # make dir for config and data
   mkdir -p /config; \
   chmod 777 /config; \
