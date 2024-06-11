@@ -3,7 +3,7 @@
 # Docker build arguments
 ARG DOTNET_VERSION
 ARG JELLYFIN_VERSION
-ARG FFMPEG_URL
+ARG FFMPEG_URL=https://repo.jellyfin.org/files/ffmpeg/linux/latest-6.x/amd64/jellyfin-ffmpeg_6.0.1-7_portable_linux64-gpl.tar.xz
 
 # build jellyfin server
 FROM mcr.microsoft.com/dotnet/sdk:$DOTNET_VERSION-alpine AS server
@@ -64,8 +64,6 @@ RUN set -ex; \
 
 # build jellyfin-ffmpeg
 FROM alpine as ffmpeg
-
-ENV FFMPEG_URL=$FFMPEG_URL
 
 WORKDIR /tmp
 
