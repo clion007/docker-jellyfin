@@ -117,6 +117,7 @@ RUN set -ex; \
     --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/main \
     --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/community \
     su-exec \
+    icu-libs \
     libva-intel-driver \
     intel-media-driver \
     font-noto-cjk-extra \
