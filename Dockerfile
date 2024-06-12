@@ -72,10 +72,13 @@ FROM alpine as ffmpeg
 
 ARG FFMPEG_VERSION
 ARG FFMPEG_BIG_VERSION
+# ARG MEDIASDK_VERSION
+
+# ADD https://github.com/jellyfin/jellyfin-ffmpeg/archive/refs/tags/v$FFMPEG_VERSION.tar.gz /tmp/jellyfin-ffmpeg.tar.xz
+# ADD https://github.com/Intel-Media-SDK/MediaSDK/archive/refs/tags/v$MEDIASDK_VERSION.tar.gz /tmp/intel-mediasdk.tar.xz
+ADD https://repo.jellyfin.org/files/ffmpeg/linux/latest-${FFMPEG_BIG_VERSION}/amd64/jellyfin-ffmpeg_${FFMPEG_VERSION}_portable_linux64-gpl.tar.xz /tmp/jellyfin-ffmpeg.tar.xz
 
 WORKDIR /tmp/jellyfin-ffmpeg
-
-ADD https://repo.jellyfin.org/files/ffmpeg/linux/latest-${FFMPEG_BIG_VERSION}/amd64/jellyfin-ffmpeg_${FFMPEG_VERSION}_portable_linux64-gpl.tar.xz /tmp/jellyfin-ffmpeg.tar.xz
 
 RUN set -ex; \
     tar -xvf ../jellyfin-ffmpeg.tar.xz -C ../jellyfin-ffmpeg; \
@@ -112,16 +115,8 @@ COPY --from=ffmpeg /ffmpeg /usr/lib/jellyfin-ffmpeg
 RUN set -ex; \
   apk add --no-cache \
     --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/main \
-    --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/testing \
     --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/community \
-    opencl \
-    gcompat \
-    libintl \
     su-exec \
-    icu-libs \
-    icu-data-full \
-    intel-media-sdk \
-    chromaprint-libs \
     libva-intel-driver \
     intel-media-driver \
     font-noto-cjk-extra \
