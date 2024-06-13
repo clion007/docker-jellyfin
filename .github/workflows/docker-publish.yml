@@ -72,9 +72,9 @@ jobs:
         push: true
         build-args: |
           DOTNET_VERSION=${{ steps.getVersion.outputs.dotnetVersion }}
-          FFMPEG_VERSION=${{ steps.getVersion.outputs.ffmpegVersion }}
+          # FFMPEG_VERSION=${{ steps.getVersion.outputs.ffmpegVersion }}
           JELLYFIN_VERSION=${{ steps.getVersion.outputs.jellyfinVersion }}
-          FFMPEG_BIG_VERSION=${{ steps.getVersion.outputs.ffmpegBigVersion }}
+          # FFMPEG_BIG_VERSION=${{ steps.getVersion.outputs.ffmpegBigVersion }}
           # MEDIASDK_VERSION=${{ steps.getVersion.outputs.mediasdkVersion }}
         tags: |
           clion007/jellyfin:latest
