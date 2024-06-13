@@ -109,7 +109,7 @@ ENV MALLOC_TRIM_THRESHOLD_=131072
 # add jellyfin and jellyfin-web files
 COPY --from=server /server /usr/lib/jellyfin
 COPY --from=web /web /usr/share/jellyfin-web
-COPY --from=ffmpeg /ffmpeg /usr/lib/jellyfin-ffmpeg
+# COPY --from=ffmpeg /ffmpeg /usr/lib/jellyfin-ffmpeg
 
 # install packages
 RUN set -ex; \
