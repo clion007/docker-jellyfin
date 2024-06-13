@@ -68,25 +68,25 @@ RUN set -ex; \
         ;
 
 # build jellyfin-ffmpeg
-FROM alpine as ffmpeg
+# FROM alpine as ffmpeg
 
-ARG FFMPEG_VERSION
-ARG FFMPEG_BIG_VERSION
+# ARG FFMPEG_VERSION
+# ARG FFMPEG_BIG_VERSION
 # ARG MEDIASDK_VERSION
 
 # ADD https://github.com/jellyfin/jellyfin-ffmpeg/archive/refs/tags/v$FFMPEG_VERSION.tar.gz /tmp/jellyfin-ffmpeg.tar.xz
 # ADD https://github.com/Intel-Media-SDK/MediaSDK/archive/refs/tags/v$MEDIASDK_VERSION.tar.gz /tmp/intel-mediasdk.tar.xz
-ADD https://repo.jellyfin.org/files/ffmpeg/linux/latest-${FFMPEG_BIG_VERSION}/amd64/jellyfin-ffmpeg_${FFMPEG_VERSION}_portable_linux64-gpl.tar.xz /tmp/jellyfin-ffmpeg.tar.xz
+# ADD https://repo.jellyfin.org/files/ffmpeg/linux/latest-${FFMPEG_BIG_VERSION}/amd64/jellyfin-ffmpeg_${FFMPEG_VERSION}_portable_linux64-gpl.tar.xz /tmp/jellyfin-ffmpeg.tar.xz
 
-WORKDIR /tmp/jellyfin-ffmpeg
+# WORKDIR /tmp/jellyfin-ffmpeg
 
-RUN set -ex; \
-    tar -xvf ../jellyfin-ffmpeg.tar.xz -C ../jellyfin-ffmpeg; \
-    mv ../jellyfin-ffmpeg /ffmpeg; \
-    rm -rf \
-        /var/tmp/* \
-        /tmp/* \
-        ;
+# RUN set -ex; \
+#     tar -xvf ../jellyfin-ffmpeg.tar.xz -C ../jellyfin-ffmpeg; \
+#     mv ../jellyfin-ffmpeg /ffmpeg; \
+#     rm -rf \
+#         /var/tmp/* \
+#         /tmp/* \
+#         ;
 
 # Build the final combined image
 FROM clion007/alpine
@@ -118,6 +118,7 @@ RUN set -ex; \
     --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/community \
     su-exec \
     icu-libs \
+    jellyfin-ffmpeg \
     libva-intel-driver \
     intel-media-driver \
     font-noto-cjk-extra \
