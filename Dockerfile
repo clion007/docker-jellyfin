@@ -68,25 +68,113 @@ RUN set -ex; \
         ;
 
 # build jellyfin-ffmpeg
-# FROM alpine as ffmpeg
+FROM alpine as ffmpeg
 
-# ARG FFMPEG_VERSION
-# ARG FFMPEG_BIG_VERSION
+ARG FFMPEG_VERSION
+ARG FFMPEG_BIG_VERSION
+ARG PREFIX=/usr/lib/jellyfin-ffmpeg
 # ARG MEDIASDK_VERSION
 
-# ADD https://github.com/jellyfin/jellyfin-ffmpeg/archive/refs/tags/v$FFMPEG_VERSION.tar.gz /tmp/jellyfin-ffmpeg.tar.xz
+ADD https://github.com/jellyfin/jellyfin-ffmpeg/archive/refs/tags/v$FFMPEG_VERSION.tar.gz /tmp/jellyfin-ffmpeg.tar.xz
 # ADD https://github.com/Intel-Media-SDK/MediaSDK/archive/refs/tags/v$MEDIASDK_VERSION.tar.gz /tmp/intel-mediasdk.tar.xz
-# ADD https://repo.jellyfin.org/files/ffmpeg/linux/latest-${FFMPEG_BIG_VERSION}/amd64/jellyfin-ffmpeg_${FFMPEG_VERSION}_portable_linux64-gpl.tar.xz /tmp/jellyfin-ffmpeg.tar.xz
 
-# WORKDIR /tmp/jellyfin-ffmpeg
+WORKDIR /tmp/jellyfin-ffmpeg
 
-# RUN set -ex; \
-#     tar -xvf ../jellyfin-ffmpeg.tar.xz -C ../jellyfin-ffmpeg; \
-#     mv ../jellyfin-ffmpeg /ffmpeg; \
-#     rm -rf \
-#         /var/tmp/* \
-#         /tmp/* \
-#         ;
+RUN set -ex; \
+    apk add --no-cache --virtual .build-deps \
+    	alsa-lib-dev \
+    	bzip2-dev \
+    	chromaprint-dev \
+    	coreutils \
+    	dav1d-dev \
+    	fontconfig-dev \
+    	freetype-dev \
+    	fribidi-dev \
+    	gmp-dev \
+    	imlib2-dev \
+    	lame-dev \
+    	libass-dev \
+    	libbluray-dev \
+    	libdrm-dev \
+    	libopenmpt-dev \
+    	libplacebo-dev \
+    	libtheora-dev \
+    	libva-dev \
+    	libvorbis-dev \
+    	libvpx-dev \
+    	libwebp-dev \
+    	nasm \
+    	opencl-dev \
+    	openssl-dev \
+    	opus-dev \
+    	perl-dev \
+    	shaderc-dev \
+    	vulkan-loader-dev \
+    	x264-dev \
+    	x265-dev \
+    	xz-dev \
+    	zimg-dev \
+    	zlib-dev \
+    ; \
+    tar xf ../jellyfin-ffmpeg.tar.xz --strip-components=1; \
+    for i in debian/patches/*.patch; do \
+  		patch -p1 -i "$i" \
+  	done \
+    ./configure \
+  		--prefix=$PREFIX \
+  		--target-os=linux \
+  		--extra-version=Jellyfin \
+      --cc=musl-gcc \
+      --cxx=musl-g++ \
+      --ar=musl-ar \
+      --ranlib=musl-ranlib \
+  		--disable-doc \
+  		--disable-ffplay \
+  		--disable-librtmp \
+  		--disable-libxcb \
+  		--disable-sdl2 \
+  		--disable-shared \
+  		--disable-xlib \
+  		--enable-chromaprint \
+  		--enable-gmp \
+  		--enable-gpl \
+  		--enable-libass \
+  		--enable-libbluray \
+  		--enable-libdav1d \
+  		--enable-libdrm \
+  		--enable-libfontconfig \
+  		--enable-libfreetype \
+  		--enable-libfribidi \
+  		--enable-libmp3lame \
+  		--enable-libopenmpt \
+  		--enable-libopus \
+  		--enable-libplacebo \
+  		--enable-libshaderc \
+  		--enable-libtheora \
+  		--enable-libvorbis \
+  		--enable-libvpx \
+  		--enable-libwebp \
+  		--enable-libx264 \
+  		--enable-libx265 \
+  		--enable-libzimg \
+  		--enable-opencl \
+  		--enable-openssl \
+  		--enable-pic \
+  		--enable-pthreads \
+  		--enable-static \
+  		--enable-vaapi \
+  		--enable-version3 \
+  		--enable-vulkan \
+  		--disable-asm \
+  		--enable-libvpl \
+      || (cat ffbuild/config.log ; false); \
+    make -j$(nproc) install /ffmpeg; \
+    apk del --no-network .build-deps; \
+    rm -rf \
+        /var/cache/apk/* \
+        /var/tmp/* \
+        /tmp/* \
+        ;
 
 # Build the final combined image
 FROM clion007/alpine
@@ -94,6 +182,9 @@ FROM clion007/alpine
 LABEL mantainer="Clion Nihe Email: clion007@126.com"
 
 ARG BRANCH="edge"
+ARG JELLYFIN_PATH=/usr/lib/jellyfin
+ARG JELLYFIN_WEB_PATH=/usr/share/jellyfin-web
+ARG JELLYFIN_FFMPEG_PATH=/usr/lib/jellyfin-ffmpeg
 
 # Default environment variables for the Jellyfin invocation
 ENV JELLYFIN_LOG_DIR=/config/log \
@@ -107,9 +198,9 @@ ENV JELLYFIN_LOG_DIR=/config/log \
 ENV MALLOC_TRIM_THRESHOLD_=131072
 
 # add jellyfin and jellyfin-web files
-COPY --from=server /server /usr/lib/jellyfin
-COPY --from=web /web /usr/share/jellyfin-web
-# COPY --from=ffmpeg /ffmpeg /usr/lib/jellyfin-ffmpeg
+COPY --from=server /server $JELLYFIN_PATH
+COPY --from=web /web $JELLYFIN_WEB_PATH
+COPY --from=ffmpeg /ffmpeg $JELLYFIN_FFMPEG_PATH
 
 # install packages
 RUN set -ex; \
@@ -119,7 +210,7 @@ RUN set -ex; \
     --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/community \
     su-exec \
     icu-libs \
-    jellyfin-ffmpeg \
+    # jellyfin-ffmpeg \
     libva-intel-driver \
     intel-media-driver \
     font-noto-cjk-extra \
