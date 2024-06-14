@@ -118,7 +118,7 @@ RUN set -ex; \
     tar xf ../jellyfin-ffmpeg.tar.xz --strip-components=1; \
     for i in debian/patches/*.patch; do \
   		patch -p1 -i "$i" \
-  	done \
+  	done; \
     ./configure \
   		--prefix=$PREFIX \
   		--target-os=linux \
