@@ -74,10 +74,10 @@ jobs:
           JELLYFIN_VERSION=${{ steps.getVersion.outputs.jellyfinVersion }}
           # MEDIASDK_VERSION=${{ steps.getVersion.outputs.mediasdkVersion }}
         tags: |
-          clion007/jellyfin:latest
-          clion007/jellyfin:${{ steps.getVersion.outputs.jellyfinVersion }}
-          registry.cn-chengdu.aliyuncs.com/clion/jellyfin:latest
-          registry.cn-chengdu.aliyuncs.com/clion/jellyfin:${{ steps.getVersion.outputs.jellyfinVersion }}
+          clion007/jellyfin:slim
+          clion007/jellyfin:${{ steps.getVersion.outputs.jellyfinVersion }}-slim
+          registry.cn-chengdu.aliyuncs.com/clion/jellyfin:slim
+          registry.cn-chengdu.aliyuncs.com/clion/jellyfin:${{ steps.getVersion.outputs.jellyfinVersion }}-slim
         
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@v2
