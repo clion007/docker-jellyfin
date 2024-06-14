@@ -71,7 +71,6 @@ RUN set -ex; \
 FROM alpine as ffmpeg
 
 ARG FFMPEG_VERSION
-ARG FFMPEG_BIG_VERSION
 ARG PREFIX=/usr/lib/jellyfin-ffmpeg
 # ARG MEDIASDK_VERSION
 
