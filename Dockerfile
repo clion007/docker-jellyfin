@@ -70,12 +70,12 @@ RUN set -ex; \
 # build jellyfin-ffmpeg
 FROM alpine as ffmpeg
 
-ARG MEDIASDK_VERSION
 ARG FFMPEG_VERSION
 ARG FFMPEG_PREFIX=/usr/lib/jellyfin-ffmpeg
 
-ADD https://github.com/Intel-Media-SDK/MediaSDK/archive/refs/tags/intel-mediasdk-$MEDIASDK_VERSION.tar.gz /tmp/intel-mediasdk.tar.gz
 ADD https://github.com/jellyfin/jellyfin-ffmpeg/archive/refs/tags/v$FFMPEG_VERSION.tar.gz /tmp/jellyfin-ffmpeg.tar.gz
+
+WORKDIR /tmp/jellyfin-ffmpeg
 
 RUN set -ex; \
     apk add --no-cache --upgrade \
@@ -125,26 +125,8 @@ RUN set -ex; \
         intel-media-driver-dev \
         libva-dev \
         libva-intel-driver \
+        intel-media-sdk-dev \
     ; 
-
-WORKDIR /tmp/intel-mediasdk
-
-RUN set -ex; \
-    tar xf ../intel-mediasdk.tar.gz --strip-components=1; \
-    mkdir build; \
-    cd build; \
-    cmake \
-        -DCMAKE_BUILD_TYPE=MinSizeRel \
-        -DENABLE_X11=OFF \
-        -DBUILD_SAMPLES=OFF \
-        -DBUILD_TUTORIALS=OFF \
-        ../; \
-    make -j $(nproc); \
-    make -j $(nproc) install;
-
-WORKDIR /tmp/jellyfin-ffmpeg
-
-RUN set -ex; \
     tar xf ../jellyfin-ffmpeg.tar.gz --strip-components=1; \
     cat debian/patches/*.patch | patch -p1; \
     ./configure \
