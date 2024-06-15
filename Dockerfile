@@ -130,7 +130,7 @@ RUN set -ex; \
 WORKDIR /tmp/intel-mediasdk
 
 RUN set -ex; \
-    tar xf ../mediasdk.tar.gz --strip-components=1; \
+    tar xf ../intel-mediasdk.tar.gz --strip-components=1; \
     mkdir build; \
     cd build; \
     cmake \
