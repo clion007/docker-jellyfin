@@ -90,7 +90,8 @@ RUN set -ex; \
     	freetype-dev \
     	fribidi-dev \
     	gmp-dev \
-    	imlib2-dev \
+    	imlib2-dev \	
+        intel-media-sdk-dev \
     	lame-dev \
     	libass-dev \
     	libbluray-dev \
@@ -147,6 +148,7 @@ RUN set -ex; \
       --enable-libfontconfig \
       --enable-libfreetype \
       --enable-libfribidi \
+      --enable-libmfx \
       --enable-libmp3lame \
       --enable-libopenmpt \
       --enable-libopus \
