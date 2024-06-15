@@ -179,7 +179,7 @@ RUN set -ex; \
       --enable-version3 \
       --enable-vulkan \
     ; \
-    make -j $(nproc) install /ffmpeg; \
+    make -j $(nproc) install /ffmpeg/FFMPEG_PREFIX; \
     rm -rf \
         /var/cache/apk/* \
         /var/tmp/* \
@@ -194,7 +194,6 @@ LABEL mantainer="Clion Nihe Email: clion007@126.com"
 ARG BRANCH="edge"
 ARG JELLYFIN_PATH=/usr/lib/jellyfin
 ARG JELLYFIN_WEB_PATH=/usr/share/jellyfin-web
-ARG JELLYFIN_FFMPEG_PATH=/usr/lib/jellyfin-ffmpeg
 
 # Default environment variables for the Jellyfin invocation
 ENV JELLYFIN_LOG_DIR=/config/log \
@@ -210,7 +209,7 @@ ENV MALLOC_TRIM_THRESHOLD_=131072
 # add jellyfin and jellyfin-web files
 COPY --from=server /server $JELLYFIN_PATH
 COPY --from=web /web $JELLYFIN_WEB_PATH
-COPY --from=ffmpeg /ffmpeg $JELLYFIN_FFMPEG_PATH
+COPY --from=ffmpeg /ffmpeg /
 
 # install packages
 RUN set -ex; \
@@ -220,7 +219,6 @@ RUN set -ex; \
     --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/community \
     su-exec \
     icu-libs \
-    # jellyfin-ffmpeg \
     libva-intel-driver \
     intel-media-driver \
     font-noto-cjk-extra \
