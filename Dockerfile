@@ -92,7 +92,8 @@ RUN set -ex; \
         g++ \
         gcc \
         libtool \
-        musl \
+        musl-dev \
+        musl-libintl \
         nasm \
         python3 \
         tzdata \
