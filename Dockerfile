@@ -80,6 +80,13 @@ ADD https://github.com/jellyfin/jellyfin-ffmpeg/archive/refs/tags/v$FFMPEG_VERSI
 WORKDIR /tmp/jellyfin-ffmpeg
 
 RUN set -ex; \
+    tar xf ../jellyfin-ffmpeg.tar.xz --strip-components=1; \
+    cat debian/patches/*.patch | patch -p1;
+    # for i in debian/patches/*.patch; do \
+    #   patch -p1 -i "$i"; \
+    # done
+
+RUN set -ex; \
     apk add --no-cache --virtual .build-deps \
     	alsa-lib-dev \
     	bzip2-dev \
@@ -116,14 +123,6 @@ RUN set -ex; \
     	zimg-dev \
     	zlib-dev \
     ; \
-    tar xf ../jellyfin-ffmpeg.tar.xz --strip-components=1; \
-    # ls -l; \
-    # cat debian/patches/*.patch | patch -p1; \
-    for i in debian/patches/*.patch; do \
-      patch -p1 -i "$i"; \
-    done
-
-RUN set -ex; \
     ./configure \
       --prefix=$PREFIX \
       --target-os=linux \
