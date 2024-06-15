@@ -119,8 +119,8 @@ RUN set -ex; \
     # ls -l; \
     # cat debian/patches/*.patch | patch -p1; \
     for i in debian/patches/*.patch; do \
-		patch -p1 -i "$i" \
-	done \
+			patch -p1 -i "$i"; \
+		done \
     ./configure \
       --prefix=$PREFIX \
       --target-os=linux \
