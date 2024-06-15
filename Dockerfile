@@ -116,8 +116,11 @@ RUN set -ex; \
     	zlib-dev \
     ; \
     tar xf ../jellyfin-ffmpeg.tar.xz --strip-components=1; \
-    ls -l; \
-    cat debian/patches/*.patch | patch -p1; \
+    # ls -l; \
+    # cat debian/patches/*.patch | patch -p1; \
+    for i in debian/patches/*.patch; do \
+		patch -p1 -i "$i" \
+	done \
     ./configure \
       --prefix=$PREFIX \
       --target-os=linux \
