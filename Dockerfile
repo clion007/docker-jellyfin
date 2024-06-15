@@ -65,7 +65,7 @@ RUN set -ex; \
         /var/cache/apk/* \
         /var/tmp/* \
         /tmp/* \
-        ;
+    ;
 
 # build jellyfin-ffmpeg
 FROM alpine as ffmpeg
@@ -78,6 +78,14 @@ ADD https://github.com/jellyfin/jellyfin-ffmpeg/archive/refs/tags/v$FFMPEG_VERSI
 # ADD https://github.com/Intel-Media-SDK/MediaSDK/archive/refs/tags/v$MEDIASDK_VERSION.tar.gz /tmp/intel-mediasdk.tar.xz
 
 WORKDIR /tmp/jellyfin-ffmpeg
+
+RUN set -ex; \
+    tar xf ../jellyfin-ffmpeg.tar.xz --strip-components=1; \
+    # ls -l; \
+    # cat debian/patches/*.patch | patch -p1; \
+    for i in debian/patches/*.patch; do \
+      patch -p1 -i "$i"; \
+    done
 
 RUN set -ex; \
     apk add --no-cache --virtual .build-deps \
@@ -116,12 +124,6 @@ RUN set -ex; \
     	zimg-dev \
     	zlib-dev \
     ; \
-    tar xf ../jellyfin-ffmpeg.tar.xz --strip-components=1; \
-    # ls -l; \
-    # cat debian/patches/*.patch | patch -p1; \
-    for i in debian/patches/*.patch; do \
-      patch -p1 -i "$i"; \
-    done \
     ./configure \
       --prefix=$PREFIX \
       --target-os=linux \
@@ -177,7 +179,7 @@ RUN set -ex; \
         /var/cache/apk/* \
         /var/tmp/* \
         /tmp/* \
-        ;
+    ;
 
 # Build the final combined image
 FROM clion007/alpine
