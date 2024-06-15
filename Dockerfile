@@ -133,7 +133,7 @@ RUN set -ex; \
       --prefix=$FFMPEG_PREFIX \
       --target-os=linux \
       --extra-version=Jellyfin \
-      --cc="musl-gcc -static" \
+      --cc="musl -static" \
       --disable-asm \
       --disable-doc \
       --disable-ffplay \
