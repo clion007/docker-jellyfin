@@ -126,7 +126,7 @@ RUN set -ex; \
         libva-dev \
         libva-intel-driver \
         intel-media-sdk-dev \
-    ; 
+    ; \
     tar xf ../jellyfin-ffmpeg.tar.gz --strip-components=1; \
     cat debian/patches/*.patch | patch -p1; \
     ./configure \
