@@ -118,53 +118,53 @@ RUN set -ex; \
     tar xf ../jellyfin-ffmpeg.tar.xz --strip-components=1; \
     cat debian/patches/*.patch | patch -p1; \
     ./configure \
-  		--prefix=$PREFIX \
-  		--target-os=linux \
-  		--extra-version=Jellyfin \
+      --prefix=$PREFIX \
+      --target-os=linux \
+      --extra-version=Jellyfin \
       # --cc=musl-gcc 
       # --cxx=musl-g++ 
       # --ar=musl-ar 
-      --ranlib=musl-ranlib \
-  		--disable-doc \
-  		--disable-ffplay \
-  		--disable-librtmp \
-  		--disable-libxcb \
-  		--disable-sdl2 \
-  		--disable-shared \
-  		--disable-xlib \
-  		--enable-chromaprint \
-  		--enable-gmp \
-  		--enable-gpl \
-  		--enable-libass \
-  		--enable-libbluray \
-  		--enable-libdav1d \
-  		--enable-libdrm \
-  		--enable-libfontconfig \
-  		--enable-libfreetype \
-  		--enable-libfribidi \
-  		--enable-libmp3lame \
-  		--enable-libopenmpt \
-  		--enable-libopus \
-  		--enable-libplacebo \
-  		--enable-libshaderc \
-  		--enable-libtheora \
-  		--enable-libvorbis \
-  		--enable-libvpx \
-  		--enable-libwebp \
-  		--enable-libx264 \
-  		--enable-libx265 \
-  		--enable-libzimg \
-  		--enable-opencl \
-  		--enable-openssl \
-  		--enable-pic \
-  		--enable-pthreads \
-  		--enable-static \
-  		--enable-vaapi \
-  		--enable-version3 \
-  		--enable-vulkan \
-  		--disable-asm \
-  		--enable-libvpl \
-      || (cat ffbuild/config.log ; false); \
+      # --ranlib=musl-ranlib 
+      --disable-asm \
+      --disable-doc \
+      --disable-ffplay \
+      --disable-librtmp \
+      --disable-libxcb \
+      --disable-sdl2 \
+      --disable-shared \
+      --disable-xlib \
+      --enable-chromaprint \
+      --enable-gmp \
+      --enable-gpl \
+      --enable-libass \
+      --enable-libbluray \
+      --enable-libdav1d \
+      --enable-libdrm \
+      --enable-libfontconfig \
+      --enable-libfreetype \
+      --enable-libfribidi \
+      --enable-libmp3lame \
+      --enable-libopenmpt \
+      --enable-libopus \
+      --enable-libplacebo \
+      --enable-libshaderc \
+      --enable-libtheora \
+      --enable-libvorbis \
+      --enable-libvpl \
+      --enable-libvpx \
+      --enable-libwebp \
+      --enable-libx264 \
+      --enable-libx265 \
+      --enable-libzimg \
+      --enable-opencl \
+      --enable-openssl \
+      --enable-pic \
+      --enable-pthreads \
+      --enable-static \
+      --enable-vaapi \
+      --enable-version3 \
+      --enable-vulkan \
+    ; \
     make -j$(nproc) install /ffmpeg; \
     apk del --no-network .build-deps; \
     rm -rf \
