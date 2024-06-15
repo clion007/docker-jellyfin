@@ -121,10 +121,10 @@ RUN set -ex; \
       --prefix=$PREFIX \
       --target-os=linux \
       --extra-version=Jellyfin \
-      # --cc=musl-gcc 
-      # --cxx=musl-g++ 
-      # --ar=musl-ar 
-      # --ranlib=musl-ranlib 
+      --cc=musl-gcc \
+      --cxx=musl-g++ \
+      --ar=musl-ar \
+      --ranlib=musl-ranlib \
       --disable-asm \
       --disable-doc \
       --disable-ffplay \
