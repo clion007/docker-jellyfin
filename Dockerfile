@@ -28,7 +28,7 @@ RUN set -ex; \
         /var/cache/apk/* \
         /var/tmp/* \
         /tmp/* \
-        ;
+    ;
 
 # build jellyfin-web client
 FROM node:lts-alpine AS web
