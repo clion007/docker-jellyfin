@@ -93,7 +93,6 @@ RUN set -ex; \
         gcc \
         libtool \
         musl-dev \
-        musl-libintl \
         nasm \
         python3 \
         tzdata \
