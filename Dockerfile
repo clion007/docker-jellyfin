@@ -70,56 +70,85 @@ RUN set -ex; \
 # build jellyfin-ffmpeg
 FROM alpine as ffmpeg
 
+ARG MEDIASDK_VERSION
 ARG FFMPEG_VERSION
-ARG PREFIX=/usr/lib/jellyfin-ffmpeg
-# ARG MEDIASDK_VERSION
+ARG FFMPEG_PREFIX=/usr/lib/jellyfin-ffmpeg
 
+ADD https://github.com/Intel-Media-SDK/MediaSDK/archive/refs/tags/v$MEDIASDK_VERSION.tar.gz /tmp/intel-mediasdk.tar.gz
 ADD https://github.com/jellyfin/jellyfin-ffmpeg/archive/refs/tags/v$FFMPEG_VERSION.tar.gz /tmp/jellyfin-ffmpeg.tar.gz
-# ADD https://github.com/Intel-Media-SDK/MediaSDK/archive/refs/tags/v$MEDIASDK_VERSION.tar.gz /tmp/intel-mediasdk.tar.gz
+
+RUN set -ex; \
+    apk add --no-cache --upgrade \
+        autoconf \
+        automake \
+        alpine-sdk \
+        bash \
+        ca-certificates \
+        cmake \
+        coreutils \
+        cunit-dev \
+        curl \
+        dos2unix \
+        g++ \
+        gcc \
+        libtool \
+        musl \
+        nasm \
+        python3 \
+        tzdata \
+        unzip \
+        yasm \
+        cunit-dev \
+        dav1d-dev \
+        fdk-aac-dev \
+        ffmpeg-libs \
+        ffmpeg-dev \
+        fontconfig-dev \
+        freetype-dev \
+        fribidi-dev \
+        lame-dev \
+        libass-dev \
+        libbluray-dev \
+        libdrm-dev \
+        libogg-dev \
+        libpng-dev \
+        libtheora-dev \
+        libvorbis-dev \
+        libvpx-dev \
+        libwebp-dev \
+        mesa-dev \
+        openssl-dev \
+        opus-dev \
+        util-linux-dev \
+        x264-dev \
+        x265-dev \
+        intel-media-driver-dev \
+        libva-dev \
+        libva-intel-driver \
+    ; 
+
+WORKDIR /tmp/intel-mediasdk
+
+RUN set -ex; \
+    tar xf ../mediasdk.tar.gz --strip-components=1; \
+    mkdir build; \
+    cd build; \
+    cmake \
+        -DCMAKE_BUILD_TYPE=MinSizeRel \
+        -DENABLE_X11=OFF \
+        -DBUILD_SAMPLES=OFF \
+        -DBUILD_TUTORIALS=OFF \
+        ../; \
+    make -j $(nproc); \
+    make -j $(nproc) install;
 
 WORKDIR /tmp/jellyfin-ffmpeg
 
 RUN set -ex; \
-    apk add --no-cache --virtual .build-deps \
-    	alsa-lib-dev \
-    	bzip2-dev \
-    	chromaprint-dev \
-    	coreutils \
-    	dav1d-dev \
-    	fontconfig-dev \
-    	freetype-dev \
-    	fribidi-dev \
-    	gmp-dev \
-    	imlib2-dev \	
-        intel-media-sdk-dev \
-    	lame-dev \
-    	libass-dev \
-    	libbluray-dev \
-    	libdrm-dev \
-    	libopenmpt-dev \
-    	libplacebo-dev \
-    	libtheora-dev \
-    	libva-dev \
-    	libvorbis-dev \
-    	libvpx-dev \
-    	libwebp-dev \
-    	nasm \
-    	opencl-dev \
-    	openssl-dev \
-    	opus-dev \
-    	perl-dev \
-    	shaderc-dev \
-    	vulkan-loader-dev \
-    	x264-dev \
-    	x265-dev \
-    	xz-dev \
-    	zimg-dev \
-    	zlib-dev \
-    ; \
-    tar xf ../jellyfin-ffmpeg.tar.xz --strip-components=1; \
+    tar xf ../jellyfin-ffmpeg.tar.gz --strip-components=1; \
     cat debian/patches/*.patch | patch -p1;
     ./configure \
-      --prefix=$PREFIX \
+      --prefix=$FFMPEG_PREFIX \
       --target-os=linux \
       --extra-version=Jellyfin \
       --cc=musl-gcc \
@@ -167,8 +196,7 @@ RUN set -ex; \
       --enable-version3 \
       --enable-vulkan \
     ; \
-    make -j$(nproc) install /ffmpeg; \
-    apk del --no-network .build-deps; \
+    make -j $(nproc) install /ffmpeg; \
     rm -rf \
         /var/cache/apk/* \
         /var/tmp/* \
