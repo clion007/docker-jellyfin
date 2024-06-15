@@ -74,8 +74,8 @@ ARG FFMPEG_VERSION
 ARG PREFIX=/usr/lib/jellyfin-ffmpeg
 # ARG MEDIASDK_VERSION
 
-ADD https://github.com/jellyfin/jellyfin-ffmpeg/archive/refs/tags/v$FFMPEG_VERSION.tar.gz /tmp/jellyfin-ffmpeg.tar.xz
-# ADD https://github.com/Intel-Media-SDK/MediaSDK/archive/refs/tags/v$MEDIASDK_VERSION.tar.gz /tmp/intel-mediasdk.tar.xz
+ADD https://github.com/jellyfin/jellyfin-ffmpeg/archive/refs/tags/v$FFMPEG_VERSION.tar.gz /tmp/jellyfin-ffmpeg.tar.gz
+# ADD https://github.com/Intel-Media-SDK/MediaSDK/archive/refs/tags/v$MEDIASDK_VERSION.tar.gz /tmp/intel-mediasdk.tar.gz
 
 WORKDIR /tmp/jellyfin-ffmpeg
 
