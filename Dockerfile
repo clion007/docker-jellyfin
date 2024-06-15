@@ -146,7 +146,7 @@ WORKDIR /tmp/jellyfin-ffmpeg
 
 RUN set -ex; \
     tar xf ../jellyfin-ffmpeg.tar.gz --strip-components=1; \
-    cat debian/patches/*.patch | patch -p1;
+    cat debian/patches/*.patch | patch -p1; \
     ./configure \
       --prefix=$FFMPEG_PREFIX \
       --target-os=linux \
