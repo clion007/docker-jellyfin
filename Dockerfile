@@ -135,6 +135,7 @@ RUN set -ex; \
       --extra-version=Jellyfin \
       --disable-asm \
       --disable-doc \
+      --disable-debug \
       --disable-ffplay \
       --disable-librtmp \
       --disable-libxcb \
