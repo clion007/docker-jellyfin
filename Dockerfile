@@ -176,7 +176,7 @@ RUN set -ex; \
       --enable-version3 \
       --enable-vulkan \
     ; \
-    make -j $(nproc); \
+    make -j $(nproc) install $FFMPEG_PREFIX; \
     ls $FFMPEG_PREFIX; \
     mv $FFMPEG_PREFIX /ffmpeg; \
     rm -rf \
