@@ -79,53 +79,65 @@ WORKDIR /tmp/jellyfin-ffmpeg
 
 RUN set -ex; \
     apk add --no-cache --upgrade \
+        alpine-sdk \
+        alsa-lib-dev \
         autoconf \
         automake \
-        alpine-sdk \
         bash \
+        bzip2-dev \
         ca-certificates \
+        chromaprint-dev \
         cmake \
         coreutils \
         cunit-dev \
-        curl \
-        dos2unix \
-        g++ \
-        gcc \
-        libtool \
-        musl-dev \
-        nasm \
-        python3 \
-        tzdata \
-        unzip \
-        yasm \
-        cunit-dev \
         dav1d-dev \
+        dos2unix \
         fdk-aac-dev \
         ffmpeg-libs \
         ffmpeg-dev \
         fontconfig-dev \
         freetype-dev \
         fribidi-dev \
+        g++ \
+        gcc \
+        gmp-dev \
+        imlib2-dev \
+        intel-media-driver-dev \
+        intel-media-sdk-dev \
         lame-dev \
         libass-dev \
         libbluray-dev \
         libdrm-dev \
         libogg-dev \
+        libopenmpt-dev \
+        libplacebo-dev \
         libpng-dev \
         libtheora-dev \
+        libtool \
+        libva-dev \
+        libva-intel-driver \
         libvorbis-dev \
         libvpx-dev \
         libwebp-dev \
         mesa-dev \
+        musl-dev \
+        nasm \
+        opencl-dev \
         openssl-dev \
         opus-dev \
+        perl-dev
+        python3 \
+        shaderc-dev \
+        tzdata \
+        unzip \
         util-linux-dev \
+        vulkan-loader-dev \
         x264-dev \
         x265-dev \
-        intel-media-driver-dev \
-        libva-dev \
-        libva-intel-driver \
-        intel-media-sdk-dev \
+        xz-dev
+        yasm \
+        zimg-dev \
+        zlib-dev \
     ; \
     tar xf ../jellyfin-ffmpeg.tar.gz --strip-components=1; \
     cat debian/patches/*.patch | patch -p1; \
