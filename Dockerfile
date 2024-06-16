@@ -128,7 +128,6 @@ RUN set -ex; \
     cat debian/patches/*.patch | patch -p1; \
     ./configure \
       --prefix=$FFMPEG_PREFIX \
-      --bindir=$FFMPEG_PREFIX/lib/jellyfin-ffmpeg \
       --target-os=linux \
       --extra-version=Jellyfin \
       --disable-asm \
@@ -249,4 +248,4 @@ COPY --chmod=755 root/ /
 EXPOSE 8096 8920 7359/udp 1900/udp
 
 # entrypoint set in clion007/alpine base image
-CMD ["--ffmpeg=/usr/lib/jellyfin-ffmpeg/ffmpeg"]
+CMD ["--ffmpeg=/usr/bin/ffmpeg"]
