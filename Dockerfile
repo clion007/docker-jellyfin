@@ -43,15 +43,12 @@ ADD https://github.com/jellyfin/jellyfin-web/archive/refs/tags/v$JELLYFIN_VERSIO
 
 RUN set -ex; \
     apk add --no-cache --virtual .build-deps \
+      alpine-sdk \
       autoconf \
-      g++ \
-      make \
       libpng-dev \
       gifsicle \
-      alpine-sdk \
       automake \
       libtool \
-      gcc \
       musl-dev \
       nasm \
       python3 \
