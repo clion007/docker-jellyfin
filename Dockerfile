@@ -79,27 +79,20 @@ WORKDIR /tmp/jellyfin-ffmpeg
 
 RUN set -ex; \
     apk add --no-cache --upgrade \
-        alpine-sdk \
         alsa-lib-dev \
         autoconf \
         automake \
-        bash \
         bzip2-dev \
-        ca-certificates \
         chromaprint-dev \
-        cmake \
         coreutils \
         cunit-dev \
         dav1d-dev \
-        dos2unix \
         fdk-aac-dev \
         ffmpeg-libs \
         ffmpeg-dev \
         fontconfig-dev \
         freetype-dev \
         fribidi-dev \
-        g++ \
-        gcc \
         gmp-dev \
         imlib2-dev \
         intel-media-driver-dev \
@@ -126,16 +119,12 @@ RUN set -ex; \
         openssl-dev \
         opus-dev \
         perl-dev \
-        python3 \
         shaderc-dev \
-        tzdata \
-        unzip \
         util-linux-dev \
         vulkan-loader-dev \
         x264-dev \
         x265-dev \
         xz-dev \
-        yasm \
         zimg-dev \
         zlib-dev \
     ; \
@@ -190,9 +179,8 @@ RUN set -ex; \
       --enable-vulkan \
     ; \
     make -j $(nproc); \
-    ls ./dist; \
     ls $FFMPEG_PREFIX; \
-    mv dist /ffmpeg; \
+    mv $FFMPEG_PREFIX /ffmpeg; \
     rm -rf \
         /var/cache/apk/* \
         /var/tmp/* \
