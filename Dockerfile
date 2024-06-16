@@ -190,6 +190,8 @@ RUN set -ex; \
       --enable-vulkan \
     ; \
     make -j $(nproc); \
+    ls ./dist; \
+    ls $FFMPEG_PREFIX; \
     mv dist /ffmpeg; \
     rm -rf \
         /var/cache/apk/* \
