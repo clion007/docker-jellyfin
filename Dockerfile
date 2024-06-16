@@ -134,7 +134,7 @@ RUN set -ex; \
         vulkan-loader-dev \
         x264-dev \
         x265-dev \
-        xz-dev
+        xz-dev \
         yasm \
         zimg-dev \
         zlib-dev \
