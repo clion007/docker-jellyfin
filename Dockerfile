@@ -177,7 +177,6 @@ RUN set -ex; \
       --enable-vulkan \
     ; \
     make -j $(nproc) install $FFMPEG_PREFIX; \
-    ls $FFMPEG_PREFIX; \
     mv $FFMPEG_PREFIX /ffmpeg; \
     rm -rf \
         /var/cache/apk/* \
@@ -193,6 +192,7 @@ LABEL mantainer="Clion Nihe Email: clion007@126.com"
 ARG BRANCH="edge"
 ARG JELLYFIN_PATH=/usr/lib/jellyfin
 ARG JELLYFIN_WEB_PATH=/usr/share/jellyfin-web
+ARG JELLYFIN_FFMPEG_PATH=/usr
 
 # Default environment variables for the Jellyfin invocation
 ENV JELLYFIN_LOG_DIR=/config/log \
@@ -208,7 +208,7 @@ ENV MALLOC_TRIM_THRESHOLD_=131072
 # add jellyfin and jellyfin-web files
 COPY --from=server /server $JELLYFIN_PATH
 COPY --from=web /web $JELLYFIN_WEB_PATH
-COPY --from=ffmpeg /ffmpeg /
+COPY --from=ffmpeg /ffmpeg $JELLYFIN_FFMPEG_PATH
 
 # install packages
 RUN set -ex; \
@@ -251,4 +251,4 @@ COPY --chmod=755 root/ /
 EXPOSE 8096 8920 7359/udp 1900/udp
 
 # entrypoint set in clion007/alpine base image
-CMD ["--ffmpeg=/usr/lib/jellyfin-ffmpeg/ffmpeg"]
+CMD ["--ffmpeg=/usr/bin/ffmpeg"]
