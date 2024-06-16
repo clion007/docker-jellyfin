@@ -79,6 +79,7 @@ WORKDIR /tmp/jellyfin-ffmpeg
 
 RUN set -ex; \
     apk add --no-cache --upgrade \
+        alpine-sdk \
         alsa-lib-dev \
         autoconf \
         automake \
