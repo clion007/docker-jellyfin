@@ -173,6 +173,9 @@ RUN set -ex; \
       --enable-vaapi \
       --enable-version3 \
       --enable-vulkan \
+      --extra-cflags="-static" \
+      --extra-cxxflags="-static" \
+      --pkg-config-flags="-static" \
     ; \
     make -j $(nproc) install $FFMPEG_PREFIX; \
     rm -rf \
