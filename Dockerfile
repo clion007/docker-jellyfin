@@ -177,7 +177,7 @@ RUN set -ex; \
     make -j $(nproc) install $FFMPEG_PREFIX; \
     ls $FFMPEG_PREFIX/lib; \
     ls $FFMPEG_PREFIX/share; \
-    exist 1; \
+    exit 1; \
     rm -rf \
         /var/cache/apk/* \
         /var/tmp/* \
