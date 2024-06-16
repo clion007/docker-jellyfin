@@ -68,7 +68,7 @@ RUN set -ex; \
 FROM alpine as ffmpeg
 
 ARG FFMPEG_VERSION
-ARG FFMPEG_PREFIX=/usr/lib/jellyfin-ffmpeg
+ARG FFMPEG_PREFIX=/ffmpeg
 
 ADD https://github.com/jellyfin/jellyfin-ffmpeg/archive/refs/tags/v$FFMPEG_VERSION.tar.gz /tmp/jellyfin-ffmpeg.tar.gz
 
@@ -78,8 +78,6 @@ RUN set -ex; \
     apk add --no-cache --upgrade \
         alpine-sdk \
         alsa-lib-dev \
-        autoconf \
-        automake \
         bzip2-dev \
         chromaprint-dev \
         coreutils \
@@ -130,6 +128,7 @@ RUN set -ex; \
     cat debian/patches/*.patch | patch -p1; \
     ./configure \
       --prefix=$FFMPEG_PREFIX \
+      --bindir=$FFMPEG_PREFIX/lib/jellyfin-ffmpeg \
       --target-os=linux \
       --extra-version=Jellyfin \
       --disable-asm \
@@ -177,7 +176,6 @@ RUN set -ex; \
       --enable-vulkan \
     ; \
     make -j $(nproc) install $FFMPEG_PREFIX; \
-    mv $FFMPEG_PREFIX /ffmpeg; \
     rm -rf \
         /var/cache/apk/* \
         /var/tmp/* \
@@ -251,4 +249,4 @@ COPY --chmod=755 root/ /
 EXPOSE 8096 8920 7359/udp 1900/udp
 
 # entrypoint set in clion007/alpine base image
-CMD ["--ffmpeg=/usr/bin/ffmpeg"]
+CMD ["--ffmpeg=/usr/lib/jellyfin-ffmpeg/ffmpeg"]
