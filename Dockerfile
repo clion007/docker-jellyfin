@@ -125,7 +125,7 @@ RUN set -ex; \
         opencl-dev \
         openssl-dev \
         opus-dev \
-        perl-dev
+        perl-dev \
         python3 \
         shaderc-dev \
         tzdata \
