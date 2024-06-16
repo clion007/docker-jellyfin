@@ -178,6 +178,7 @@ RUN set -ex; \
       --pkg-config-flags="-static" \
     ; \
     make -j $(nproc) install $FFMPEG_PREFIX; \
+    ls $FFMPEG_PREFIX/share; \
     rm -rf \
         /var/cache/apk/* \
         /var/tmp/* \
