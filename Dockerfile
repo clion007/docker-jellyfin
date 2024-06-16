@@ -134,8 +134,8 @@ RUN set -ex; \
       --target-os=linux \
       --extra-version=Jellyfin \
       --disable-asm \
-      --disable-doc \
       --disable-debug \
+      --disable-doc \
       --disable-ffplay \
       --disable-librtmp \
       --disable-libxcb \
@@ -143,12 +143,14 @@ RUN set -ex; \
       --disable-shared \
       --disable-xlib \
       --enable-chromaprint \
+      --enable-fontconfig \
       --enable-gmp \
       --enable-gpl \
       --enable-libass \
       --enable-libbluray \
       --enable-libdav1d \
       --enable-libdrm \
+      --enable-libfdk-aac \
       --enable-libfontconfig \
       --enable-libfreetype \
       --enable-libfribidi \
@@ -166,6 +168,7 @@ RUN set -ex; \
       --enable-libx264 \
       --enable-libx265 \
       --enable-libzimg \
+      --enable-nonfree \
       --enable-opencl \
       --enable-openssl \
       --enable-pic \
