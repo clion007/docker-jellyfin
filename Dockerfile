@@ -174,7 +174,6 @@ RUN set -ex; \
       --enable-libshaderc \
       --enable-libtheora \
       --enable-libvorbis \
-      --enable-libvpl \
       --enable-libvpx \
       --enable-libwebp \
       --enable-libx264 \
