@@ -70,14 +70,13 @@ FROM alpine as ffmpeg
 ARG FFMPEG_VERSION
 ARG FFMPEG_PREFIX=/ffmpeg
 
-ADD https://github.com/jellyfin/jellyfin-ffmpeg/archive/refs/tags/v$FFMPEG_VERSION.tar.gz /tmp/jellyfin-ffmpeg.tar.gz
-
 WORKDIR /tmp/jellyfin-ffmpeg
+
+ADD https://github.com/jellyfin/jellyfin-ffmpeg/archive/refs/tags/v$FFMPEG_VERSION.tar.gz ../jellyfin-ffmpeg.tar.gz
 
 COPY --chmod=755 deplib/ ../
 
 RUN set -ex; \
-    ls ../ && exit 1;\
     apk add --no-cache --upgrade \
         alpine-sdk \
         alsa-lib-dev \
@@ -178,7 +177,7 @@ RUN set -ex; \
     make -j $(nproc) install $FFMPEG_PREFIX; \
     \
     # build ffmpeg lib files
-    rm -rf $FFMPEG_PREFIX/lib/* \
+    rm -rf $FFMPEG_PREFIX/lib/*; \
     /tmp/cplibfiles.sh $FFMPEG_PREFIX/bin/ffmpeg $FFMPEG_PREFIX/lib/; \
     /tmp/cplibfiles.sh $FFMPEG_PREFIX/bin/ffprobe $FFMPEG_PREFIX/lib/; \
     ls $FFMPEG_PREFIX/lib/; \
