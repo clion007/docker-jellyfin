@@ -174,6 +174,7 @@ RUN set -ex; \
       --enable-vulkan \
       --extra-cflags="-static" \
       --extra-ldflags="-static" \
+      --pkg-config-flags="--static" \
     ; \
     make -j $(nproc) install $FFMPEG_PREFIX; \
     rm -rf \
