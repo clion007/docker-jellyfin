@@ -96,6 +96,7 @@ RUN set -ex; \
         lame-dev \
         libass-dev \
         libbluray-dev \
+        libc++-static \
         libdrm-dev \
         libogg-dev \
         libopenmpt-dev \
@@ -173,6 +174,9 @@ RUN set -ex; \
       --enable-vaapi \
       --enable-version3 \
       --enable-vulkan \
+      --extra-cflags="-static" \
+      --extra-ldflags="-static" \
+      --pkg-config-flags="--static" \
     ; \
     make -j $(nproc) install $FFMPEG_PREFIX; \
     rm -rf \
