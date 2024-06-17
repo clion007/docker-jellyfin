@@ -71,10 +71,10 @@ jobs:
           FFMPEG_VERSION=${{ steps.getVersion.outputs.ffmpegVersion }}
           JELLYFIN_VERSION=${{ steps.getVersion.outputs.jellyfinVersion }}
         tags: |
-          clion007/jellyfin:slim
-          clion007/jellyfin:${{ steps.getVersion.outputs.jellyfinVersion }}-slim
-          registry.cn-chengdu.aliyuncs.com/clion/jellyfin:slim
-          registry.cn-chengdu.aliyuncs.com/clion/jellyfin:${{ steps.getVersion.outputs.jellyfinVersion }}-slim
+          clion007/jellyfin:latest
+          clion007/jellyfin:${{ steps.getVersion.outputs.jellyfinVersion }}
+          registry.cn-chengdu.aliyuncs.com/clion/jellyfin:latest
+          registry.cn-chengdu.aliyuncs.com/clion/jellyfin:${{ steps.getVersion.outputs.jellyfinVersion }}
         
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@v2
