@@ -78,6 +78,7 @@ RUN set -ex; \
     apk add --no-cache --upgrade \
         alpine-sdk \
         alsa-lib-dev \
+        bash \
         bzip2-dev \
         coreutils \
         cunit-dev \
@@ -173,10 +174,9 @@ RUN set -ex; \
       --enable-vulkan \
     ; \
     make -j $(nproc) install $FFMPEG_PREFIX; \
-    ldd $FFMPEG_PREFIX/bin/ffmpeg; \
-    exit 1; \
+    rm -rf $FFMPEG_PREFIX/lib/*
+    bash /deplib/cplibfiles.sh $FFMPEG_PREFIX/bin/ffmpeg $FFMPEG_PREFIX/lib/; \
     rm -rf \
-        $FFMPEG_PREFIX/share/examples \
         /var/cache/apk/* \
         /var/tmp/* \
         /tmp/* \
@@ -207,6 +207,7 @@ ENV MALLOC_TRIM_THRESHOLD_=131072
 COPY --from=server /server $JELLYFIN_PATH
 COPY --from=web /web $JELLYFIN_WEB_PATH
 COPY --from=ffmpeg /ffmpeg/bin $JELLYFIN_FFMPEG_PATH/bin
+COPY --from=ffmpeg /ffmpeg/lib $JELLYFIN_FFMPEG_PATH/lib
 
 # install packages
 RUN set -ex; \
