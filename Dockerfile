@@ -175,8 +175,7 @@ RUN set -ex; \
       --enable-vulkan \
     ; \
     make -j $(nproc) install $FFMPEG_PREFIX; \
-    ls $FFMPEG_PREFIX/lib; \
-    ls $FFMPEG_PREFIX/share; \
+    ls $FFMPEG_PREFIX; \
     exit 1; \
     rm -rf \
         /var/cache/apk/* \
