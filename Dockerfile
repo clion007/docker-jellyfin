@@ -216,7 +216,7 @@ RUN set -ex; \
     --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/community \
     gcompat \
     libgcc \
-    libstdc++
+    libstdc++ \
     su-exec \
     icu-libs \
     libva-intel-driver \
