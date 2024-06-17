@@ -169,7 +169,7 @@ RUN set -ex; \
       --enable-openssl \
       --enable-pic \
       --enable-pthreads \
-      --enable-static="yes" \
+      --enable-static="-yes" \
       --enable-vaapi \
       --enable-version3 \
       --enable-vulkan \
