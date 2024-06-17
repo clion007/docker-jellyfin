@@ -204,7 +204,7 @@ ENV MALLOC_TRIM_THRESHOLD_=131072
 # add jellyfin and jellyfin-web files
 COPY --from=server /server $JELLYFIN_PATH
 COPY --from=web /web $JELLYFIN_WEB_PATH
-COPY --from=ffmpeg /ffmpeg/bin $JELLYFIN_FFMPEG_PATH/bin
+COPY --from=ffmpeg /ffmpeg $JELLYFIN_FFMPEG_PATH
 # COPY --from=ffmpeg /ffmpeg/share $JELLYFIN_FFMPEG_PATH/share
 
 # install packages
