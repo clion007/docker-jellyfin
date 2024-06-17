@@ -40,16 +40,12 @@ jobs:
           DOTNET_VERSION=${{ inputs.DOTNET_VERSION }}
         fi
         echo "dotnetVersion=$DOTNET_VERSION" >> $GITHUB_OUTPUT
-        # if [ -z ${{ inputs.FFMPEG_VERSION }} ]; then
-        #   FFMPEG_VERSION=$(wget -qO- -t1 -T2 https://api.github.com/repos/jellyfin/jellyfin-ffmpeg/releases/latest | grep "tag_name" | head -n 1 | awk -F "\"" '{printf $4}' | awk -F "v" '{printf $2}')
-        # else
-        #   FFMPEG_VERSION=${{ inputs.FFMPEG_VERSION }}
-        # fi
-        # FFMPEG_BIG_VERSION=${FFMPEG_VERSION:0:1}.x
-        # echo "ffmpegVersion=$FFMPEG_VERSION" >> $GITHUB_OUTPUT
-        # echo "ffmpegBigVersion=$FFMPEG_BIG_VERSION" >> $GITHUB_OUTPUT
-        # MEDIASDK_VERSION=$(wget -qO- -t1 -T2 https://github.com/Intel-Media-SDK/MediaSDK/tags  | grep "intel-mediasdk" | head -n 1 | awk -F "\" " '{printf $2}' | awk -F "intel-mediasdk-" '{printf $2}')
-        # echo "mediasdkVersion=$MEDIASDK_VERSION" >> $GITHUB_OUTPUT
+        if [ -z ${{ inputs.FFMPEG_VERSION }} ]; then
+          FFMPEG_VERSION=$(wget -qO- -t1 -T2 https://api.github.com/repos/jellyfin/jellyfin-ffmpeg/releases/latest | grep "tag_name" | head -n 1 | awk -F "\"" '{printf $4}' | awk -F "v" '{printf $2}')
+        else
+          FFMPEG_VERSION=${{ inputs.FFMPEG_VERSION }}
+        fi
+        echo "ffmpegVersion=$FFMPEG_VERSION" >> $GITHUB_OUTPUT
      
     - name: Login to Docker Hub
       uses: docker/login-action@v3
@@ -72,15 +68,13 @@ jobs:
         push: true
         build-args: |
           DOTNET_VERSION=${{ steps.getVersion.outputs.dotnetVersion }}
-          # FFMPEG_VERSION=${{ steps.getVersion.outputs.ffmpegVersion }}
+          FFMPEG_VERSION=${{ steps.getVersion.outputs.ffmpegVersion }}
           JELLYFIN_VERSION=${{ steps.getVersion.outputs.jellyfinVersion }}
-          # FFMPEG_BIG_VERSION=${{ steps.getVersion.outputs.ffmpegBigVersion }}
-          # MEDIASDK_VERSION=${{ steps.getVersion.outputs.mediasdkVersion }}
         tags: |
-          clion007/jellyfin:latest
-          clion007/jellyfin:${{ steps.getVersion.outputs.jellyfinVersion }}
-          registry.cn-chengdu.aliyuncs.com/clion/jellyfin:latest
-          registry.cn-chengdu.aliyuncs.com/clion/jellyfin:${{ steps.getVersion.outputs.jellyfinVersion }}
+          clion007/jellyfin:slim
+          clion007/jellyfin:${{ steps.getVersion.outputs.jellyfinVersion }}-slim
+          registry.cn-chengdu.aliyuncs.com/clion/jellyfin:slim
+          registry.cn-chengdu.aliyuncs.com/clion/jellyfin:${{ steps.getVersion.outputs.jellyfinVersion }}-slim
         
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@v2
