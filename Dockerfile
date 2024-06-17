@@ -219,8 +219,9 @@ RUN set -ex; \
     su-exec \
     libva-intel-driver \
     intel-media-driver \
-    font-noto-cjk-extra \
+    font-droid-nonlatin \
   ; \
+  find /usr/share/fonts/droid-nonlatin/ -type f -not -name 'DroidSansFallbackFull.ttf' -delete; \
   apk add --no-cache --virtual .user-deps \
     shadow \
   ; \
