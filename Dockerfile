@@ -173,6 +173,8 @@ RUN set -ex; \
       --enable-vulkan \
     ; \
     make -j $(nproc) install $FFMPEG_PREFIX; \
+    ldd $FFMPEG_PREFIX/bin/ffmpeg; \
+    exit 1; \
     rm -rf \
         $FFMPEG_PREFIX/share/examples \
         /var/cache/apk/* \
@@ -204,8 +206,7 @@ ENV MALLOC_TRIM_THRESHOLD_=131072
 # add jellyfin and jellyfin-web files
 COPY --from=server /server $JELLYFIN_PATH
 COPY --from=web /web $JELLYFIN_WEB_PATH
-COPY --from=ffmpeg /ffmpeg $JELLYFIN_FFMPEG_PATH
-# COPY --from=ffmpeg /ffmpeg/share $JELLYFIN_FFMPEG_PATH/share
+COPY --from=ffmpeg /ffmpeg/bin $JELLYFIN_FFMPEG_PATH/bin
 
 # install packages
 RUN set -ex; \
