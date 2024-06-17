@@ -79,7 +79,6 @@ RUN set -ex; \
         alpine-sdk \
         alsa-lib-dev \
         bzip2-dev \
-        chromaprint-dev \
         coreutils \
         cunit-dev \
         dav1d-dev \
@@ -96,6 +95,7 @@ RUN set -ex; \
         lame-dev \
         libass-dev \
         libbluray-dev \
+        libc++-static \
         libdrm-dev \
         libogg-dev \
         libopenmpt-dev \
@@ -139,7 +139,6 @@ RUN set -ex; \
       --disable-sdl2 \
       --disable-shared \
       --disable-xlib \
-      --enable-chromaprint \
       --enable-fontconfig \
       --enable-gmp \
       --enable-gpl \
@@ -173,6 +172,9 @@ RUN set -ex; \
       --enable-vaapi \
       --enable-version3 \
       --enable-vulkan \
+      --extra-cflags="-static" \
+      --extra-ldflags="-static" \
+      --pkg-config-flags="--static" \
     ; \
     make -j $(nproc) install $FFMPEG_PREFIX; \
     rm -rf \
