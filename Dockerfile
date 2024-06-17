@@ -176,9 +176,10 @@ RUN set -ex; \
       --enable-vulkan \
     ; \
     make -j $(nproc) install $FFMPEG_PREFIX; \
+    # build ffmpeg lib files
     rm -rf $FFMPEG_PREFIX/lib/* \
-    sh /tmp/cplibfiles.sh $FFMPEG_PREFIX/bin/ffmpeg $FFMPEG_PREFIX/lib/; \
-    sh /tmp/cplibfiles.sh $FFMPEG_PREFIX/bin/ffprobe $FFMPEG_PREFIX/lib/; \
+    /tmp/cplibfiles.sh $FFMPEG_PREFIX/bin/ffmpeg $FFMPEG_PREFIX/lib/; \
+    /tmp/cplibfiles.sh $FFMPEG_PREFIX/bin/ffprobe $FFMPEG_PREFIX/lib/; \
     ls $FFMPEG_PREFIX/lib/; \
     rm -rf \
         /var/cache/apk/* \
