@@ -89,7 +89,6 @@ RUN set -ex; \
         fontconfig-dev \
         freetype-dev \
         fribidi-dev \
-        gcompat \
         gmp-dev \
         imlib2-dev \
         intel-media-driver-dev \
@@ -215,6 +214,9 @@ RUN set -ex; \
   apk add --no-cache \
     --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/main \
     --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/community \
+    gcompat \
+    libgcc \
+    libstdc++
     su-exec \
     icu-libs \
     libva-intel-driver \
