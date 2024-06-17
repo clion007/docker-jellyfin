@@ -96,6 +96,7 @@ RUN set -ex; \
         libass-dev \
         libbluray-dev \
         libc++-static \
+        libassuan-static \
         libdrm-dev \
         libogg-dev \
         libopenmpt-dev \
