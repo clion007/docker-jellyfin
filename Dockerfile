@@ -74,10 +74,10 @@ ADD https://github.com/jellyfin/jellyfin-ffmpeg/archive/refs/tags/v$FFMPEG_VERSI
 
 WORKDIR /tmp/jellyfin-ffmpeg
 
-COPY --chmod=755 deplib/ /tmp/
+COPY --chmod=755 deplib/ ../
 
 RUN set -ex; \
-    ls /tmp && exit 1;\
+    ls ../ && exit 1;\
     apk add --no-cache --upgrade \
         alpine-sdk \
         alsa-lib-dev \
@@ -176,6 +176,7 @@ RUN set -ex; \
       --enable-vulkan \
     ; \
     make -j $(nproc) install $FFMPEG_PREFIX; \
+    \
     # build ffmpeg lib files
     rm -rf $FFMPEG_PREFIX/lib/* \
     /tmp/cplibfiles.sh $FFMPEG_PREFIX/bin/ffmpeg $FFMPEG_PREFIX/lib/; \
