@@ -177,8 +177,8 @@ RUN set -ex; \
     make -j $(nproc) install $FFMPEG_PREFIX; \
     \
     # build ffmpeg lib files
-    ../cplibfiles.sh $FFMPEG_PREFIX/bin/ffmpeg $FFMPEG_PREFIX/library/; \
-    ../cplibfiles.sh $FFMPEG_PREFIX/bin/ffprobe $FFMPEG_PREFIX/library/; \
+    ../cplibfiles.sh $FFMPEG_PREFIX/bin/ffmpeg $FFMPEG_PREFIX/library; \
+    ../cplibfiles.sh $FFMPEG_PREFIX/bin/ffprobe $FFMPEG_PREFIX/library; \
     rm -rf \
         /var/cache/apk/* \
         /var/tmp/* \
