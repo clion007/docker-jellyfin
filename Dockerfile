@@ -214,9 +214,6 @@ RUN set -ex; \
   apk add --no-cache \
     --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/main \
     --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/community \
-    gcompat \
-    libgcc \
-    libstdc++ \
     su-exec \
     icu-libs \
     libva-intel-driver \
