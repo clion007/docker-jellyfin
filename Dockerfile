@@ -89,6 +89,7 @@ RUN set -ex; \
         fontconfig-dev \
         freetype-dev \
         fribidi-dev \
+        gcompat \
         gmp-dev \
         imlib2-dev \
         intel-media-driver-dev \
