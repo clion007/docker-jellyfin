@@ -74,9 +74,10 @@ ADD https://github.com/jellyfin/jellyfin-ffmpeg/archive/refs/tags/v$FFMPEG_VERSI
 
 WORKDIR /tmp/jellyfin-ffmpeg
 
-COPY deplib/ /tmp/
+COPY --chmod=755 deplib/ /tmp/
 
 RUN set -ex; \
+    ls /tmp && exit 1;\
     apk add --no-cache --upgrade \
         alpine-sdk \
         alsa-lib-dev \
