@@ -169,14 +169,12 @@ RUN set -ex; \
       --enable-openssl \
       --enable-pic \
       --enable-pthreads \
-      --enable-static="-yes" \
+      --enable-static \
       --enable-vaapi \
       --enable-version3 \
       --enable-vulkan \
     ; \
     make -j $(nproc) install $FFMPEG_PREFIX; \
-    ls $FFMPEG_PREFIX/lib; \
-    exit 1; \
     rm -rf \
         $FFMPEG_PREFIX/share/exam* \
         /var/cache/apk/* \
@@ -215,7 +213,6 @@ COPY --from=ffmpeg /ffmpeg/share $JELLYFIN_FFMPEG_PATH/share
 RUN set -ex; \
   apk add --no-cache \
     --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/main \
-    --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/testing \
     --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/community \
     su-exec \
     icu-libs \
