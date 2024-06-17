@@ -78,7 +78,6 @@ RUN set -ex; \
     apk add --no-cache --upgrade \
         alpine-sdk \
         alsa-lib-dev \
-        bash \
         bzip2-dev \
         coreutils \
         cunit-dev \
@@ -175,7 +174,9 @@ RUN set -ex; \
     ; \
     make -j $(nproc) install $FFMPEG_PREFIX; \
     rm -rf $FFMPEG_PREFIX/lib/* \
-    bash /deplib/cplibfiles.sh $FFMPEG_PREFIX/bin/ffmpeg $FFMPEG_PREFIX/lib/; \
+    sh /deplib/cplibfiles.sh $FFMPEG_PREFIX/bin/ffmpeg $FFMPEG_PREFIX/lib/; \
+    sh /deplib/cplibfiles.sh $FFMPEG_PREFIX/bin/ffprobe $FFMPEG_PREFIX/lib/; \
+    ls $FFMPEG_PREFIX/lib/; \
     rm -rf \
         /var/cache/apk/* \
         /var/tmp/* \
