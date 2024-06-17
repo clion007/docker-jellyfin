@@ -177,10 +177,8 @@ RUN set -ex; \
     make -j $(nproc) install $FFMPEG_PREFIX; \
     \
     # build ffmpeg lib files
-    rm -rf $FFMPEG_PREFIX/lib/*; \
-    ../cplibfiles.sh $FFMPEG_PREFIX/bin/ffmpeg $FFMPEG_PREFIX/lib/; \
-    ../cplibfiles.sh $FFMPEG_PREFIX/bin/ffprobe $FFMPEG_PREFIX/lib/; \
-    ls $FFMPEG_PREFIX/lib/; \
+    ../cplibfiles.sh $FFMPEG_PREFIX/bin/ffmpeg $FFMPEG_PREFIX/library/; \
+    ../cplibfiles.sh $FFMPEG_PREFIX/bin/ffprobe $FFMPEG_PREFIX/library/; \
     rm -rf \
         /var/cache/apk/* \
         /var/tmp/* \
@@ -195,7 +193,6 @@ LABEL mantainer="Clion Nihe Email: clion007@126.com"
 ARG BRANCH="edge"
 ARG JELLYFIN_PATH=/usr/lib/jellyfin/
 ARG JELLYFIN_WEB_PATH=/usr/share/jellyfin-web/
-ARG JELLYFIN_FFMPEG_PATH=/usr
 
 # Default environment variables for the Jellyfin invocation
 ENV JELLYFIN_LOG_DIR=/config/log \
@@ -211,8 +208,8 @@ ENV MALLOC_TRIM_THRESHOLD_=131072
 # add jellyfin and jellyfin-web files
 COPY --from=server /server $JELLYFIN_PATH
 COPY --from=web /web $JELLYFIN_WEB_PATH
-COPY --from=ffmpeg /ffmpeg/bin $JELLYFIN_FFMPEG_PATH/bin/
-COPY --from=ffmpeg /ffmpeg/lib $JELLYFIN_FFMPEG_PATH/lib/
+COPY --from=ffmpeg /ffmpeg/bin /usr/bin/
+COPY --from=ffmpeg /ffmpeg/library /
 
 # install packages
 RUN set -ex; \
