@@ -234,7 +234,6 @@ RUN set -ex; \
   \
   # make dir for config and data
   mkdir -p /config; \
-  chmod 777 /config; \
   chown jellyfin:jellyfin /config; \
   \
   apk del --no-network .user-deps; \
