@@ -169,12 +169,14 @@ RUN set -ex; \
       --enable-openssl \
       --enable-pic \
       --enable-pthreads \
-      --enable-static \
+      --enable-static="yes" \
       --enable-vaapi \
       --enable-version3 \
       --enable-vulkan \
     ; \
     make -j $(nproc) install $FFMPEG_PREFIX; \
+    ls $FFMPEG_PREFIX/lib; \
+    exit 1; \
     rm -rf \
         $FFMPEG_PREFIX/share/exam* \
         /var/cache/apk/* \
