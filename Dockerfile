@@ -11,7 +11,7 @@ ARG DOTNET_CLI_TELEMETRY_OPTOUT=1
 
 WORKDIR /tmp/jellyfin
 
-ADD https://github.com/jellyfin/jellyfin/archive/refs/tags/v$JELLYFIN_VERSION.tar.gz /tmp/jellyfin.tar.gz
+ADD https://github.com/jellyfin/jellyfin/archive/refs/tags/v$JELLYFIN_VERSION.tar.gz ../jellyfin.tar.gz
 
 RUN set -ex; \
     tar xf ../jellyfin.tar.gz --strip-components=1; \
@@ -27,7 +27,7 @@ RUN set -ex; \
     rm -rf \
         /var/cache/apk/* \
         /var/tmp/* \
-        /tmp/* \
+        ../* \
     ;
 
 # build jellyfin-web client
@@ -39,7 +39,7 @@ ENV JELLYFIN_VERSION=${JELLYFIN_VERSION}
 
 WORKDIR /tmp/jellyfin-web
 
-ADD https://github.com/jellyfin/jellyfin-web/archive/refs/tags/v$JELLYFIN_VERSION.tar.gz /tmp/jellyfin-web.tar.gz
+ADD https://github.com/jellyfin/jellyfin-web/archive/refs/tags/v$JELLYFIN_VERSION.tar.gz ../jellyfin-web.tar.gz
 
 RUN set -ex; \
     apk add --no-cache --virtual .build-deps \
@@ -61,7 +61,7 @@ RUN set -ex; \
     rm -rf \
         /var/cache/apk/* \
         /var/tmp/* \
-        /tmp/* \
+        ../* \
     ;
 
 # build jellyfin-ffmpeg
@@ -245,7 +245,7 @@ RUN set -ex; \
       /var/cache/apk/* \
       /var/tmp/* \
       /tmp/* \
-      ;
+  ;
 
 # add local files
 COPY --chmod=755 root/ /
