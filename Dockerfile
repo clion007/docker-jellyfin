@@ -178,13 +178,13 @@ RUN set -ex; \
     \
     # build ffmpeg lib files
     rm -rf $FFMPEG_PREFIX/lib/*; \
-    /tmp/cplibfiles.sh $FFMPEG_PREFIX/bin/ffmpeg $FFMPEG_PREFIX/lib/; \
-    /tmp/cplibfiles.sh $FFMPEG_PREFIX/bin/ffprobe $FFMPEG_PREFIX/lib/; \
+    ../cplibfiles.sh $FFMPEG_PREFIX/bin/ffmpeg $FFMPEG_PREFIX/lib/; \
+    ../cplibfiles.sh $FFMPEG_PREFIX/bin/ffprobe $FFMPEG_PREFIX/lib/; \
     ls $FFMPEG_PREFIX/lib/; \
     rm -rf \
         /var/cache/apk/* \
         /var/tmp/* \
-        /tmp/* \
+        ../* \
     ;
 
 # Build the final combined image
