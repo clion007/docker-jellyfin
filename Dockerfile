@@ -205,11 +205,14 @@ ENV JELLYFIN_LOG_DIR=/config/log \
 # https://github.com/dlemstra/Magick.NET/issues/707#issuecomment-785351620
 ENV MALLOC_TRIM_THRESHOLD_=131072
 
-# add jellyfin and jellyfin-web files
+# add jellyfin files
 COPY --from=server /server $JELLYFIN_PATH
 COPY --from=web /web $JELLYFIN_WEB_PATH
 COPY --from=ffmpeg /ffmpeg/bin /usr/bin/
 COPY --from=ffmpeg /ffmpeg/library /
+
+# add local files
+COPY --chmod=755 root/ /
 
 # install packages
 RUN set -ex; \
@@ -243,9 +246,6 @@ RUN set -ex; \
       /var/tmp/* \
       /tmp/* \
   ;
-
-# add local files
-COPY --chmod=755 root/ /
 
 # ports
 EXPOSE 8096 8920 7359/udp 1900/udp
