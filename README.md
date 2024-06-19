@@ -49,7 +49,7 @@ Containers are configured using parameters passed at runtime (such as those abov
 * ```-e TZ=Asia/Shanghai``` specify a timezone to use in your local area.
 * ```-e JELLYFIN_PublishedServerUrl=192.168.0.5``` Set the autodiscovery response domain or IP address.
 * ```-v /config``` Jellyfin data storage location. This can grow very large, 50gb+ is likely for a large collection.
-* ```-v /video``` Media goes here. Add as many as needed e.g. /video/movies, /video/tv, etc.
+* ```-v /media``` Media goes here. Add as many as needed e.g. /media/movies, /media/tv, etc.
 
 ## Umask for running applications
 For all of my images I provide the ability to override the default umask settings for services started within the containers using the optional -e UMASK=022 setting. Keep in mind umask is not chmod it subtracts from permissions based on it's value it does not add.
