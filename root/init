@@ -8,7 +8,8 @@ mkdir -p \
     /config/data/transcodes \
     /config/cache \
     /data \
-    /transcode
+    /transcode \
+    /media
 
 # permissions
 chown -R jellyfin:jellyfin \
