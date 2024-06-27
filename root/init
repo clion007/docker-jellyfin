@@ -13,7 +13,7 @@ mkdir -p \
 # permissions
 chown -R jellyfin:jellyfin \
     /config \
-    /transcodex
+    /transcode
 chmod -R 766 /config \
     /media
 
