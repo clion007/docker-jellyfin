@@ -247,7 +247,7 @@ RUN set -ex; \
       /tmp/* \
   ;
 
-# Add madia volumes
+# Add madia volume
 VOLUME /media
 
 # ports
