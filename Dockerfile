@@ -231,8 +231,8 @@ RUN set -ex; \
   ; \
   \
   # set jellyfin process user and group
-  groupadd -g 101 jellyfin; \
-  useradd -u 100 -s /bin/nologin -M -g 101 jellyfin; \
+  groupadd -g 100 jellyfin; \
+  useradd -u 99 -s /bin/nologin -M -g 100 jellyfin; \
   ln -s /usr/lib/jellyfin/jellyfin /usr/bin/jellyfin; \
   chown jellyfin:jellyfin /usr/bin/jellyfin; \
   \
