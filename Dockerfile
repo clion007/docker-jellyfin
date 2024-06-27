@@ -247,6 +247,9 @@ RUN set -ex; \
       /tmp/* \
   ;
 
+# Add madia volumes
+VOLUME /media
+
 # ports
 EXPOSE 8096 8920 7359/udp 1900/udp
 
