@@ -16,7 +16,7 @@ jobs:
     - name: Get latest version of jellyfin
       id: getVersion
       run: |
-        version=$(wget -qO- -t1 -T2 https://api.github.com/repos/jellyfin/jellyfin/releases/latest | grep '"name"' | head -n 1 | awk -F "\"" '{printf $4}')
+        version=$(wget -qO- -t1 -T2 https://api.github.com/repos/jellyfin/jellyfin/releases/latest | grep '"name"' | awk -F "\"" '{printf $4}')
         echo "curentVersion=$version" >> $GITHUB_OUTPUT
 
     - name: Compare jellyfin version
