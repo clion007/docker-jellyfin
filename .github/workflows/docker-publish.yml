@@ -29,19 +29,19 @@ jobs:
       id: getVersion
       run: |
         if [ -z ${{ inputs.JELLYFIN_VERSION }} ]; then
-          JELLYFIN_VERSION=$(wget -qO- -t1 -T2 https://api.github.com/repos/jellyfin/jellyfin/releases/latest | grep "tag_name" | head -n 1 | awk -F "\"" '{printf $4}' | awk -F "v" '{printf $2}')
+          JELLYFIN_VERSION=$(wget -qO- -t1 -T2 https://api.github.com/repos/jellyfin/jellyfin/releases/latest | grep '"name"' | awk -F "\"" '{printf $4}')
         else
           JELLYFIN_VERSION=${{ inputs.JELLYFIN_VERSION }}
         fi
         echo "jellyfinVersion=$JELLYFIN_VERSION" >> $GITHUB_OUTPUT
         if [ -z ${{ inputs.DOTNET_VERSION }} ]; then
-          DOTNET_VERSION=$(wget -qO- -t1 -T2 https://api.github.com/repos/dotnet/sdk/releases/latest | grep "tag_name" | head -n 1 | awk -F "\"" '{printf $4}' | awk -F "v" '{printf $2}' | awk -F "." '{printf $1"."$2}')
+          DOTNET_VERSION=$(wget -qO- -t1 -T2 https://api.github.com/repos/dotnet/sdk/releases/latest | grep '"name"' | awk '{printf $3}')
         else
           DOTNET_VERSION=${{ inputs.DOTNET_VERSION }}
         fi
         echo "dotnetVersion=$DOTNET_VERSION" >> $GITHUB_OUTPUT
         if [ -z ${{ inputs.FFMPEG_VERSION }} ]; then
-          FFMPEG_VERSION=$(wget -qO- -t1 -T2 https://api.github.com/repos/jellyfin/jellyfin-ffmpeg/releases/latest | grep "tag_name" | head -n 1 | awk -F "\"" '{printf $4}' | awk -F "v" '{printf $2}')
+          FFMPEG_VERSION=$(wget -qO- -t1 -T2 https://api.github.com/repos/jellyfin/jellyfin-ffmpeg/releases/latest | grep '"name"' | awk '{printf $3}' | awk -F "-" '{printf $1}')
         else
           FFMPEG_VERSION=${{ inputs.FFMPEG_VERSION }}
         fi
