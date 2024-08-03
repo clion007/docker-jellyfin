@@ -34,6 +34,7 @@ docker run -d \
   -p 1900:1900/udp `#optional` \
   -v /path/to/config:/config \
   -v /path/to/media:/media \
+  -v /etc/localtime:/etc/localtime:ro \
   --restart unless-stopped \
   registry.cn-chengdu.aliyuncs.com/clion/jellyfin
 ```
