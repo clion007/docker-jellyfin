@@ -41,7 +41,7 @@ jobs:
         fi
         echo "dotnetVersion=$DOTNET_VERSION" >> $GITHUB_OUTPUT
         if [ -z ${{ inputs.FFMPEG_VERSION }} ]; then
-          FFMPEG_VERSION=$(wget -qO- -t1 -T2 https://api.github.com/repos/jellyfin/jellyfin-ffmpeg/releases/latest | grep '"name"' | awk '{printf $3}' | awk -F "-" '{printf $1}')
+          FFMPEG_VERSION=$(wget -qO- -t1 -T2 https://api.github.com/repos/jellyfin/jellyfin-ffmpeg/releases/latest | grep '"name"' | awk '{printf $3}')
         else
           FFMPEG_VERSION=${{ inputs.FFMPEG_VERSION }}
         fi
