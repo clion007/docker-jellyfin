@@ -80,6 +80,7 @@ RUN set -ex; \
     apk add --no-cache --upgrade \
         alpine-sdk \
         alsa-lib-dev \
+        aom-dev \
         bzip2-dev \
         coreutils \
         cunit-dev \
@@ -153,6 +154,7 @@ RUN set -ex; \
       --enable-gmp \
       --enable-gpl \
 	    --enable-ladspa \
+		  --enable-libaom \
       --enable-libass \
       --enable-libbluray \
       --enable-libdav1d \
