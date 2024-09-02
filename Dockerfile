@@ -91,7 +91,6 @@ RUN set -ex; \
         fontconfig-dev \
         freetype-dev \
         fribidi-dev \
-	      # harfbuzz-dev \
         gmp-dev \
         imlib2-dev \
         intel-media-driver-dev \
@@ -164,7 +163,6 @@ RUN set -ex; \
       --enable-libfontconfig \
       --enable-libfreetype \
       --enable-libfribidi \
-	    # --enable-libharfbuzz \
       --enable-libmfx \
       --enable-libmp3lame \
       --enable-libopenmpt \
