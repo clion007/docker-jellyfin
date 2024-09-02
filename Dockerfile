@@ -115,6 +115,7 @@ RUN set -ex; \
         libvpx-dev \
         libwebp-dev \
 	      libxml2-dev \
+        lilv-dev \
         mesa-dev \
         musl-dev \
         nasm \
@@ -183,6 +184,7 @@ RUN set -ex; \
       --enable-libx265 \
 	    --enable-libxml2 \
       --enable-libzimg \
+      --enable-lv2 \
       --enable-nonfree \
       --enable-opencl \
       --enable-openssl \
