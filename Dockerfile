@@ -90,12 +90,12 @@ RUN set -ex; \
         fontconfig-dev \
         freetype-dev \
         fribidi-dev \
-	    harfbuzz-dev \
+	      harfbuzz-dev \
         gmp-dev \
         imlib2-dev \
         intel-media-driver-dev \
         intel-media-sdk-dev \
-	    ladspa-dev \
+	      ladspa-dev \
         lame-dev \
         libass-dev \
         libbluray-dev \
@@ -104,8 +104,8 @@ RUN set -ex; \
         libopenmpt-dev \
         libplacebo-dev \
         libpng-dev \
-	    librist-dev \
-	    libsrt-dev \
+	      librist-dev \
+	      libsrt-dev \
         libtheora-dev \
         libtool \
         libva-dev \
@@ -113,7 +113,7 @@ RUN set -ex; \
         libvorbis-dev \
         libvpx-dev \
         libwebp-dev \
-	    libxml2-dev \
+	      libxml2-dev \
         mesa-dev \
         musl-dev \
         nasm \
@@ -121,11 +121,11 @@ RUN set -ex; \
         openssl-dev \
         opus-dev \
         perl-dev \
-	    rav1e-dev \
+	      rav1e-dev \
         shaderc-dev \
         svt-av1-dev \
         util-linux-dev \
-	    v4l-utils-dev \
+	      v4l-utils-dev \
         vulkan-loader-dev \
         x264-dev \
         x265-dev \
@@ -148,11 +148,11 @@ RUN set -ex; \
       --disable-sdl2 \
       --disable-shared \
       --disable-xlib \
-	  --enable-avfilter \
+	    --enable-avfilter \
       --enable-fontconfig \
       --enable-gmp \
       --enable-gpl \
-	  --enable-ladspa \
+	    --enable-ladspa \
       --enable-libass \
       --enable-libbluray \
       --enable-libdav1d \
@@ -161,25 +161,25 @@ RUN set -ex; \
       --enable-libfontconfig \
       --enable-libfreetype \
       --enable-libfribidi \
-	  --enable-libharfbuzz \
+	    --enable-libharfbuzz \
       --enable-libmfx \
       --enable-libmp3lame \
       --enable-libopenmpt \
       --enable-libopus \
       --enable-libplacebo \
-	  --enable-librav1e \
-	  --enable-librist \
+	    --enable-librav1e \
+	    --enable-librist \
       --enable-libshaderc \
-	  --enable-libsrt \
+	    --enable-libsrt \
       --enable-libsvtav1 \
       --enable-libtheora \
-	  --enable-libv4l2 \
+	    --enable-libv4l2 \
       --enable-libvorbis \
       --enable-libvpx \
       --enable-libwebp \
       --enable-libx264 \
       --enable-libx265 \
-	  --enable-libxml2 \
+	    --enable-libxml2 \
       --enable-libzimg \
       --enable-nonfree \
       --enable-opencl \
