@@ -25,7 +25,7 @@ To help you get started creating a container from this image you can either use 
 
 ### docker-compose (recommended, [click here for more info](https://https://docs.docker.com/compose/))
 
----
+```
 services:
   jellyfin:
     image: registry.cn-chengdu.aliyuncs.com/clion/jellyfin:latest
