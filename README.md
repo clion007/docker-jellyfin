@@ -1,13 +1,16 @@
 # clion/jellyfin
+
 Jellyfin is a Free Software Media System that puts you in control of managing and streaming your media. It is an alternative to the proprietary Emby and Plex, to provide media from a dedicated server to end-user devices via multiple apps. Jellyfin is descended from Emby's 3.5.2 release and ported to the .NET Core framework to enable full cross-platform support. There are no strings attached, no premium licenses or features, and no hidden agendas: just a team who want to build something better and work together to achieve it.
 
 This clion/jellyfin docker image supply you a better choice for the jellyfin container than offical image. It is builded base on latest alpine, with smaller size and fix the ffmpg decode, hardware drivers and chinese shown in garbled problems et,al. This image will auto check and update when there is new version of jellyfin exist.
 
 ## Application Setup
+
 * Webui can be found at http://\<your-ip\>:8096
 * More information can be found on the official documentation.
 
 ## Hardware Acceleration
+
 Many desktop applications need access to a GPU to function properly and even some Desktop Environments have compositor effects that will not function without a GPU. However this is not a hard requirement and all base images will function without a video device mounted into the container.
 
 For Intel/ATI/AMD to leverage hardware acceleration you will need to mount /dev/dri video device inside of the container.
@@ -17,13 +20,39 @@ For Intel/ATI/AMD to leverage hardware acceleration you will need to mount /dev/
 I will automatically ensure the jellyfin user inside of the container has the proper permissions to access this device.
 
 ## Usage
-To help you get started creating a container from this image you can use the docker cli.
+
+To help you get started creating a container from this image you can either use docker-compose or the docker cli.
+
+### docker-compose (recommended, [click here for more info](https://https://docs.docker.com/compose/))
+
+---
+services:
+  jellyfin:
+    image: registry.cn-chengdu.aliyuncs.com/clion/jellyfin:latest
+    container_name: Jellyfin
+    environment:
+      - UMASK=022
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Shanghai
+      - JELLYFIN_PublishedServerUrl=192.168.0.5 #optional
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /path/to/jellyfin/library:/config
+      - /path/to/media:/media
+    ports:
+      - 8096:8096
+      - 8920:8920 #optional
+      - 7359:7359/udp #optional
+      - 1900:1900/udp #optional
+    restart: unless-stopped
+```
 
 ### Docker cli
 ```
 docker run -d \
   --name=Jellyfin \
-  -e 'UMASK'='022' \
+  -e UMASK=022 \
   -e PUID=1000 \
   -e PGID=1000 \
   -e TZ=Asia/Shanghai \
@@ -36,7 +65,7 @@ docker run -d \
   -v /path/to/media:/media \
   -v /etc/localtime:/etc/localtime:ro \
   --restart unless-stopped \
-  registry.cn-chengdu.aliyuncs.com/clion/jellyfin
+  registry.cn-chengdu.aliyuncs.com/clion/jellyfin:latest
 ```
 ## Parameters
 Containers are configured using parameters passed at runtime (such as those above). These parameters are separated by a colon and indicate <external>:<internal> respectively. For example, -p 8080:80 would expose port 80 from inside the container to be accessible from the host's IP on port 8080 outside the container.
