@@ -28,23 +28,23 @@ To help you get started creating a container from this image you can either use 
 ```
 services:
   jellyfin:
-    image: registry.cn-chengdu.aliyuncs.com/clion/jellyfin:latest
     container_name: Jellyfin
+    image: registry.cn-chengdu.aliyuncs.com/clion/jellyfin:latest
     environment:
       - UMASK=022
       - PUID=1000
       - PGID=1000
       - TZ=Asia/Shanghai
       - JELLYFIN_PublishedServerUrl=192.168.0.5 #optional
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - /path/to/jellyfin/library:/config
-      - /path/to/media:/media
     ports:
       - 8096:8096
       - 8920:8920 #optional
       - 7359:7359/udp #optional
       - 1900:1900/udp #optional
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /path/to/jellyfin/library:/config
+      - /path/to/media:/media
     restart: unless-stopped
 ```
 
