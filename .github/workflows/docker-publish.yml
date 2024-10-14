@@ -82,7 +82,7 @@ jobs:
       if: steps.build.outcome == 'success'
       run: |
         BODYINFO=$(curl -fsSL https://github.com/jellyfin/jellyfin/releases/latest | grep "<p>")
-        BODYINFO=${ BODYINFO }<h3>📈 General Changes</h3>$(curl -fsSL https://github.com/jellyfin/jellyfin/releases/latest | grep "<li>" | sed '/<li>$/d')
+        BODYINFO=${ BODYINFO }'/n<h3>📈 General Changes</h3>/n'$(curl -fsSL https://github.com/jellyfin/jellyfin/releases/latest | grep "<li>" | sed '/<li>$/d')
         echo "BodyInfo=$BODYINFO" >> $GITHUB_OUTPUT
       
     - name: Publish Release
