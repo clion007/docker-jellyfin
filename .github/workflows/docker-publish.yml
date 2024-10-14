@@ -61,6 +61,7 @@ jobs:
         password: ${{ secrets.ALIYUN_TOKEN }}
 
     - name: Build and Push Docker images
+      id: build
       uses: docker/build-push-action@v5
       with:
         file: Dockerfile
@@ -75,6 +76,22 @@ jobs:
           clion007/jellyfin:${{ steps.getVersion.outputs.jellyfinVersion }}
           registry.cn-chengdu.aliyuncs.com/clion/jellyfin:latest
           registry.cn-chengdu.aliyuncs.com/clion/jellyfin:${{ steps.getVersion.outputs.jellyfinVersion }}
+
+    - name: Get Release Body Info
+      id: getBody
+      if: steps.build.outcome == 'success'
+      run: |
+        BODYINFO=$(curl -fsSL https://github.com/jellyfin/jellyfin/releases/latest | grep "<p>")
+        BODYINFO=${ BODYINFO }<h3>📈 General Changes</h3>$(curl -fsSL https://github.com/jellyfin/jellyfin/releases/latest | grep "<li>" | sed '/<li>$/d')
+        echo "BodyInfo=$BODYINFO" >> $GITHUB_OUTPUT
+      
+    - name: 版本发布
+      if: steps.build.outcome == 'success'
+      uses: ncipollo/release-action@v1
+      with:
+        name: Jellyfin Server v${{ steps.getVersion.outputs.jellyfinVersion }}
+        tag: v${{ steps.getVersion.outputs.jellyfinVersion }}
+        body: ${{ steps.getBody.outputs.BodyInfo }}
         
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@v2
