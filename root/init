@@ -8,13 +8,14 @@ mkdir -p \
     /config/data/transcodes \
     /config/cache \
     /data \
+    /media \
     /transcode
 
 # permissions
 chown -R jellyfin:jellyfin \
     /config \
     /transcode
-chmod -R 777 /config
+chmod -R 766 /media /config
 
 # first arg is `--some-option`
 if [ "${1#-}" != "$1" ]; then
