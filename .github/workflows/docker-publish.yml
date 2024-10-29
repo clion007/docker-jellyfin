@@ -10,11 +10,11 @@ on:
       DOTNET_VERSION:
         required: false
         type: string
-        description: 'The server and web stable version ("X.Y")'
+        description: 'The dotnet stable version ("X.Y")'
       FFMPEG_VERSION:
         required: false
         type: string
-        description: 'The server and web stable version ("X.Y.Z-V")'
+        description: 'The ffmpeg stable version ("X.Y.Z-V")'
   repository_dispatch:
 
 jobs:
