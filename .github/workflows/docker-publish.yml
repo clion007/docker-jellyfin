@@ -18,7 +18,7 @@ on:
   repository_dispatch:
 
 jobs:
-  publish:
+  Jellyfin_Publish:
     runs-on: ubuntu-latest
 
     steps:
