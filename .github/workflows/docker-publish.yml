@@ -84,7 +84,7 @@ jobs:
         DIS=$(curl -fsSL https://github.com/jellyfin/jellyfin/releases/latest | grep "<p>")
         CHANGE=$(curl -fsSL https://github.com/jellyfin/jellyfin/releases/latest | grep "<li>" | sed '/<li>$/d')
         BODYINFO="${DIS}\n<h3>📈 Changes</h3>\n<ul>\n${CHANGE}\n</ul>"
-        echo "BodyInfo<<EOF=$BODYINFO" >> $GITHUB_OUTPUT
+        echo "BodyInfo<<EOF" >> $GITHUB_OUTPUT
         echo $BODYINFO >> $GITHUB_OUTPUT
         echo "EOF" >> $GITHUB_OUTPUT
       
