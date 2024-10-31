@@ -44,7 +44,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /path/to/jellyfin/library:/config
-      - /path/to/media:/media
+      - /path/to/media:/media/nas
     restart: unless-stopped
 ```
 
@@ -62,7 +62,7 @@ docker run -d \
   -p 7359:7359/udp `#optional` \
   -p 1900:1900/udp `#optional` \
   -v /path/to/config:/config \
-  -v /path/to/media:/media \
+  -v /path/to/media:/media/nas \
   -v /etc/localtime:/etc/localtime:ro \
   --restart unless-stopped \
   registry.cn-chengdu.aliyuncs.com/clion/jellyfin:latest
@@ -80,7 +80,7 @@ Containers are configured using parameters passed at runtime (such as those abov
 * ```-e TZ=Asia/Shanghai``` specify a timezone to use in your local area.
 * ```-e JELLYFIN_PublishedServerUrl=192.168.0.5``` Set the autodiscovery response domain or IP address.
 * ```-v /config``` Jellyfin data storage location. This can grow very large, 50gb+ is likely for a large collection.
-* ```-v /media``` Media goes here. Add as many as needed e.g. /media/movies, /media/tv, etc.
+* ```-v /media/nas``` Media goes here. Add as many as needed e.g. /media/nas/movies, /media/nas/tv, etc.
 
 ## Umask for running applications
 
