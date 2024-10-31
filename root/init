@@ -14,7 +14,7 @@ mkdir -p \
 chown -R jellyfin:jellyfin \
     /config \
     /transcode
-chmod -R 777 /media /config
+chmod -R 777 /config
 
 # first arg is `--some-option`
 if [ "${1#-}" != "$1" ]; then
