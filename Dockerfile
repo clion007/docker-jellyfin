@@ -127,7 +127,7 @@ RUN set -ex; \
         svt-av1-dev \
         util-linux-dev \
 	v4l-utils-dev \
-        # vulkan-loader-dev \
+        vulkan-loader-dev \
         x264-dev \
         x265-dev \
         xz-dev \
@@ -191,7 +191,7 @@ RUN set -ex; \
       --enable-static \
       --enable-vaapi \
       --enable-version3 \
-      # --enable-vulkan \
+      --enable-vulkan \
     ; \
     make -j $(nproc) install $FFMPEG_PREFIX; \
     \
