@@ -7,10 +7,10 @@ on:
         required: false
         type: string
         description: 'The server and web stable version ("X.Y.Z")'
-      DOTNET_VERSION:
-        required: false
-        type: string
-        description: 'The dotnet stable version ("X.Y")'
+      # DOTNET_VERSION:
+      #   required: false
+      #   type: string
+      #   description: 'The dotnet stable version ("X.Y")'
       FFMPEG_VERSION:
         required: false
         type: string
@@ -68,7 +68,7 @@ jobs:
         context: .
         push: true
         build-args: |
-          DOTNET_VERSION=${{ steps.getVersion.outputs.dotnetVersion }}
+          # DOTNET_VERSION=${{ steps.getVersion.outputs.dotnetVersion }}
           FFMPEG_VERSION=${{ steps.getVersion.outputs.ffmpegVersion }}
           JELLYFIN_VERSION=${{ steps.getVersion.outputs.jellyfinVersion }}
         tags: |
