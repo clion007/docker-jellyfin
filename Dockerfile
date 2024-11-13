@@ -218,8 +218,8 @@ ENV JELLYFIN_LOG_DIR=/config/log \
     JELLYFIN_DATA_DIR=/config/data \
     JELLYFIN_CACHE_DIR=/config/cache \
     JELLYFIN_CONFIG_DIR=/config/config \
-    JELLYFIN_WEB_DIR=/usr/share/jellyfin-web \
-    XDG_CACHE_HOME=${JELLYFIN_CACHE_DIR}
+    JELLYFIN_WEB_DIR=/usr/share/jellyfin-web
+ENV XDG_CACHE_HOME=${JELLYFIN_CACHE_DIR}
 
 # https://github.com/dlemstra/Magick.NET/issues/707#issuecomment-785351620
 ENV MALLOC_TRIM_THRESHOLD_=131072
