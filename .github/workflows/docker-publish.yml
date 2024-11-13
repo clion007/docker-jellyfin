@@ -34,12 +34,12 @@ jobs:
           JELLYFIN_VERSION=${{ inputs.JELLYFIN_VERSION }}
         fi
         echo "jellyfinVersion=$JELLYFIN_VERSION" >> $GITHUB_OUTPUT
-        if [ -z ${{ inputs.DOTNET_VERSION }} ]; then
-          DOTNET_VERSION=$(wget -qO- -t1 -T2 https://dotnet.microsoft.com/zh-cn/download | grep 'md:version'  | awk 'NR==1' | awk '{printf $9}' | awk -F "<" '{printf $1}')
-        else
-          DOTNET_VERSION=${{ inputs.DOTNET_VERSION }}
-        fi
-        echo "dotnetVersion=$DOTNET_VERSION" >> $GITHUB_OUTPUT
+        # if [ -z ${{ inputs.DOTNET_VERSION }} ]; then
+        #   DOTNET_VERSION=$(wget -qO- -t1 -T2 https://dotnet.microsoft.com/zh-cn/download | grep 'md:version'  | awk 'NR==1' | awk '{printf $9}' | awk -F "<" '{printf $1}')
+        # else
+        #   DOTNET_VERSION=${{ inputs.DOTNET_VERSION }}
+        # fi
+        # echo "dotnetVersion=$DOTNET_VERSION" >> $GITHUB_OUTPUT
         if [ -z ${{ inputs.FFMPEG_VERSION }} ]; then
           FFMPEG_VERSION=$(wget -qO- -t1 -T2 https://api.github.com/repos/jellyfin/jellyfin-ffmpeg/releases/latest | grep '"name"' | awk '{printf $3}' | awk -F "\"" '{printf $1}')
         else
