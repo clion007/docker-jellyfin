@@ -1,7 +1,8 @@
 # syntax=docker/dockerfile:1
 
 # Docker build arguments
-ARG DOTNET_VERSION
+# ARG DOTNET_VERSION
+ARG DOTNET_VERSION=8.0
 
 # build jellyfin server
 FROM mcr.microsoft.com/dotnet/sdk:$DOTNET_VERSION-alpine AS server
@@ -75,6 +76,7 @@ WORKDIR /tmp/jellyfin-ffmpeg
 ADD https://github.com/jellyfin/jellyfin-ffmpeg/archive/refs/tags/v$FFMPEG_VERSION.tar.gz ../jellyfin-ffmpeg.tar.gz
 
 COPY --chmod=755 deplib/ ../
+COPY --chmod=755 patchs/ ../
 
 RUN set -ex; \
     apk add --no-cache --upgrade \
@@ -135,6 +137,7 @@ RUN set -ex; \
         zlib-dev \
     ; \
     tar xf ../jellyfin-ffmpeg.tar.gz --strip-components=1; \
+    mv ../*.patch debian/patches/; \
     cat debian/patches/*.patch | patch -p1; \
     ./configure \
       --prefix=$FFMPEG_PREFIX \
