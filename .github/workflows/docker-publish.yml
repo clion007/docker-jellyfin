@@ -96,7 +96,7 @@ jobs:
         name: Jellyfin Server v${{ steps.getVersion.outputs.jellyfinVersion }}
         tag: v${{ steps.getVersion.outputs.jellyfinVersion }}
         body: ${{ steps.getBody.outputs.BodyInfo }}
-        skipIfReleaseExists: ture
+        skipIfReleaseExists: true
         
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@v2
