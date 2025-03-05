@@ -7,10 +7,6 @@ on:
         required: false
         type: string
         description: 'The server and web stable version ("X.Y.Z")'
-      # DOTNET_VERSION:
-      #   required: false
-      #   type: string
-      #   description: 'The dotnet stable version ("X.Y")'
       FFMPEG_VERSION:
         required: false
         type: string
@@ -34,12 +30,6 @@ jobs:
           JELLYFIN_VERSION=${{ inputs.JELLYFIN_VERSION }}
         fi
         echo "jellyfinVersion=$JELLYFIN_VERSION" >> $GITHUB_OUTPUT
-        # if [ -z ${{ inputs.DOTNET_VERSION }} ]; then
-        #   DOTNET_VERSION=$(wget -qO- -t1 -T2 https://dotnet.microsoft.com/zh-cn/download | grep 'md:version'  | awk 'NR==1' | awk '{printf $9}' | awk -F "<" '{printf $1}')
-        # else
-        #   DOTNET_VERSION=${{ inputs.DOTNET_VERSION }}
-        # fi
-        # echo "dotnetVersion=$DOTNET_VERSION" >> $GITHUB_OUTPUT
         if [ -z ${{ inputs.FFMPEG_VERSION }} ]; then
           FFMPEG_VERSION=$(wget -qO- -t1 -T2 https://api.github.com/repos/jellyfin/jellyfin-ffmpeg/releases/latest | grep '"name"' | awk '{printf $3}' | awk -F "\"" '{printf $1}')
         else
@@ -68,7 +58,6 @@ jobs:
         context: .
         push: true
         build-args: |
-          # DOTNET_VERSION=${{ steps.getVersion.outputs.dotnetVersion }}
           FFMPEG_VERSION=${{ steps.getVersion.outputs.ffmpegVersion }}
           JELLYFIN_VERSION=${{ steps.getVersion.outputs.jellyfinVersion }}
         tags: |
@@ -81,12 +70,7 @@ jobs:
       id: getBody
       if: steps.build.outcome == 'success'
       run: |
-        # CHANGES=$(curl -fsSL https://github.com/jellyfin/jellyfin/releases/latest | grep "<li>" | sed '/<li>$/d')
-        # BODYINFO="<h3>Changes</h3><ul>${CHANGES}</ul>"
         BODYINFO="Changes for details can view in offical link https://github.com/jellyfin/jellyfin/releases/latest"
-        # echo "BodyInfo<<EOF" >> $GITHUB_OUTPUT
-        # echo "$BODYINFO" >> $GITHUB_OUTPUT
-        # echo "EOF" >> $GITHUB_OUTPUT
         echo "BodyInfo=$BODYINFO" >> $GITHUB_OUTPUT
       
     - name: Publish Release
