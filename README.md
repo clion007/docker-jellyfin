@@ -6,10 +6,10 @@
 [![Build Status](https://img.shields.io/github/actions/workflow/status/clion007/docker-jellyfin/build.yml?branch=main)](https://github.com/clion007/docker-jellyfin/actions)
 [![Image Size](https://img.shields.io/docker/image-size/clion007/jellyfin/latest)](https://hub.docker.com/r/clion007/jellyfin)
 [![Jellyfin Version](https://img.shields.io/badge/jellyfin-10.8.13-blue)](https://github.com/jellyfin/jellyfin/releases)
-[![FFmpeg Version](https://img.shields.io/badge/ffmpeg-6.0-orange)](https://github.com/jellyfin/jellyfin-ffmpeg/releases)
+[![FFmpeg Version](https://img.shields.io/badge/ffmpeg-7.0-orange)](https://github.com/jellyfin/jellyfin-ffmpeg/releases)
 
 <div align="center">
-  <img src="https://jellyfin.org/images/logo.png" alt="Jellyfin Logo" width="200"/>
+  <img src="https://raw.githubusercontent.com/jellyfin/jellyfin-ux/master/branding/SVG/banner-logo.svg" alt="Jellyfin Logo" width="200"/>
   <br>
   <strong>The Free Software Media System</strong>
 </div>
