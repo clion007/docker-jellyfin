@@ -9,7 +9,7 @@
 [![FFmpeg Version](https://img.shields.io/badge/ffmpeg-7.0-orange)](https://github.com/jellyfin/jellyfin-ffmpeg/releases)
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/jellyfin/jellyfin-ux/master/branding/SVG/banner-logo.svg" alt="Jellyfin Logo" width="200"/>
+  <img src="https://jellyfin.org/images/logo.svg" alt="Jellyfin Logo" width="280" height="80">
   <br>
   <strong>The Free Software Media System</strong>
 </div>
