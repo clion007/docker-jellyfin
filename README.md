@@ -1,4 +1,9 @@
 # Clion/Jellyfin
+[![Docker Pulls](https://img.shields.io/docker/pulls/clion007/jellyfin.svg)](https://hub.docker.com/r/clion007/jellyfin)
+[![Docker Stars](https://img.shields.io/docker/stars/clion007/jellyfin.svg)](https://hub.docker.com/r/clion007/jellyfin)
+[![GitHub Stars](https://img.shields.io/github/stars/clion007/docker-jellyfin.svg)](https://github.com/clion007/docker-jellyfin)
+[![GitHub Last Commit](https://img.shields.io/github/last-commit/clion007/docker-jellyfin.svg)](https://github.com/clion007/docker-jellyfin/commits/main)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/clion007/docker-jellyfin/build.yml?branch=main)](https://github.com/clion007/docker-jellyfin/actions)
 
 <div align="center">
   <img src="https://jellyfin.org/images/logo.png" alt="Jellyfin Logo" width="200"/>
@@ -11,18 +16,6 @@
 Jellyfin is a Free Software Media System that puts you in control of managing and streaming your media. It is an alternative to the proprietary Emby and Plex, to provide media from a dedicated server to end-user devices via multiple apps. Jellyfin is descended from Emby's 3.5.2 release and ported to the .NET Core framework to enable full cross-platform support. There are no strings attached, no premium licenses or features, and no hidden agendas: just a team who want to build something better and work together to achieve it.
 
 This clion/jellyfin docker image provides a better alternative to the official Jellyfin container. It's built on the latest Alpine Linux, offering a smaller footprint while fixing FFmpeg decoding issues, hardware acceleration support, and Chinese character display problems. The image automatically updates when new Jellyfin versions are released.
-
-## 📊 Project Status
-
-<div align="center">
-
-[![Docker Pulls](https://img.shields.io/docker/pulls/clion007/jellyfin.svg)](https://hub.docker.com/r/clion007/jellyfin)
-[![Docker Stars](https://img.shields.io/docker/stars/clion007/jellyfin.svg)](https://hub.docker.com/r/clion007/jellyfin)
-[![GitHub Stars](https://img.shields.io/github/stars/clion007/docker-jellyfin.svg)](https://github.com/clion007/docker-jellyfin)
-[![GitHub Last Commit](https://img.shields.io/github/last-commit/clion007/docker-jellyfin.svg)](https://github.com/clion007/docker-jellyfin/commits/main)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/clion007/docker-jellyfin/build.yml?branch=main)](https://github.com/clion007/docker-jellyfin/actions)
-
-</div>
 
 ## 🚀 Application Setup
 
