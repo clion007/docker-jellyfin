@@ -1,31 +1,53 @@
-# clion/jellyfin
+# Clion/Jellyfin
+
+<div align="center">
+  <img src="https://jellyfin.org/images/logo.png" alt="Jellyfin Logo" width="200"/>
+  <br>
+  <strong>The Free Software Media System</strong>
+</div>
+
+<br>
 
 Jellyfin is a Free Software Media System that puts you in control of managing and streaming your media. It is an alternative to the proprietary Emby and Plex, to provide media from a dedicated server to end-user devices via multiple apps. Jellyfin is descended from Emby's 3.5.2 release and ported to the .NET Core framework to enable full cross-platform support. There are no strings attached, no premium licenses or features, and no hidden agendas: just a team who want to build something better and work together to achieve it.
 
-This clion/jellyfin docker image supply you a better choice for the jellyfin container than offical image. It is builded base on latest alpine, with smaller size and fix the ffmpg decode, hardware drivers and chinese shown in garbled problems et,al. This image will auto check and update when there is new version of jellyfin exist.
+This clion/jellyfin docker image provides a better alternative to the official Jellyfin container. It's built on the latest Alpine Linux, offering a smaller footprint while fixing FFmpeg decoding issues, hardware acceleration support, and Chinese character display problems. The image automatically updates when new Jellyfin versions are released.
 
-## Application Setup
+## 📊 Project Status
 
-* Webui can be found at http://\<your-ip\>:8096
-* More information can be found on the official documentation.
+<div align="center">
 
-## Hardware Acceleration
+[![Docker Pulls](https://img.shields.io/docker/pulls/clion007/jellyfin.svg)](https://hub.docker.com/r/clion007/jellyfin)
+[![Docker Stars](https://img.shields.io/docker/stars/clion007/jellyfin.svg)](https://hub.docker.com/r/clion007/jellyfin)
+[![GitHub Stars](https://img.shields.io/github/stars/clion007/docker-jellyfin.svg)](https://github.com/clion007/docker-jellyfin)
+[![GitHub Last Commit](https://img.shields.io/github/last-commit/clion007/docker-jellyfin.svg)](https://github.com/clion007/docker-jellyfin/commits/main)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/clion007/docker-jellyfin/build.yml?branch=main)](https://github.com/clion007/docker-jellyfin/actions)
 
-Many desktop applications need access to a GPU to function properly and even some Desktop Environments have compositor effects that will not function without a GPU. However this is not a hard requirement and all base images will function without a video device mounted into the container.
+</div>
 
-For Intel/ATI/AMD to leverage hardware acceleration you will need to mount /dev/dri video device inside of the container.
+## 🚀 Application Setup
+
+* WebUI can be accessed at `http://<your-ip>:8096`
+* For detailed configuration options, please refer to the [official Jellyfin documentation](https://jellyfin.org/docs/)
+
+## 🖥️ Hardware Acceleration
+
+Hardware acceleration significantly improves transcoding performance. While not strictly required, it's highly recommended for optimal media streaming experience.
+
+### For Intel/AMD/ATI GPUs:
+Mount the `/dev/dri` device into the container:
 ```
 --device=/dev/dri:/dev/dri
 ```
-I will automatically ensure the jellyfin user inside of the container has the proper permissions to access this device.
 
-## Usage
+The container automatically configures proper permissions for the jellyfin user to access these devices.
 
-To help you get started creating a container from this image you can either use docker-compose or the docker cli.
+## 📋 Usage
 
-### docker-compose (recommended, [click here for more info](https://https://docs.docker.com/compose/))
+You can deploy this container using either docker-compose (recommended) or the docker CLI.
 
-```
+### Docker Compose (Recommended)
+
+```yaml
 services:
   jellyfin:
     container_name: Jellyfin
@@ -45,11 +67,14 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /path/to/jellyfin/library:/config
       - /path/to/media:/media/nas
+    devices:
+      - /dev/dri:/dev/dri #optional - for hardware transcoding
     restart: unless-stopped
 ```
 
-### Docker cli
-```
+### Docker CLI
+
+```bash
 docker run -d \
   --name=Jellyfin \
   -e UMASK=022 \
@@ -64,30 +89,80 @@ docker run -d \
   -v /path/to/config:/config \
   -v /path/to/media:/media/nas \
   -v /etc/localtime:/etc/localtime:ro \
+  --device=/dev/dri:/dev/dri `#optional - for hardware transcoding` \
   --restart unless-stopped \
   registry.cn-chengdu.aliyuncs.com/clion/jellyfin:latest
 ```
-## Parameters
 
-Containers are configured using parameters passed at runtime (such as those above). These parameters are separated by a colon and indicate <external>:<internal> respectively. For example, -p 8080:80 would expose port 80 from inside the container to be accessible from the host's IP on port 8080 outside the container.
+## ⚙️ Parameters
 
-* ```-p 8096``` Http webUI.
-* ```-p 8920``` Optional - Https webUI (you need to set up your own certificate).
-* ```-p 7359/udp``` Optional - Allows clients to discover Jellyfin on the local network.
-* ```-p 1900/udp``` Optional - Service discovery used by DNLA and clients.
-* ```-e PUID=1000``` for UserID - see below for explanation.
-* ```-e PUID=1000``` for GroupID - see below for explanation.
-* ```-e TZ=Asia/Shanghai``` specify a timezone to use in your local area.
-* ```-e JELLYFIN_PublishedServerUrl=192.168.0.5``` Set the autodiscovery response domain or IP address.
-* ```-v /config``` Jellyfin data storage location. This can grow very large, 50gb+ is likely for a large collection.
-* ```-v /media/nas``` Media goes here. Add as many as needed e.g. /media/nas/movies, /media/nas/tv, etc.
+Containers are configured using parameters passed at runtime. These parameters are separated by a colon and indicate `<external>:<internal>` respectively. For example, `-p 8080:80` would expose port 80 from inside the container to be accessible from the host's IP on port 8080.
 
-## Umask for running applications
+### Port Mappings
+| Parameter | Function |
+| :----: | --- |
+| `-p 8096:8096` | Primary HTTP web interface |
+| `-p 8920:8920` | HTTPS web interface (requires your own certificate) |
+| `-p 7359:7359/udp` | Allows clients to discover Jellyfin on the local network |
+| `-p 1900:1900/udp` | Service discovery used by DLNA and clients |
 
-For all of my images I provide the ability to override the default umask settings for services started within the containers using the optional -e UMASK=022 setting. Keep in mind umask is not chmod it subtracts from permissions based on it's value it does not add.
+### Environment Variables
+| Parameter | Function |
+| :----: | --- |
+| `-e PUID=1000` | User ID for container user (see User/Group section below) |
+| `-e PGID=1000` | Group ID for container user (see User/Group section below) |
+| `-e TZ=Asia/Shanghai` | Specify timezone |
+| `-e UMASK=022` | Control permission bits for newly created files (see Umask section) |
+| `-e JELLYFIN_PublishedServerUrl=192.168.0.5` | Set the autodiscovery response domain or IP address |
 
-## User / Group Identifiers
+### Volume Mappings
+| Parameter | Function |
+| :----: | --- |
+| `-v /config` | Jellyfin data storage location (can grow very large, 50GB+ for large collections) |
+| `-v /media/nas` | Media location. Add as many as needed (e.g., /media/nas/movies, /media/nas/tv) |
 
-When using volumes (-v flags), permissions issues can arise between the host OS and the container, we avoid this issue by allowing you to specify the user PUID and group PGID.
+### Device Mappings
+| Parameter | Function |
+| :----: | --- |
+| `--device=/dev/dri:/dev/dri` | For Intel/AMD GPU hardware acceleration |
 
-Ensure any volume directories on the host are owned by the same user you specify and any permissions issues will vanish like magic.
+## 🔧 Performance Tuning
+
+For optimal performance with large media libraries:
+
+1. **Memory Allocation**: Consider allocating sufficient memory:
+   ```
+   --memory=4g --memory-swap=6g
+   ```
+
+2. **Storage Performance**: Mount configuration and media directories on high-performance storage
+
+3. **Network Configuration**: For local streaming, consider using host networking:
+   ```
+   --network=host
+   ```
+
+## 🔐 Umask for Running Applications
+
+This image provides the ability to override default permission settings using the optional `-e UMASK=022` parameter. Remember that umask subtracts from permissions based on its value; it does not add permissions.
+
+## 👥 User / Group Identifiers
+
+When using volumes, permission issues can arise between the host OS and the container. To avoid this, specify the user PUID and group PGID.
+
+Ensure any volume directories on the host are owned by the same user you specify, and permission issues will be resolved automatically.
+
+## ❓ Troubleshooting
+
+### Transcoding Issues
+- ✅ Verify hardware acceleration is properly configured
+- ✅ Check Jellyfin dashboard for transcoding errors
+- ✅ Ensure media formats are supported
+
+### Network Discovery Problems
+- ✅ Confirm UDP ports 7359 and 1900 are properly mapped
+- ✅ Set the correct `JELLYFIN_PublishedServerUrl` environment variable
+
+### Permission Issues
+- ✅ Verify PUID/PGID match the owner of your host directories
+- ✅ Check umask settings if files have incorrect permissions

@@ -1,7 +1,6 @@
-# syntax=docker/dockerfile:1
+# syntax=docker/dockerfile:1.4
 
 # Docker build arguments
-# ARG DOTNET_VERSION
 ARG DOTNET_VERSION=8.0
 
 # build jellyfin server
@@ -14,8 +13,13 @@ WORKDIR /tmp/jellyfin
 
 ADD https://github.com/jellyfin/jellyfin/archive/refs/tags/v$JELLYFIN_VERSION.tar.gz ../jellyfin.tar.gz
 
-RUN set -ex; \
+# 使用 --mount=type=cache 缓存构建依赖
+RUN --mount=type=cache,target=/var/cache/apk \
+    --mount=type=cache,target=/tmp/nuget \
+    set -ex; \
     tar xf ../jellyfin.tar.gz --strip-components=1; \
+    # 设置 Nuget 缓存目录
+    mkdir -p /tmp/nuget && export NUGET_PACKAGES=/tmp/nuget; \
     dotnet publish \
         Jellyfin.Server \
         --self-contained \
@@ -28,6 +32,8 @@ RUN set -ex; \
     rm -rf \
         /var/cache/apk/* \
         /var/tmp/* \
+        /tmp/* \
+        ~/.nuget \
         ../* \
     ;
 
@@ -97,7 +103,7 @@ RUN set -ex; \
         imlib2-dev \
         intel-media-driver-dev \
         intel-media-sdk-dev \
-	ladspa-dev \
+	      ladspa-dev \
         lame-dev \
         libass-dev \
         libbluray-dev \
@@ -106,8 +112,8 @@ RUN set -ex; \
         libopenmpt-dev \
         libplacebo-dev \
         libpng-dev \
-	librist-dev \
-	libsrt-dev \
+        librist-dev \
+        libsrt-dev \
         libtheora-dev \
         libtool \
         libva-dev \
@@ -115,7 +121,7 @@ RUN set -ex; \
         libvorbis-dev \
         libvpx-dev \
         libwebp-dev \
-	libxml2-dev \
+        libxml2-dev \
         lilv-dev \
         mesa-dev \
         musl-dev \
@@ -124,12 +130,14 @@ RUN set -ex; \
         openssl-dev \
         opus-dev \
         perl-dev \
-	rav1e-dev \
+        rav1e-dev \
         shaderc-dev \
         svt-av1-dev \
         util-linux-dev \
-	v4l-utils-dev \
-        # vulkan-loader-dev \
+        v4l-utils-dev \
+        vulkan-loader-dev \
+        vulkan-headers \
+        vulkan-tools \
         x264-dev \
         x265-dev \
         xz-dev \
@@ -194,7 +202,8 @@ RUN set -ex; \
       --enable-static \
       --enable-vaapi \
       --enable-version3 \
-      # --enable-vulkan \
+      --enable-vulkan \
+      --enable-libshaderc \
     ; \
     make -j $(nproc) install $FFMPEG_PREFIX; \
     \
