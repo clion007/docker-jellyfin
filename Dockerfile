@@ -13,7 +13,6 @@ WORKDIR /tmp/jellyfin
 
 ADD https://github.com/jellyfin/jellyfin/archive/refs/tags/v$JELLYFIN_VERSION.tar.gz ../jellyfin.tar.gz
 
-# 使用 --mount=type=cache 缓存构建依赖
 RUN --mount=type=cache,target=/var/cache/apk \
     --mount=type=cache,target=/tmp/nuget \
     set -ex; \
@@ -30,7 +29,6 @@ RUN --mount=type=cache,target=/var/cache/apk \
         "-p:DebugType=none" \
     ; \
     rm -rf \
-        /var/cache/apk/* \
         /var/tmp/* \
         /tmp/*[!nuget] \
         ~/.nuget \
@@ -48,7 +46,9 @@ WORKDIR /tmp/jellyfin-web
 
 ADD https://github.com/jellyfin/jellyfin-web/archive/refs/tags/v$JELLYFIN_VERSION.tar.gz ../jellyfin-web.tar.gz
 
-RUN set -ex; \
+RUN --mount=type=cache,target=/var/cache/apk \
+    --mount=type=cache,target=/root/.npm \
+    set -ex; \
     apk add --no-cache --virtual .build-deps \
       alpine-sdk \
       autoconf \
@@ -66,7 +66,6 @@ RUN set -ex; \
     apk del --no-network .build-deps; \
     mv dist /web; \
     rm -rf \
-        /var/cache/apk/* \
         /var/tmp/* \
         ../* \
     ;
@@ -84,7 +83,8 @@ ADD https://github.com/jellyfin/jellyfin-ffmpeg/archive/refs/tags/v$FFMPEG_VERSI
 COPY --chmod=755 deplib/ ../
 COPY --chmod=755 patches/ ../
 
-RUN set -ex; \
+RUN --mount=type=cache,target=/var/cache/apk \
+    set -ex; \
     apk add --no-cache --virtual .build-deps \
         alpine-sdk \
         alsa-lib-dev \
@@ -215,7 +215,6 @@ RUN set -ex; \
     # 删除构建依赖和缓存
     apk del --no-network .build-deps; \
     rm -rf \
-        /var/cache/apk/* \
         /var/tmp/* \
         ../* \
     ;
