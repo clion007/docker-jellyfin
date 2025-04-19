@@ -4,6 +4,9 @@
 [![GitHub Stars](https://img.shields.io/github/stars/clion007/docker-jellyfin.svg)](https://github.com/clion007/docker-jellyfin)
 [![GitHub Last Commit](https://img.shields.io/github/last-commit/clion007/docker-jellyfin.svg)](https://github.com/clion007/docker-jellyfin/commits/main)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/clion007/docker-jellyfin/build.yml?branch=main)](https://github.com/clion007/docker-jellyfin/actions)
+[![Image Size](https://img.shields.io/docker/image-size/clion007/jellyfin/latest)](https://hub.docker.com/r/clion007/jellyfin)
+[![Jellyfin Version](https://img.shields.io/badge/jellyfin-10.8.13-blue)](https://github.com/jellyfin/jellyfin/releases)
+[![FFmpeg Version](https://img.shields.io/badge/ffmpeg-6.0-orange)](https://github.com/jellyfin/jellyfin-ffmpeg/releases)
 
 <div align="center">
   <img src="https://jellyfin.org/images/logo.png" alt="Jellyfin Logo" width="200"/>
