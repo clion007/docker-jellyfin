@@ -32,7 +32,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
     rm -rf \
         /var/cache/apk/* \
         /var/tmp/* \
-        /tmp/* \
+        /tmp/*[!nuget] \
         ~/.nuget \
         ../* \
     ;
@@ -85,7 +85,6 @@ COPY --chmod=755 deplib/ ../
 COPY --chmod=755 patches/ ../
 
 RUN set -ex; \
-    # 使用 --virtual 创建构建依赖包组，便于后续一次性删除
     apk add --no-cache --virtual .build-deps \
         alpine-sdk \
         alsa-lib-dev \
