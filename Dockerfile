@@ -33,7 +33,6 @@ RUN --mount=type=cache,target=/var/cache/apk \
         /var/cache/apk/* \
         /var/tmp/* \
         /tmp/*[!nuget] \
-        ~/.nuget \
         ../* \
     ;
 
