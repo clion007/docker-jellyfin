@@ -3,7 +3,7 @@
 [![Docker Stars](https://img.shields.io/docker/stars/clion007/jellyfin.svg)](https://hub.docker.com/r/clion007/jellyfin)
 [![GitHub Stars](https://img.shields.io/github/stars/clion007/docker-jellyfin.svg)](https://github.com/clion007/docker-jellyfin)
 [![GitHub Last Commit](https://img.shields.io/github/last-commit/clion007/docker-jellyfin.svg)](https://github.com/clion007/docker-jellyfin/commits/main)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/clion007/docker-jellyfin/build.yml?branch=main)](https://github.com/clion007/docker-jellyfin/actions)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/clion007/docker-jellyfin/docker-publish.yml?branch=main)](https://github.com/clion007/docker-jellyfin/actions)
 [![Image Size](https://img.shields.io/docker/image-size/clion007/jellyfin/latest)](https://hub.docker.com/r/clion007/jellyfin)
 
 <div align="center">
