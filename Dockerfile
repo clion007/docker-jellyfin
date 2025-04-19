@@ -206,7 +206,6 @@ RUN set -ex; \
       --enable-vaapi \
       --enable-version3 \
       --enable-vulkan \
-      --enable-libshaderc \
     ; \
     make -j $(nproc) install $FFMPEG_PREFIX; \
     \
