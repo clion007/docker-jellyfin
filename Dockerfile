@@ -85,7 +85,8 @@ COPY --chmod=755 deplib/ ../
 COPY --chmod=755 patches/ ../
 
 RUN set -ex; \
-    apk add --no-cache --upgrade \
+    # 使用 --virtual 创建构建依赖包组，便于后续一次性删除
+    apk add --no-cache --virtual .build-deps \
         alpine-sdk \
         alsa-lib-dev \
         aom-dev \
@@ -103,7 +104,7 @@ RUN set -ex; \
         imlib2-dev \
         intel-media-driver-dev \
         intel-media-sdk-dev \
-	      ladspa-dev \
+        ladspa-dev \
         lame-dev \
         libass-dev \
         libbluray-dev \
@@ -213,6 +214,8 @@ RUN set -ex; \
     # build ffmpeg lib files
     ../cplibfiles.sh $FFMPEG_PREFIX/bin/ffmpeg $FFMPEG_PREFIX/library; \
     ../cplibfiles.sh $FFMPEG_PREFIX/bin/ffprobe $FFMPEG_PREFIX/library; \
+    # 删除构建依赖和缓存
+    apk del --no-network .build-deps; \
     rm -rf \
         /var/cache/apk/* \
         /var/tmp/* \
