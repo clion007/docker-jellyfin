@@ -82,7 +82,7 @@ WORKDIR /tmp/jellyfin-ffmpeg
 ADD https://github.com/jellyfin/jellyfin-ffmpeg/archive/refs/tags/v$FFMPEG_VERSION.tar.gz ../jellyfin-ffmpeg.tar.gz
 
 COPY --chmod=755 deplib/ ../
-COPY --chmod=755 patches/ ../
+# COPY --chmod=755 patches/ ../
 
 RUN set -ex; \
     apk add --no-cache --upgrade \
@@ -145,8 +145,8 @@ RUN set -ex; \
         zlib-dev \
     ; \
     tar xf ../jellyfin-ffmpeg.tar.gz --strip-components=1; \
-    mv -f ../*.patch debian/patches/; \
-    cat debian/patches/*.patch | patch -p1; \
+    # mv -f ../*.patch debian/patches/; \
+    # cat debian/patches/*.patch | patch -p1; \
     ./configure \
       --prefix=$FFMPEG_PREFIX \
       --target-os=linux \
