@@ -102,7 +102,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
         gmp-dev \
         imlib2-dev \
         intel-media-driver-dev \
-        intel-media-sdk-dev \
+        # intel-media-sdk-dev \
         ladspa-dev \
         lame-dev \
         libass-dev \
