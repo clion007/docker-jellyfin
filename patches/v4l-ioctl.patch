@@ -17,11 +17,13 @@
      s->munmap_f = prefix ## munmap;     \
  } while (0)
  
-@@ -147,7 +147,7 @@ static int device_open(AVFormatContext *ctx, const char* device_path)
+@@ -146,7 +146,9 @@ static int device_open(AVFormatContext *ctx, const char* device_path)
              s->open_f = v4l2_open;
  #else
              av_log(ctx, AV_LOG_ERROR, "libavdevice is not built with libv4l2 support.\n");
 -            return AVERROR(EINVAL);
++            /* Use ENOSYS (Function not implemented) instead of EINVAL */
++            av_log(ctx, AV_LOG_ERROR, "Please compile FFmpeg with --enable-libv4l2.\n");
 +            return AVERROR(ENOSYS);
  #endif
          } else {
