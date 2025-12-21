@@ -4,12 +4,12 @@
  #define V4L_RAWFORMATS  1
  #define V4L_COMPFORMATS 2
  
-+/* Fix for libv4l2 compatibility */
++/* Compatibility fix for libv4l2 */
 +#if CONFIG_LIBV4L2
-+    #define V4L2_IOCTL_SIGNATURE int, unsigned long int, ...
++    #define V4L2_IOCTL_TYPE unsigned long int
 +    #define V4L2_IOCTL_CAST (int (*)(int, unsigned long int, ...))
 +#else
-+    #define V4L2_IOCTL_SIGNATURE int, int, ...
++    #define V4L2_IOCTL_TYPE int
 +    #define V4L2_IOCTL_CAST (int (*)(int, int, ...))
 +#endif
 +
@@ -23,7 +23,7 @@
      int fd;
      int ioctl_retry;
 -    int (*ioctl_f)(int, int, ...);
-+    int (*ioctl_f)(V4L2_IOCTL_SIGNATURE);
++    int (*ioctl_f)(int, V4L2_IOCTL_TYPE, ...);
      int (*open_f)(const char *, int, ...);
      int (*close_f)(int fd);
 @@ -134,7 +143,7 @@
@@ -31,11 +31,11 @@
      struct video_data *s = ctx->priv_data;
      struct v4l2_capability cap;
 -    int (*ioctl_f)(int, int, ...);
-+    int (*ioctl_f)(V4L2_IOCTL_SIGNATURE);
++    int (*ioctl_f)(int, V4L2_IOCTL_TYPE, ...);
      int fd;
      int err;
      int flags = O_RDWR;
-@@ -143,13 +152,13 @@
+@@ -143,7 +152,7 @@
      s->open_f   = prefix ## open;       \
      s->close_f  = prefix ## close;      \
      s->dup_f    = prefix ## dup;        \
@@ -44,4 +44,3 @@
      s->read_f   = prefix ## read;       \
      s->mmap_f   = prefix ## mmap;       \
      s->munmap_f = prefix ## munmap;     \
- } while (0)
