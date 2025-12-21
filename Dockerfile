@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.4
 
 # Docker build arguments
-ARG DOTNET_VERSION=8.0
+ARG DOTNET_VERSION=9.0
 
 # build jellyfin server
 FROM mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION}-alpine-amd64 AS server
