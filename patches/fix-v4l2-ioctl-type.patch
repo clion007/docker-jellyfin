@@ -1,5 +1,5 @@
---- a/ffmpeg/libavdevice/v4l2.c
-+++ b/ffmpeg/libavdevice/v4l2.c
+--- a/libavdevice/v4l2.c
++++ b/libavdevice/v4l2.c
 @@ -1,6 +1,6 @@
  /* ... (file header/context) ... */
  
