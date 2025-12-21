@@ -1,22 +1,25 @@
 --- a/libavdevice/v4l2.c
 +++ b/libavdevice/v4l2.c
-@@ -43,6 +43,15 @@ static const int desired_video_buffers = 256;
+@@ -43,6 +43,16 @@
  #define V4L_RAWFORMATS  1
  #define V4L_COMPFORMATS 2
  
-+/* 修复函数指针类型的兼容性 */
++/* Fix function pointer type compatibility with libv4l2 */
 +#if CONFIG_LIBV4L2
-+#define V4L2_IOCTL_TYPE int (*)(int, unsigned long int, ...)
-+#define V4L2_IOCTL_CAST (int (*)(int, unsigned long int, ...))
++    #define V4L2_IOCTL_TYPE int (*)(int, unsigned long int, ...)
++    #define V4L2_IOCTL_CAST (int (*)(int, unsigned long int, ...))
 +#else
-+#define V4L2_IOCTL_TYPE int (*)(int, int, ...)
-+#define V4L2_IOCTL_CAST (int (*)(int, int, ...))
++    #define V4L2_IOCTL_TYPE int (*)(int, int, ...)
++    #define V4L2_IOCTL_CAST (int (*)(int, int, ...))
 +#endif
++
 +
  /**
   * Return timestamps to the user exactly as returned by the kernel
   */
-@@ -57,7 +66,7 @@ struct video_data {
+@@ -57,13 +67,13 @@
+ 
+ struct video_data {
      AVClass *class;
      int fd;
      int ioctl_retry;
@@ -25,7 +28,13 @@
      int (*open_f)(const char *, int, ...);
      int (*close_f)(int fd);
      int (*dup_f)(int fd);
-@@ -131,18 +140,27 @@ static int device_open(AVFormatContext *ctx, const char* device_path)
+ #if HAVE_POSIX_IOCTL
+     int (*ioctl_f)(int fd, int request, ...);
+ #else
+     int (*ioctl_f)(int fd, unsigned long int request, ...);
+@@ -131,29 +141,39 @@
+ 
+ static int device_open(AVFormatContext *ctx, const char* device_path)
  {
      struct video_data *s = ctx->priv_data;
      struct v4l2_capability cap;
@@ -42,26 +51,38 @@
 -    s->ioctl_f  = prefix ## ioctl;      \
 -    s->read_f   = prefix ## read;       \
 -    s->mmap_f   = prefix ## mmap;       \
-+/* 修复 SET_WRAPPERS 宏以正确处理类型转换 */
-+#undef SET_WRAPPERS
-+#if CONFIG_LIBV4L2
-+#define SET_WRAPPERS(prefix) do {                         \
-+    s->open_f   = prefix ## open;                         \
-+    s->close_f  = prefix ## close;                        \
-+    s->dup_f    = prefix ## dup;                          \
-+    s->ioctl_f  = (V4L2_IOCTL_TYPE)prefix ## ioctl;       \
-+    s->read_f   = prefix ## read;                         \
-+    s->mmap_f   = prefix ## mmap;                         \
-+    s->munmap_f = prefix ## munmap;                       \
-+} while (0)
-+#else
-+#define SET_WRAPPERS(prefix) do {                         \
-+    s->open_f   = prefix ## open;                         \
-+    s->close_f  = prefix ## close;                        \
-+    s->dup_f    = prefix ## dup;                          \
-+    s->ioctl_f  = (V4L2_IOCTL_TYPE)prefix ## ioctl;       \
-+    s->read_f   = prefix ## read;                         \
-+    s->mmap_f   = prefix ## mmap;                         \
-     s->munmap_f = prefix ## munmap;     \
- } while (0)
-+#endif
+-    s->munmap_f = prefix ## munmap;     \
+-} while (0)
++    /* Fix SET_WRAPPERS macro to handle type casting properly */
++    #undef SET_WRAPPERS
++    #if CONFIG_LIBV4L2
++    #define SET_WRAPPERS(prefix) do {                               \
++        s->open_f   = prefix ## open;                               \
++        s->close_f  = prefix ## close;                              \
++        s->dup_f    = prefix ## dup;                                \
++        s->ioctl_f  = (V4L2_IOCTL_TYPE)prefix ## ioctl;             \
++        s->read_f   = prefix ## read;                               \
++        s->mmap_f   = prefix ## mmap;                               \
++        s->munmap_f = prefix ## munmap;                             \
++    } while (0)
++    #else
++    #define SET_WRAPPERS(prefix) do {                               \
++        s->open_f   = prefix ## open;                               \
++        s->close_f  = prefix ## close;                              \
++        s->dup_f    = prefix ## dup;                                \
++        s->ioctl_f  = (V4L2_IOCTL_TYPE)prefix ## ioctl;             \
++        s->read_f   = prefix ## read;                               \
++        s->mmap_f   = prefix ## mmap;                               \
++        s->munmap_f = prefix ## munmap;                             \
++    } while (0)
++    #endif
+ 
+-#define v4l2_open   s->open_f
+-#define v4l2_close  s->close_f
+-#define v4l2_dup    s->dup_f
+-#define v4l2_ioctl  s->ioctl_f
+ #define v4l2_read   s->read_f
+ #define v4l2_mmap   s->mmap_f
+ #define v4l2_munmap s->munmap_f
+ 
+     if (ctx->flags & AVFMT_FLAG_NONBLOCK) {
