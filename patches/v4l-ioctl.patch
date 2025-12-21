@@ -1,15 +1,6 @@
---- libavdevice/v4l2.c.orig	2024-01-01 00:00:00.000000000 +0000
-+++ libavdevice/v4l2.c	2024-01-01 00:00:01.000000000 +0000
-@@ -45,7 +45,7 @@
- #include "v4l2-common.h"
- #include <dirent.h>
- 
--#if CONFIG_LIBV4L2
-+#ifdef CONFIG_LIBV4L2
- #include <libv4l2.h>
- #endif
- 
-@@ -70,13 +70,9 @@
+--- a/libavdevice/v4l2.c
++++ b/libavdevice/v4l2.c
+@@ -70,11 +70,7 @@
      int use_libv4l2;
      int (*open_f)(const char *file, int oflag, ...);
      int (*close_f)(int fd);
@@ -18,36 +9,16 @@
 -    int (*ioctl_f)(int fd, int request, ...);
 -#else
 +    int (*dup_f)(int fd);
-+    /* Always use unsigned long int for ioctl request parameter */
      int (*ioctl_f)(int fd, unsigned long int request, ...);
 -#endif
--    ssize_t (*read_f)(int fd, void *buffer, size_t n);
+     ssize_t (*read_f)(int fd, void *buffer, size_t n);
      void *(*mmap_f)(void *start, size_t length, int prot, int flags, int fd, int64_t offset);
      int (*munmap_f)(void *_start, size_t length);
-@@ -134,7 +130,7 @@
- } while (0)
- 
-     if (s->use_libv4l2) {
--#if CONFIG_LIBV4L2
-+#ifdef CONFIG_LIBV4L2
-         SET_WRAPPERS(v4l2_);
- #else
-         av_log(ctx, AV_LOG_ERROR, "libavdevice is not built with libv4l2 support.\n");
-@@ -142,6 +138,8 @@
+@@ -142,6 +138,7 @@
  #endif
      } else {
          SET_WRAPPERS();
-+        /* Cast system ioctl to match the function pointer signature */
 +        s->ioctl_f = (int (*)(int, unsigned long int, ...))ioctl;
      }
  
  #define v4l2_open   s->open_f
-@@ -831,7 +829,7 @@
-     if (!st)
-         return AVERROR(ENOMEM);
- 
--#if CONFIG_LIBV4L2
-+#ifdef CONFIG_LIBV4L2
-     /* silence libv4l2 logging. if fopen() fails v4l2_log_file will be NULL
-        and errors will get sent to stderr */
-     if (s->use_libv4l2)
