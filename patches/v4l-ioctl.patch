@@ -1,6 +1,17 @@
+diff --git a/libavdevice/v4l2.c b/libavdevice/v4l2.c
+index abc1234..def5678 100644
 --- a/libavdevice/v4l2.c
 +++ b/libavdevice/v4l2.c
-@@ -67,13 +67,13 @@ struct video_data {
+@@ -45,7 +45,7 @@
+ #include "v4l2-common.h"
+ #include <dirent.h>
+ 
+-#if CONFIG_LIBV4L2
++#ifdef CONFIG_LIBV4L2
+ #include <libv4l2.h>
+ #endif
+ 
+@@ -70,13 +70,9 @@ struct video_data {
      int use_libv4l2;
      int (*open_f)(const char *file, int oflag, ...);
      int (*close_f)(int fd);
@@ -9,14 +20,13 @@
 -    int (*ioctl_f)(int fd, int request, ...);
 -#else
 +    int (*dup_f)(int fd);
-+    /* ioctl_f should use unsigned long int to match libv4l2 signature
-+     * and be compatible with system ioctl (int gets promoted) */
++    /* Use unsigned long int to match both libv4l2 and system ioctl */
      int (*ioctl_f)(int fd, unsigned long int request, ...);
 -#endif
      ssize_t (*read_f)(int fd, void *buffer, size_t n);
      void *(*mmap_f)(void *start, size_t length, int prot, int flags, int fd, int64_t offset);
      int (*munmap_f)(void *_start, size_t length);
-@@ -132,7 +132,7 @@ static int device_open(AVFormatContext *ctx, const char* device_path)
+@@ -135,7 +131,7 @@ static int device_open(AVFormatContext *ctx, const char* device_path)
  } while (0)
  
      if (s->use_libv4l2) {
@@ -25,17 +35,16 @@
          SET_WRAPPERS(v4l2_);
  #else
          av_log(ctx, AV_LOG_ERROR, "libavdevice is not built with libv4l2 support.\n");
-@@ -140,6 +140,10 @@ static int device_open(AVFormatContext *ctx, const char* device_path)
+@@ -143,6 +139,8 @@ static int device_open(AVFormatContext *ctx, const char* device_path)
  #endif
      } else {
          SET_WRAPPERS();
-+        /* Cast system ioctl to match the expected signature.
-+         * This is safe because int can be promoted to unsigned long int. */
++        /* Cast system ioctl to match the expected function signature */
 +        s->ioctl_f = (int (*)(int, unsigned long int, ...))ioctl;
      }
  
  #define v4l2_open   s->open_f
-@@ -824,7 +828,7 @@ static int v4l2_read_header(AVFormatContext *ctx)
+@@ -827,7 +825,7 @@ static int v4l2_read_header(AVFormatContext *ctx)
      if (!st)
          return AVERROR(ENOMEM);
  
