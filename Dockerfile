@@ -130,10 +130,10 @@ RUN --mount=type=cache,target=/var/cache/apk \
         mesa-dev \
         musl-dev \
         nasm \
-        patch \
         opencl-dev \
         openssl-dev \
         opus-dev \
+        patch \
         perl-dev \
         rav1e-dev \
         shaderc-dev \
