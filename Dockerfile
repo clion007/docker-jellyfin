@@ -88,6 +88,8 @@ COPY --chmod=755 patches/ ../
 RUN --mount=type=cache,target=/var/cache/apk \
     set -ex; \
     apk add --no-cache --virtual .build-deps \
+      --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/main \
+      --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/community \
         alpine-sdk \
         alsa-lib-dev \
         aom-dev \
@@ -104,6 +106,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
         gmp-dev \
         imlib2-dev \
         intel-media-driver-dev \
+        intel-media-sdk-dev \
         ladspa-dev \
         lame-dev \
         libass-dev \
@@ -144,11 +147,6 @@ RUN --mount=type=cache,target=/var/cache/apk \
         xz-dev \
         zimg-dev \
         zlib-dev \
-    ; \
-    apk add --no-cache --virtual .build-deps \
-      --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/main \
-      --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/community \
-      intel-media-sdk-dev \
     ; \
     tar xf ../jellyfin-ffmpeg.tar.gz --strip-components=1; \
     # 应用补丁
