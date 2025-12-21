@@ -152,7 +152,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
     tar xf ../jellyfin-ffmpeg.tar.gz --strip-components=1; \
     # 应用补丁
     for patch in ../patches/*.patch; do \
-        [ -e "$patch" ] || continue \
+        [ -e "$patch" ] || continue; \
         echo "Applying patch: $patch"; \
         patch -p1 < "$patch" || echo "Warning: Patch $patch failed to apply, continuing anyway"; \
     done; \
