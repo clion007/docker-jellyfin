@@ -1,6 +1,6 @@
 --- a/libavdevice/v4l2.c
 +++ b/libavdevice/v4l2.c
-@@ -42,7 +42,7 @@
+@@ -45,7 +45,7 @@
  #include "v4l2-common.h"
  #include <dirent.h>
  
@@ -9,7 +9,7 @@
  #include <libv4l2.h>
  #endif
  
-@@ -67,13 +67,9 @@
+@@ -70,13 +70,9 @@
      int use_libv4l2;
      int (*open_f)(const char *file, int oflag, ...);
      int (*close_f)(int fd);
@@ -18,17 +18,18 @@
 -    int (*ioctl_f)(int fd, int request, ...);
 -#else
 +    int (*dup_f)(int fd);
++    /* Use unsigned long int to match V4L2 API */
      int (*ioctl_f)(int fd, unsigned long int request, ...);
 -#endif
 -    ssize_t (*read_f)(int fd, void *buffer, size_t n);
-+    ssize_t (*read_f)(int fd, void *buffer, size_t n);
      void *(*mmap_f)(void *start, size_t length, int prot, int flags, int fd, int64_t offset);
      int (*munmap_f)(void *_start, size_t length);
  };
-@@ -83,6 +79,17 @@
+@@ -86,6 +82,18 @@
      int index;
  };
  
++/* Wrapper function to convert unsigned long int to int for system ioctl */
 +static int sys_ioctl_wrapper(int fd, unsigned long int request, ...)
 +{
 +    va_list ap;
@@ -43,7 +44,7 @@
  static int device_open(AVFormatContext *ctx, const char* device_path)
  {
      struct video_data *s = ctx->priv_data;
-@@ -102,7 +109,7 @@
+@@ -105,7 +113,7 @@
  } while (0)
  
      if (s->use_libv4l2) {
@@ -52,15 +53,16 @@
          SET_WRAPPERS(v4l2_);
  #else
          av_log(ctx, AV_LOG_ERROR, "libavdevice is not built with libv4l2 support.\n");
-@@ -110,6 +117,7 @@
+@@ -113,6 +121,8 @@
  #endif
      } else {
          SET_WRAPPERS();
++        /* Use wrapper function for system ioctl */
 +        s->ioctl_f = sys_ioctl_wrapper;
      }
  
  #define v4l2_open   s->open_f
-@@ -828,7 +836,7 @@
+@@ -831,7 +841,7 @@
      if (!st)
          return AVERROR(ENOMEM);
  
