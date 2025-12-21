@@ -1,22 +1,8 @@
 --- a/libavdevice/v4l2.c
 +++ b/libavdevice/v4l2.c
-@@ -136,7 +136,7 @@ static int device_open(AVFormatContext *ctx, const char* device_path)
-     s->open_f   = prefix ## open;       \
-     s->close_f  = prefix ## close;      \
-     s->dup_f    = prefix ## dup;        \
+@@ -138,1 +138,1 @@ static int device_open(AVFormatContext *ctx, const char* device_path)
 -    s->ioctl_f  = prefix ## ioctl;      \
 +    s->ioctl_f  = (int (*)(int, int, ...))prefix ## ioctl;      \
-     s->read_f   = prefix ## read;       \
-     s->mmap_f   = prefix ## mmap;       \
-     s->munmap_f = prefix ## munmap;     \
-@@ -143,7 +143,7 @@ static int device_open(AVFormatContext *ctx, const char* device_path)
-     if (s->use_libv4l2) {
- #if CONFIG_LIBV4L2
-         SET_WRAPPERS(v4l2_);
- #else
-         av_log(ctx, AV_LOG_ERROR, "libavdevice is not built with libv4l2 support.\n");
+@@ -146,1 +146,1 @@
 -        return AVERROR(EINVAL);
 +        return AVERROR(ENOSYS);
- #endif
-     } else {
-         SET_WRAPPERS();
