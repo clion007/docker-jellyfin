@@ -2,6 +2,7 @@
 
 # Docker build arguments
 ARG DOTNET_VERSION=9.0
+ARG NODEJS_VERSION=20
 
 # build jellyfin server
 FROM mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION}-alpine-amd64 AS server
@@ -36,7 +37,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
     ;
 
 # build jellyfin-web client
-FROM node:lts-alpine AS web
+FROM node:${NODEJS_VERSION}-alpine AS web
 
 ARG JELLYFIN_VERSION
 
