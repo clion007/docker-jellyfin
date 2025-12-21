@@ -1,7 +1,13 @@
 --- a/libavdevice/v4l2.c
 +++ b/libavdevice/v4l2.c
-@@ -57,7 +57,7 @@ struct video_data {
-     AVClass *class;
+@@ -1,4 +1,4 @@
+ /*
+- * Copyright (c) 2000,2001 Fabrice Bellard
++ * Copyright (c) 2000,2001 Fabrice Bellard
+  * Copyright (c) 2006 Luca Abeni
+  *
+  * This file is part of FFmpeg.
+@@ -57,6 +57,7 @@ struct video_data {
      int fd;
      int ioctl_retry;
 -    int (*ioctl_f)(int, int, ...);
@@ -9,7 +15,7 @@
      int (*open_f)(const char *, int, ...);
      int (*close_f)(int fd);
      int (*dup_f)(int fd);
-@@ -134,7 +134,7 @@ static int device_open(AVFormatContext *ctx, const char* device_path)
+@@ -131,6 +132,7 @@ static int device_open(AVFormatContext *ctx, const char* device_path)
  {
      struct video_data *s = ctx->priv_data;
      struct v4l2_capability cap;
@@ -17,4 +23,3 @@
 +    int (*ioctl_f)(int, unsigned long int, ...);
      int fd;
      int err;
-     int flags = O_RDWR;
