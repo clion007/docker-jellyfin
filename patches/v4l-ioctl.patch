@@ -28,7 +28,7 @@
  };
  
  struct buff_data {
-@@ -83,6 +80,18 @@
+@@ -83,19 +80,20 @@
      int index;
  };
  
@@ -46,8 +46,21 @@
 +
  static int device_open(AVFormatContext *ctx, const char* device_path)
  {
-     struct video_data *s = ctx->priv_data;
-@@ -102,7 +111,7 @@
+-    struct video_data *s = ctx->priv_data;
+-    struct v4l2_capability cap;
+-    int fd;
+-    int err;
+-    int flags = O_RDWR;
+-
+-#define SET_WRAPPERS(prefix) do {       \
+-    s->open_f   = prefix ## open;       \
+-    s->close_f  = prefix ## close;      \
+-    s->dup_f    = prefix ## dup;        \
+-    s->ioctl_f  = prefix ## ioctl;      \
+     s->read_f   = prefix ## read;       \
+     s->mmap_f   = prefix ## mmap;       \
+     s->munmap_f = prefix ## munmap;     \
+@@ -111,7 +109,7 @@
  } while (0)
  
      if (s->use_libv4l2) {
@@ -56,26 +69,17 @@
          SET_WRAPPERS(v4l2_);
  #else
          av_log(ctx, AV_LOG_ERROR, "libavdevice is not built with libv4l2 support.\n");
-@@ -110,6 +119,7 @@
+@@ -119,8 +117,7 @@
  #endif
      } else {
          SET_WRAPPERS();
+-        /* 转换系统ioctl的签名以匹配函数指针 */
+-        s->ioctl_f = (int (*)(int, unsigned long int, ...))(void*)ioctl;
 +        s->ioctl_f = sys_ioctl_wrapper;
      }
  
  #define v4l2_open   s->open_f
-@@ -194,7 +204,9 @@
-     return fd;
- 
- fail:
--    v4l2_close(fd);
-+    if (fd >= 0) {
-+        v4l2_close(fd);
-+    }
-     return err;
- }
- 
-@@ -831,7 +843,7 @@
+@@ -831,7 +828,7 @@
      if (!st)
          return AVERROR(ENOMEM);
  
