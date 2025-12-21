@@ -161,7 +161,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
     # 如果没有匹配，$1 会等于原始模式字符串
     if [ "$1" = "../patches/*.patch" ]; then \
       echo "No patch files found, skipping patches."; \
-    else; \
+    else \
       for patch in "$@"; do \
         echo "Applying patch: $patch"; \
         patch -p1 < "$patch" || echo "Warning: Patch $patch failed to apply, continuing anyway"; \
