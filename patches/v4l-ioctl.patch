@@ -18,10 +18,10 @@
 -    int (*ioctl_f)(int fd, int request, ...);
 -#else
 +    int (*dup_f)(int fd);
-+    /* Use unsigned long int to match V4L2 API */
      int (*ioctl_f)(int fd, unsigned long int request, ...);
 -#endif
 -    ssize_t (*read_f)(int fd, void *buffer, size_t n);
++    ssize_t (*read_f)(int fd, void *buffer, size_t n);
      void *(*mmap_f)(void *start, size_t length, int prot, int flags, int fd, int64_t offset);
      int (*munmap_f)(void *_start, size_t length);
  };
@@ -29,16 +29,17 @@
      int index;
  };
  
-+/* Wrapper function to convert unsigned long int to int for system ioctl */
++/* Wrapper for system ioctl to match V4L2 API signature */
 +static int sys_ioctl_wrapper(int fd, unsigned long int request, ...)
 +{
 +    va_list ap;
 +    void *arg;
++    int res;
 +    va_start(ap, request);
 +    arg = va_arg(ap, void *);
 +    va_end(ap);
-+    
-+    return ioctl(fd, (int)request, arg);
++    res = ioctl(fd, (int)request, arg);
++    return res;
 +}
 +
  static int device_open(AVFormatContext *ctx, const char* device_path)
@@ -57,12 +58,21 @@
  #endif
      } else {
          SET_WRAPPERS();
-+        /* Use wrapper function for system ioctl */
++        /* Use wrapper function to handle signature mismatch */
 +        s->ioctl_f = sys_ioctl_wrapper;
      }
  
  #define v4l2_open   s->open_f
-@@ -831,7 +841,7 @@
+@@ -127,7 +137,7 @@
+         return err;
+     }
+ 
+-    if (v4l2_ioctl(fd, VIDIOC_QUERYCAP, &cap) < 0) {
++    if (s->ioctl_f(fd, VIDIOC_QUERYCAP, &cap) < 0) {
+         err = AVERROR(errno);
+         av_log(ctx, AV_LOG_ERROR, "ioctl(VIDIOC_QUERYCAP): %s\n",
+                av_err2str(err));
+@@ -844,7 +854,7 @@
      if (!st)
          return AVERROR(ENOMEM);
  
