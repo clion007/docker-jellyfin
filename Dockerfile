@@ -74,6 +74,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
 # build jellyfin-ffmpeg
 FROM alpine AS ffmpeg
 
+ARG BRANCH="v3.22"
 ARG FFMPEG_VERSION
 ARG FFMPEG_PREFIX=/ffmpeg
 
@@ -144,6 +145,13 @@ RUN --mount=type=cache,target=/var/cache/apk \
         xz-dev \
         zimg-dev \
         zlib-dev \
+    ; \
+    apk add --no-cache \
+      --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/main \
+      --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/community \
+      
+    apk add --no-cache --virtual .build-deps \
+      intel-media-sdk-dev \
     ; \
     tar xf ../jellyfin-ffmpeg.tar.gz --strip-components=1; \
     # 应用补丁
