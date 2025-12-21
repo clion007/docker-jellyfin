@@ -151,12 +151,6 @@ RUN --mount=type=cache,target=/var/cache/apk \
     ; \
     tar xf ../jellyfin-ffmpeg.tar.gz --strip-components=1; \
     # # 应用补丁
-    # for patch in ../patches/*.patch; do \
-    #     [ -e "$patch" ] || continue; \
-    #     echo "Applying patch: $patch"; \
-    #     patch -p1 < "$patch" || echo "Warning: Patch $patch failed to apply, continuing anyway"; \
-    # done; \
-    # 将 glob 展开到位置参数（$@）
     set -- ../patches/*.patch; \
     # 如果没有匹配，$1 会等于原始模式字符串
     if [ "$1" = "../patches/*.patch" ]; then \
@@ -164,7 +158,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
     else \
       for patch in "$@"; do \
         echo "Applying patch: $patch"; \
-        patch -p1 < "$patch" || echo "Warning: Patch $patch failed to apply, continuing anyway"; \
+        patch -p1 < "$patch" || { echo "ERROR: Patch $patch failed"; exit 1; } \
       done; \
     fi; \
     ./configure \
