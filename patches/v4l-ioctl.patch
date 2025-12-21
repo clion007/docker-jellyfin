@@ -1,6 +1,15 @@
 --- a/libavdevice/v4l2.c
 +++ b/libavdevice/v4l2.c
-@@ -70,11 +70,7 @@
+@@ -45,7 +45,7 @@
+ #include "v4l2-common.h"
+ #include <dirent.h>
+ 
+-#if CONFIG_LIBV4L2
++#ifdef CONFIG_LIBV4L2
+ #include <libv4l2.h>
+ #endif
+ 
+@@ -67,13 +67,9 @@
      int use_libv4l2;
      int (*open_f)(const char *file, int oflag, ...);
      int (*close_f)(int fd);
@@ -9,16 +18,38 @@
 -    int (*ioctl_f)(int fd, int request, ...);
 -#else
 +    int (*dup_f)(int fd);
++    /* Always use unsigned long int to match V4L2 API */
      int (*ioctl_f)(int fd, unsigned long int request, ...);
 -#endif
-     ssize_t (*read_f)(int fd, void *buffer, size_t n);
+-    ssize_t (*read_f)(int fd, void *buffer, size_t n);
      void *(*mmap_f)(void *start, size_t length, int prot, int flags, int fd, int64_t offset);
      int (*munmap_f)(void *_start, size_t length);
-@@ -142,6 +138,7 @@
+ };
+@@ -131,7 +127,7 @@
+ } while (0)
+ 
+     if (s->use_libv4l2) {
+-#if CONFIG_LIBV4L2
++#ifdef CONFIG_LIBV4L2
+         SET_WRAPPERS(v4l2_);
+ #else
+         av_log(ctx, AV_LOG_ERROR, "libavdevice is not built with libv4l2 support.\n");
+@@ -139,6 +135,9 @@
  #endif
      } else {
          SET_WRAPPERS();
-+        s->ioctl_f = (int (*)(int, unsigned long int, ...))ioctl;
++        /* Cast system ioctl to match the required signature.
++         * The double cast avoids strict type checking warnings. */
++        s->ioctl_f = (int (*)(int, unsigned long int, ...)) (void *) ioctl;
      }
  
  #define v4l2_open   s->open_f
+@@ -828,7 +827,7 @@
+     if (!st)
+         return AVERROR(ENOMEM);
+ 
+-#if CONFIG_LIBV4L2
++#ifdef CONFIG_LIBV4L2
+     /* silence libv4l2 logging. if fopen() fails v4l2_log_file will be NULL
+        and errors will get sent to stderr */
+     if (s->use_libv4l2)
