@@ -9,7 +9,7 @@
  #include <libv4l2.h>
  #endif
  
-@@ -67,15 +67,12 @@
+@@ -67,13 +67,9 @@
      int use_libv4l2;
      int (*open_f)(const char *file, int oflag, ...);
      int (*close_f)(int fd);
@@ -18,21 +18,17 @@
 -    int (*ioctl_f)(int fd, int request, ...);
 -#else
 +    int (*dup_f)(int fd);
-+    /* 统一使用 unsigned long int 以匹配 V4L2 API */
      int (*ioctl_f)(int fd, unsigned long int request, ...);
 -#endif
-     ssize_t (*read_f)(int fd, void *buffer, size_t n);
+-    ssize_t (*read_f)(int fd, void *buffer, size_t n);
++    ssize_t (*read_f)(int fd, void *buffer, size_t n);
      void *(*mmap_f)(void *start, size_t length, int prot, int flags, int fd, int64_t offset);
--    int (*munmap_f)(void *_start, size_t length);
-+    int (*munmap_f)(void *_start, size_t length);
+     int (*munmap_f)(void *_start, size_t length);
  };
- 
- struct buff_data {
-@@ -83,19 +80,20 @@
+@@ -83,6 +79,17 @@
      int index;
  };
  
-+/* 包装函数，用于将 unsigned long int 转换为 int 以匹配系统 ioctl 签名 */
 +static int sys_ioctl_wrapper(int fd, unsigned long int request, ...)
 +{
 +    va_list ap;
@@ -46,21 +42,8 @@
 +
  static int device_open(AVFormatContext *ctx, const char* device_path)
  {
--    struct video_data *s = ctx->priv_data;
--    struct v4l2_capability cap;
--    int fd;
--    int err;
--    int flags = O_RDWR;
--
--#define SET_WRAPPERS(prefix) do {       \
--    s->open_f   = prefix ## open;       \
--    s->close_f  = prefix ## close;      \
--    s->dup_f    = prefix ## dup;        \
--    s->ioctl_f  = prefix ## ioctl;      \
-     s->read_f   = prefix ## read;       \
-     s->mmap_f   = prefix ## mmap;       \
-     s->munmap_f = prefix ## munmap;     \
-@@ -111,7 +109,7 @@
+     struct video_data *s = ctx->priv_data;
+@@ -102,7 +109,7 @@
  } while (0)
  
      if (s->use_libv4l2) {
@@ -69,17 +52,15 @@
          SET_WRAPPERS(v4l2_);
  #else
          av_log(ctx, AV_LOG_ERROR, "libavdevice is not built with libv4l2 support.\n");
-@@ -119,8 +117,7 @@
+@@ -110,6 +117,7 @@
  #endif
      } else {
          SET_WRAPPERS();
--        /* 转换系统ioctl的签名以匹配函数指针 */
--        s->ioctl_f = (int (*)(int, unsigned long int, ...))(void*)ioctl;
 +        s->ioctl_f = sys_ioctl_wrapper;
      }
  
  #define v4l2_open   s->open_f
-@@ -831,7 +828,7 @@
+@@ -828,7 +836,7 @@
      if (!st)
          return AVERROR(ENOMEM);
  
