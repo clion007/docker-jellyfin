@@ -150,12 +150,23 @@ RUN --mount=type=cache,target=/var/cache/apk \
         zlib-dev \
     ; \
     tar xf ../jellyfin-ffmpeg.tar.gz --strip-components=1; \
-    # 应用补丁
-    for patch in ../patches/*.patch; do \
-        [ -e "$patch" ] || continue; \
+    # # 应用补丁
+    # for patch in ../patches/*.patch; do \
+    #     [ -e "$patch" ] || continue; \
+    #     echo "Applying patch: $patch"; \
+    #     patch -p1 < "$patch" || echo "Warning: Patch $patch failed to apply, continuing anyway"; \
+    # done; \
+    # 将 glob 展开到位置参数（$@）
+    set -- ../patches/*.patch; \
+    # 如果没有匹配，$1 会等于原始模式字符串
+    if [ "$1" = "../patches/*.patch" ]; then \
+      echo "No patch files found, skipping patches."; \
+    else; \
+      for patch in "$@"; do \
         echo "Applying patch: $patch"; \
         patch -p1 < "$patch" || echo "Warning: Patch $patch failed to apply, continuing anyway"; \
-    done; \
+      done; \
+    fi; \
     ./configure \
       --prefix=$FFMPEG_PREFIX \
       --target-os=linux \
