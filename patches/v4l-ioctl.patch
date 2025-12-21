@@ -1,0 +1,20 @@
+--- a/libavdevice/v4l2.c
++++ b/libavdevice/v4l2.c
+@@ -57,7 +57,7 @@ struct video_data {
+     AVClass *class;
+     int fd;
+     int ioctl_retry;
+-    int (*ioctl_f)(int, int, ...);
++    int (*ioctl_f)(int, unsigned long int, ...);
+     int (*open_f)(const char *, int, ...);
+     int (*close_f)(int fd);
+     int (*dup_f)(int fd);
+@@ -134,7 +134,7 @@ static int device_open(AVFormatContext *ctx, const char* device_path)
+ {
+     struct video_data *s = ctx->priv_data;
+     struct v4l2_capability cap;
+-    int (*ioctl_f)(int, int, ...);
++    int (*ioctl_f)(int, unsigned long int, ...);
+     int fd;
+     int err;
+     int flags = O_RDWR;
