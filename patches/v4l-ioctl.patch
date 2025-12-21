@@ -1,23 +1,23 @@
 --- a/libavdevice/v4l2.c
 +++ b/libavdevice/v4l2.c
-@@ -111,11 +111,11 @@ static int device_open(AVFormatContext *ctx, const char *device_path)
+@@ -111,11 +111,11 @@ static int device_open(AVFormatContext *ctx, const char* device_path)
  
- #define SET_WRAPPERS(prefix) do { \
-     s->open_f   = prefix ## open; \
--    s->close_f  = prefix ## close; \
--    s->dup_f    = prefix ## dup; \
--    s->ioctl_f  = prefix ## ioctl; \
--    s->read_f   = prefix ## read; \
--    s->mmap_f   = prefix ## mmap; \
-+    s->close_f  = (int (*)(int))prefix ## close; \
-+    s->dup_f    = (int (*)(int))prefix ## dup; \
-+    s->ioctl_f  = (int (*)(int, unsigned long, void *))prefix ## ioctl; \
-+    s->read_f   = (ssize_t (*)(int, void *, size_t))prefix ## read; \
-+    s->mmap_f   = (void *(*)(void *, size_t, int, int, int, off_t))prefix ## mmap; \
-     s->munmap_f = prefix ## munmap; \
+ #define SET_WRAPPERS(prefix) do {       \
+     s->open_f   = prefix ## open;       \
+-    s->close_f  = prefix ## close;      \
+-    s->dup_f    = prefix ## dup;        \
+-    s->ioctl_f  = prefix ## ioctl;      \
+-    s->read_f   = prefix ## read;       \
+-    s->mmap_f   = prefix ## mmap;       \
++    s->close_f  = (int (*)(int))prefix ## close;      \
++    s->dup_f    = (int (*)(int))prefix ## dup;        \
++    s->ioctl_f  = (int (*)(int, unsigned long int, ...))prefix ## ioctl;      \
++    s->read_f   = (ssize_t (*)(int, void *, size_t))prefix ## read;       \
++    s->mmap_f   = (void *(*)(void *, size_t, int, int, int, int64_t))prefix ## mmap;       \
+     s->munmap_f = prefix ## munmap;     \
  } while (0)
  
-@@ -146,7 +146,7 @@ static int device_open(AVFormatContext *ctx, const char *device_path)
+@@ -146,7 +146,7 @@ static int device_open(AVFormatContext *ctx, const char* device_path)
              s->open_f = v4l2_open;
  #else
              av_log(ctx, AV_LOG_ERROR, "libavdevice is not built with libv4l2 support.\n");
