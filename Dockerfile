@@ -150,7 +150,15 @@ RUN --mount=type=cache,target=/var/cache/apk \
         zlib-dev \
     ; \
     tar xf ../jellyfin-ffmpeg.tar.gz --strip-components=1; \
-    # # 应用补丁
+    # 应用 Debian 补丁
+    if [ -d debian/patches ]; then \
+      for i in debian/patches/*.patch; do \
+        [ -f "$i" ] || continue; \
+        echo "Applying Debian patch: $i"; \
+        patch -p1 < "$i" ||  { echo "ERROR: Debian patch $i failed"; exit 1; } \
+      done; \
+    fi; \
+    # # 应用自定义补丁
     set -- ../patches/*.patch; \
     # 如果没有匹配，$1 会等于原始模式字符串
     if [ "$1" = "../patches/*.patch" ]; then \
