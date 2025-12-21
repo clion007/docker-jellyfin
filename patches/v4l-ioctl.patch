@@ -17,12 +17,14 @@
      s->munmap_f = prefix ## munmap;     \
  } while (0)
  
-@@ -146,7 +146,7 @@ static int device_open(AVFormatContext *ctx, const char* device_path)
-             s->open_f = v4l2_open;
+@@ -143,9 +143,9 @@ static int device_open(AVFormatContext *ctx, const char* device_path)
+     if (s->use_libv4l2) {
+ #if CONFIG_LIBV4L2
+         SET_WRAPPERS(v4l2_);
  #else
-             av_log(ctx, AV_LOG_ERROR, "libavdevice is not built with libv4l2 support.\n");
--            return AVERROR(EINVAL);
-+            return AVERROR(ENOSYS);
+         av_log(ctx, AV_LOG_ERROR, "libavdevice is not built with libv4l2 support.\n");
+-        return AVERROR(EINVAL);
++        return AVERROR(ENOSYS);
  #endif
-         } else {
-             av_log(ctx, AV_LOG_WARNING, "libv4l2 not detected, using direct I/O\n");
+     } else {
+         SET_WRAPPERS();
