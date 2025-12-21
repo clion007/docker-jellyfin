@@ -1,0 +1,25 @@
+--- a/ffmpeg/libavdevice/v4l2.c
++++ b/ffmpeg/libavdevice/v4l2.c
+@@ -1,6 +1,6 @@
+ /* ... (file header/context) ... */
+ 
+ static int device_open(AVFormatContext *ctx, const char *device)
+ {
+-    /* ioctl wrapper pointer with an 'int' request type (original) */
+-    int (*ioctl_f)(int, int, ...);
++    /* ioctl wrapper pointer: ensure the request parameter matches kernel/libv4l
++     * signature (unsigned long int). This avoids assignment warnings/errors
++     * when linking against libv4l which declares: 
++     *   int v4l2_ioctl(int fd, unsigned long int request, ...);
++     */
++    int (*ioctl_f)(int, unsigned long int, ...);
+     void *priv = ctx->priv_data;
+     struct v4l2_device *s = NULL;
+     int fd = -1;
+@@
+-    SET_WRAPPERS(v4l2_);
++    /* Ensure the wrapper assignment uses the same signature as ioctl_f above */
++    SET_WRAPPERS(v4l2_);
+ 
+     /* rest of function... */
+ }
