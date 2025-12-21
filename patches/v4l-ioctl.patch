@@ -1,15 +1,14 @@
 --- a/libavdevice/v4l2.c
 +++ b/libavdevice/v4l2.c
-@@ -42,7 +42,7 @@
- #include "v4l2-common.h"
- #include <dirent.h>
+@@ -30,6 +30,7 @@
+  */
  
--#if CONFIG_LIBV4L2
-+#ifdef CONFIG_LIBV4L2
- #include <libv4l2.h>
- #endif
+ #include <stdatomic.h>
++#include <stdarg.h>
  
-@@ -67,13 +67,9 @@
+ #include "libavutil/avassert.h"
+ #include "libavutil/avstring.h"
+@@ -67,15 +68,16 @@
      int use_libv4l2;
      int (*open_f)(const char *file, int oflag, ...);
      int (*close_f)(int fd);
@@ -18,14 +17,44 @@
 -    int (*ioctl_f)(int fd, int request, ...);
 -#else
 +    int (*dup_f)(int fd);
++    /* 统一使用 unsigned long int 以匹配 V4L2 API */
      int (*ioctl_f)(int fd, unsigned long int request, ...);
 -#endif
--    ssize_t (*read_f)(int fd, void *buffer, size_t n);
-+    ssize_t (*read_f)(int fd, void *buffer, size_t n);
+     ssize_t (*read_f)(int fd, void *buffer, size_t n);
      void *(*mmap_f)(void *start, size_t length, int prot, int flags, int fd, int64_t offset);
      int (*munmap_f)(void *_start, size_t length);
++
++    /* 包装函数指针，用于处理系统 ioctl 的签名不匹配 */
++    int (*sys_ioctl_wrapper)(int fd, unsigned long int request, ...);
++    void *ioctl_func; /* 原始 ioctl 函数指针 */
  };
-@@ -112,7 +108,7 @@ static int device_open(AVFormatContext *ctx, const char* device_path)
+ 
+ struct buff_data {
+@@ -83,6 +85,23 @@
+     int index;
+ };
+ 
++/* 包装函数，用于将 unsigned long int 转换为 int 以匹配系统 ioctl 签名 */
++static int sys_ioctl_wrapper_func(int fd, unsigned long int request, ...)
++{
++    struct video_data *s = (struct video_data *)av_get_current_context();
++    va_list ap;
++    void *arg;
++    int ret;
++    
++    va_start(ap, request);
++    arg = va_arg(ap, void *);
++    va_end(ap);
++    
++    /* 调用系统 ioctl，将 unsigned long int 转换为 int */
++    ret = ((int (*)(int, int, ...))s->ioctl_func)(fd, (int)request, arg);
++    return ret;
++}
++
+ static int device_open(AVFormatContext *ctx, const char* device_path)
+ {
+     struct video_data *s = ctx->priv_data;
+@@ -101,7 +120,7 @@
  } while (0)
  
      if (s->use_libv4l2) {
@@ -34,16 +63,87 @@
          SET_WRAPPERS(v4l2_);
  #else
          av_log(ctx, AV_LOG_ERROR, "libavdevice is not built with libv4l2 support.\n");
-@@ -120,6 +116,8 @@ static int device_open(AVFormatContext *ctx, const char* device_path)
+@@ -109,6 +128,12 @@
  #endif
      } else {
          SET_WRAPPERS();
-+        /* 转换系统ioctl的签名以匹配函数指针 */
-+        s->ioctl_f = (int (*)(int, unsigned long int, ...))(void*)ioctl;
++        /* 保存原始 ioctl 函数指针 */
++        s->ioctl_func = (void *)ioctl;
++        /* 设置包装函数 */
++        s->sys_ioctl_wrapper = sys_ioctl_wrapper_func;
++        /* 使用包装函数作为 ioctl_f */
++        s->ioctl_f = s->sys_ioctl_wrapper;
      }
  
  #define v4l2_open   s->open_f
-@@ -831,7 +829,7 @@ static int v4l2_read_header(AVFormatContext *ctx)
+@@ -194,7 +219,9 @@
+     return fd;
+ 
+ fail:
+-    v4l2_close(fd);
++    if (fd >= 0) {
++        v4l2_close(fd);
++    }
+     return err;
+ }
+ 
+@@ -218,17 +245,19 @@
+     if (v4l2_ioctl(s->fd, VIDIOC_S_FMT, &fmt) < 0)
+         res = AVERROR(errno);
+ 
+-    if ((*width != fmt.fmt.pix.width) || (*height != fmt.fmt.pix.height)) {
+-        av_log(ctx, AV_LOG_INFO,
+-               "The V4L2 driver changed the video from %dx%d to %dx%d\n",
+-               *width, *height, fmt.fmt.pix.width, fmt.fmt.pix.height);
+-        *width = fmt.fmt.pix.width;
+-        *height = fmt.fmt.pix.height;
++    if (fmt.fmt.pix.width > 0 && fmt.fmt.pix.height > 0) {
++        if ((*width != fmt.fmt.pix.width) || (*height != fmt.fmt.pix.height)) {
++            av_log(ctx, AV_LOG_INFO,
++                   "The V4L2 driver changed the video from %dx%d to %dx%d\n",
++                   *width, *height, fmt.fmt.pix.width, fmt.fmt.pix.height);
++            *width = fmt.fmt.pix.width;
++            *height = fmt.fmt.pix.height;
++        }
++    } else {
++        av_log(ctx, AV_LOG_WARNING, "Driver returned invalid dimensions\n");
+     }
+ 
+     if (pixelformat != fmt.fmt.pix.pixelformat) {
+-        av_log(ctx, AV_LOG_DEBUG,
+                "The V4L2 driver changed the pixel format "
+                "from 0x%08X to 0x%08X\n",
+                pixelformat, fmt.fmt.pix.pixelformat);
+@@ -551,6 +580,7 @@
+ 
+     if (buf.index >= s->buffers) {
+         av_log(ctx, AV_LOG_ERROR, "Invalid buffer index received.\n");
++        enqueue_buffer(s, &buf);
+         return AVERROR(EINVAL);
+     }
+     atomic_fetch_add(&s->buffers_queued, -1);
+@@ -620,7 +650,10 @@
+         }
+     }
+     pkt->pts = buf_ts.tv_sec * INT64_C(1000000) + buf_ts.tv_usec;
+-    convert_timestamp(ctx, &pkt->pts);
++    
++    if (convert_timestamp(ctx, &pkt->pts) < 0) {
++        av_log(ctx, AV_LOG_WARNING, "Failed to convert timestamp\n");
++    }
+ 
+     return pkt->size;
+ }
+@@ -701,7 +734,7 @@
+     if (s->framerate &&
+         (ret = av_parse_video_rate(&framerate_q, s->framerate)) < 0) {
+         av_log(ctx, AV_LOG_ERROR, "Could not parse framerate '%s'.\n",
+-               s->framerate);
++               s->framerate ? s->framerate : "NULL");
+         return ret;
+     }
+ 
+@@ -831,7 +864,7 @@
      if (!st)
          return AVERROR(ENOMEM);
  
