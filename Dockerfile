@@ -104,7 +104,6 @@ RUN --mount=type=cache,target=/var/cache/apk \
         gmp-dev \
         imlib2-dev \
         intel-media-driver-dev \
-        # intel-media-sdk-dev \
         ladspa-dev \
         lame-dev \
         libass-dev \
@@ -146,11 +145,9 @@ RUN --mount=type=cache,target=/var/cache/apk \
         zimg-dev \
         zlib-dev \
     ; \
-    apk add --no-cache \
+    apk add --no-cache --virtual .build-deps \
       --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/main \
       --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/community \
-      
-    apk add --no-cache --virtual .build-deps \
       intel-media-sdk-dev \
     ; \
     tar xf ../jellyfin-ffmpeg.tar.gz --strip-components=1; \
