@@ -9,16 +9,105 @@
  #include <libv4l2.h>
  #endif
  
-@@ -112,7 +112,7 @@
+@@ -67,13 +67,9 @@
+     int use_libv4l2;
+     int (*open_f)(const char *file, int oflag, ...);
+     int (*close_f)(int fd);
+-    int (*dup_f)(int fd);
+-#if HAVE_POSIX_IOCTL
+-    int (*ioctl_f)(int fd, int request, ...);
+-#else
++    int (*dup_f)(int fd);
++    /* 统一使用unsigned long int以匹配libv4l2 */
+     int (*ioctl_f)(int fd, unsigned long int request, ...);
+-#endif
+-    ssize_t (*read_f)(int fd, void *buffer, size_t n);
+     void *(*mmap_f)(void *start, size_t length, int prot, int flags, int fd, int64_t offset);
+     int (*munmap_f)(void *_start, size_t length);
+ };
+@@ -90,7 +86,7 @@ static int device_open(AVFormatContext *ctx, const char* device_path)
+     int err;
+     int flags = O_RDWR;
+ 
+-#define SET_WRAPPERS(prefix) do {       \
++#define SET_WRAPPERS(prefix, ioctl_type) do { \
+     s->open_f   = prefix ## open;       \
+     s->close_f  = prefix ## close;      \
+     s->dup_f    = prefix ## dup;        \
+@@ -99,19 +95,28 @@ static int device_open(AVFormatContext *ctx, const char* device_path)
+     s->mmap_f   = prefix ## mmap;       \
+     s->munmap_f = prefix ## munmap;     \
  } while (0)
++#define SET_WRAPPERS_NO_IOCTL(prefix) do { \
++    s->open_f   = prefix ## open;       \
++    s->close_f  = prefix ## close;      \
++    s->dup_f    = prefix ## dup;        \
++    s->read_f   = prefix ## read;       \
++    s->mmap_f   = prefix ## mmap;       \
++    s->munmap_f = prefix ## munmap;     \
++} while (0)
  
      if (s->use_libv4l2) {
 -#if CONFIG_LIBV4L2
+-        SET_WRAPPERS(v4l2_);
 +#ifdef CONFIG_LIBV4L2
-         SET_WRAPPERS(v4l2_);
++        SET_WRAPPERS(v4l2_, ioctl);
  #else
          av_log(ctx, AV_LOG_ERROR, "libavdevice is not built with libv4l2 support.\n");
-@@ -831,7 +831,7 @@
+         return AVERROR(EINVAL);
+ #endif
+     } else {
+-        SET_WRAPPERS();
++        SET_WRAPPERS_NO_IOCTL();
++        /* 手动设置ioctl_f，将int转换为unsigned long int */
++        s->ioctl_f = (int (*)(int, unsigned long int, ...))(void *)ioctl;
+     }
+ 
+-#define v4l2_open   s->open_f
+ #define v4l2_close  s->close_f
+ #define v4l2_dup    s->dup_f
+ #define v4l2_ioctl  s->ioctl_f
+@@ -127,7 +132,7 @@ static int device_open(AVFormatContext *ctx, const char* device_path)
+         return err;
+     }
+ 
+-    if (v4l2_ioctl(fd, VIDIOC_QUERYCAP, &cap) < 0) {
++    if (s->ioctl_f(fd, VIDIOC_QUERYCAP, &cap) < 0) {
+         err = AVERROR(errno);
+         av_log(ctx, AV_LOG_ERROR, "ioctl(VIDIOC_QUERYCAP): %s\n",
+                av_err2str(err));
+@@ -188,6 +193,9 @@ static int device_open(AVFormatContext *ctx, const char* device_path)
+     return fd;
+ 
+ fail:
++    if (fd >= 0) {
++        v4l2_close(fd);
++    }
+     v4l2_close(fd);
+     return err;
+ }
+@@ -218,11 +226,15 @@ static int device_init(AVFormatContext *ctx, int *width, int *height,
+     if (v4l2_ioctl(s->fd, VIDIOC_S_FMT, &fmt) < 0)
+         res = AVERROR(errno);
+ 
+-    if ((*width != fmt.fmt.pix.width) || (*height != fmt.fmt.pix.height)) {
+-        av_log(ctx, AV_LOG_INFO,
+-               "The V4L2 driver changed the video from %dx%d to %dx%d\n",
+-               *width, *height, fmt.fmt.pix.width, fmt.fmt.pix.height);
++    if (fmt.fmt.pix.width > 0 && fmt.fmt.pix.height > 0) {
++        if ((*width != fmt.fmt.pix.width) || (*height != fmt.fmt.pix.height)) {
++            av_log(ctx, AV_LOG_INFO,
++                   "The V4L2 driver changed the video from %dx%d to %dx%d\n",
++                   *width, *height, fmt.fmt.pix.width, fmt.fmt.pix.height);
++        }
+         *width = fmt.fmt.pix.width;
+         *height = fmt.fmt.pix.height;
++    } else {
++        av_log(ctx, AV_LOG_WARNING, "Driver returned invalid dimensions\n");
+     }
+ 
+     if (pixelformat != fmt.fmt.pix.pixelformat) {
+@@ -828,7 +840,7 @@ static int v4l2_read_header(AVFormatContext *ctx)
      if (!st)
          return AVERROR(ENOMEM);
  
