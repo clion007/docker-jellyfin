@@ -1,25 +1,67 @@
 --- a/libavdevice/v4l2.c
 +++ b/libavdevice/v4l2.c
-@@ -1,4 +1,4 @@
- /*
-- * Copyright (c) 2000,2001 Fabrice Bellard
-+ * Copyright (c) 2000,2001 Fabrice Bellard
-  * Copyright (c) 2006 Luca Abeni
-  *
-  * This file is part of FFmpeg.
-@@ -57,6 +57,7 @@ struct video_data {
+@@ -43,6 +43,15 @@ static const int desired_video_buffers = 256;
+ #define V4L_RAWFORMATS  1
+ #define V4L_COMPFORMATS 2
+ 
++/* 修复函数指针类型的兼容性 */
++#if CONFIG_LIBV4L2
++#define V4L2_IOCTL_TYPE int (*)(int, unsigned long int, ...)
++#define V4L2_IOCTL_CAST (int (*)(int, unsigned long int, ...))
++#else
++#define V4L2_IOCTL_TYPE int (*)(int, int, ...)
++#define V4L2_IOCTL_CAST (int (*)(int, int, ...))
++#endif
++
+ /**
+  * Return timestamps to the user exactly as returned by the kernel
+  */
+@@ -57,7 +66,7 @@ struct video_data {
+     AVClass *class;
      int fd;
      int ioctl_retry;
 -    int (*ioctl_f)(int, int, ...);
-+    int (*ioctl_f)(int, unsigned long int, ...);
++    V4L2_IOCTL_TYPE ioctl_f;
      int (*open_f)(const char *, int, ...);
      int (*close_f)(int fd);
      int (*dup_f)(int fd);
-@@ -131,6 +132,7 @@ static int device_open(AVFormatContext *ctx, const char* device_path)
+@@ -131,18 +140,27 @@ static int device_open(AVFormatContext *ctx, const char* device_path)
  {
      struct video_data *s = ctx->priv_data;
      struct v4l2_capability cap;
 -    int (*ioctl_f)(int, int, ...);
-+    int (*ioctl_f)(int, unsigned long int, ...);
++    V4L2_IOCTL_TYPE ioctl_f;
      int fd;
      int err;
+     int flags = O_RDWR;
+ 
+-#define SET_WRAPPERS(prefix) do {       \
+-    s->open_f   = prefix ## open;       \
+-    s->close_f  = prefix ## close;      \
+-    s->dup_f    = prefix ## dup;        \
+-    s->ioctl_f  = prefix ## ioctl;      \
+-    s->read_f   = prefix ## read;       \
+-    s->mmap_f   = prefix ## mmap;       \
++/* 修复 SET_WRAPPERS 宏以正确处理类型转换 */
++#undef SET_WRAPPERS
++#if CONFIG_LIBV4L2
++#define SET_WRAPPERS(prefix) do {                         \
++    s->open_f   = prefix ## open;                         \
++    s->close_f  = prefix ## close;                        \
++    s->dup_f    = prefix ## dup;                          \
++    s->ioctl_f  = (V4L2_IOCTL_TYPE)prefix ## ioctl;       \
++    s->read_f   = prefix ## read;                         \
++    s->mmap_f   = prefix ## mmap;                         \
++    s->munmap_f = prefix ## munmap;                       \
++} while (0)
++#else
++#define SET_WRAPPERS(prefix) do {                         \
++    s->open_f   = prefix ## open;                         \
++    s->close_f  = prefix ## close;                        \
++    s->dup_f    = prefix ## dup;                          \
++    s->ioctl_f  = (V4L2_IOCTL_TYPE)prefix ## ioctl;       \
++    s->read_f   = prefix ## read;                         \
++    s->mmap_f   = prefix ## mmap;                         \
+     s->munmap_f = prefix ## munmap;     \
+ } while (0)
++#endif
