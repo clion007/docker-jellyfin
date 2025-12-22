@@ -179,6 +179,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
       --disable-ffplay \
       --disable-librtmp \
       --disable-libxcb \
+      --disable-libv4l2 \
       --disable-sdl2 \
       --disable-shared \
       --disable-xlib \
