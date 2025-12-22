@@ -149,15 +149,14 @@ Ensure any volume directories on the host are owned by the same user you specify
 ## ❓ Troubleshooting
 
 ### Transcoding Issues
-- ✅ Verify hardware acceleration is properly configured
-- ✅ Check Jellyfin dashboard for transcoding errors
-- ✅ Ensure media formats are supported
+- ✅ Verify hardware acceleration is properly configured;
+- ✅ Check Jellyfin logs for transcoding errors in your server;
 - ✅ Ensure your jellyfin settings is right. The option "Prioritize fMP4-HLS Media Container" must not be selected. If your server's graphics card (GPU) is older and does not support H.264 Low-Power encoding, or H.265/AV1 encoding, you cannot select these encoding formats in the transcoding settings. The same applies to Hardware Acceleration options. 
 
 ### Network Discovery Problems
-- ✅ Confirm UDP ports 7359 and 1900 are properly mapped
-- ✅ Set the correct `JELLYFIN_PublishedServerUrl` environment variable
+- ✅ Confirm UDP ports 7359 and 1900 are properly mapped;
+- ✅ Set the correct `JELLYFIN_PublishedServerUrl` environment variable.
 
 ### Permission Issues
-- ✅ Verify PUID/PGID match the owner of your host directories
-- ✅ Check umask settings if files have incorrect permissions
+- ✅ Verify PUID/PGID match the owner of your host directories;
+- ✅ Check umask settings if files have incorrect permissions.
