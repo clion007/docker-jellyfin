@@ -139,7 +139,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
         shaderc-dev \
         svt-av1-dev \
         util-linux-dev \
-        v4l-utils-dev \
+        # v4l-utils-dev \
         vulkan-loader-dev \
         vulkan-headers \
         vulkan-tools \
@@ -207,7 +207,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
       --enable-libsrt \
       --enable-libsvtav1 \
       --enable-libtheora \
-      --enable-libv4l2 \
+      # --enable-libv4l2 \
       --enable-libvorbis \
       --enable-libvpx \
       --enable-libwebp \
