@@ -1,16 +1,3 @@
-From 24b74f9c65dc145dd6530afd9cd1059d04d8170f Mon Sep 17 00:00:00 2001
-From: FintasticMan <finlay.neon.kid@gmail.com>
-Date: Wed, 13 Nov 2024 00:29:08 +0100
-Subject: [PATCH] Fix ioctl parameter type on musl
-
-__musl__ doesn't exist, so the check doesn't correctly identify musl
-systems.
----
- libavdevice/v4l2.c | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/libavdevice/v4l2.c b/libavdevice/v4l2.c
-index 50ac47ec5a..0e6f8beae0 100644
 --- a/libavdevice/v4l2.c
 +++ b/libavdevice/v4l2.c
 @@ -107,11 +107,7 @@ struct video_data {
@@ -25,5 +12,20 @@ index 50ac47ec5a..0e6f8beae0 100644
      ssize_t (*read_f)(int fd, void *buffer, size_t n);
      void *(*mmap_f)(void *start, size_t length, int prot, int flags, int fd, int64_t offset);
      int (*munmap_f)(void *_start, size_t length);
--- 
-2.47.0
+@@ -130,11 +130,17 @@ static int device_open(AVFormatContext *ctx, const char* device_path)
+     int flags = O_RDWR;
+ 
+ #define SET_WRAPPERS(prefix) do {       \
+     s->open_f   = prefix ## open;       \
+     s->close_f  = prefix ## close;      \
+     s->dup_f    = prefix ## dup;        \
+-    s->ioctl_f  = prefix ## ioctl;      \
++    /* Explicit cast needed when prefix ## ioctl has different signature */ \
++    /* than s->ioctl_f, e.g., libv4l2's v4l2_ioctl vs standard ioctl */ \
++    s->ioctl_f  = (int (*)(int, int, ...))prefix ## ioctl;      \
+     s->read_f   = prefix ## read;       \
+     s->mmap_f   = prefix ## mmap;       \
+     s->munmap_f = prefix ## munmap;     \
+ } while (0)
+ 
+     if (s->use_libv4l2) {
