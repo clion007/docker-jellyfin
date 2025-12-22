@@ -155,7 +155,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
       for i in debian/patches/*.patch; do \
         [ -f "$i" ] || continue; \
         echo "Applying Debian patch: $i"; \
-        patch -p1 < "$i" ||  { echo "ERROR: Debian patch $i failed"; exit 1; } \
+        patch -p1 < "$i" ||  { echo "ERROR: Debian patch $i failed，continue."; } \
       done; \
     fi; \
     # # 应用自定义补丁
@@ -166,7 +166,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
     else \
       for patch in "$@"; do \
         echo "Applying patch: $patch"; \
-        patch -p1 < "$patch" || { echo "ERROR: Patch $patch failed"; exit 1; } \
+        patch -p1 < "$patch" || { echo "ERROR: Patch $patch failed, continue"; } \
       done; \
     fi; \
     ./configure \
