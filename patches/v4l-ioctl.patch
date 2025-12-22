@@ -12,20 +12,14 @@
      ssize_t (*read_f)(int fd, void *buffer, size_t n);
      void *(*mmap_f)(void *start, size_t length, int prot, int flags, int fd, int64_t offset);
      int (*munmap_f)(void *_start, size_t length);
-@@ -130,11 +130,17 @@ static int device_open(AVFormatContext *ctx, const char* device_path)
-     int flags = O_RDWR;
- 
+@@ -130,7 +130,7 @@ static int device_open(AVFormatContext *ctx, const char* device_path)
  #define SET_WRAPPERS(prefix) do {       \
      s->open_f   = prefix ## open;       \
      s->close_f  = prefix ## close;      \
      s->dup_f    = prefix ## dup;        \
 -    s->ioctl_f  = prefix ## ioctl;      \
-+    /* Explicit cast needed when prefix ## ioctl has different signature */ \
-+    /* than s->ioctl_f, e.g., libv4l2's v4l2_ioctl vs standard ioctl */ \
 +    s->ioctl_f  = (int (*)(int, int, ...))prefix ## ioctl;      \
      s->read_f   = prefix ## read;       \
      s->mmap_f   = prefix ## mmap;       \
      s->munmap_f = prefix ## munmap;     \
  } while (0)
- 
-     if (s->use_libv4l2) {
