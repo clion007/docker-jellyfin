@@ -1,6 +1,6 @@
 --- a/libavdevice/v4l2.c
 +++ b/libavdevice/v4l2.c
-@@ -129,12 +129,12 @@ static int device_open(AVFormatContext *ctx, const char* device_path)
+@@ -137,7 +137,7 @@ static int device_open(AVFormatContext *ctx, const char* device_path)
  #define SET_WRAPPERS(prefix) do {       \
      s->open_f   = prefix ## open;       \
      s->close_f  = prefix ## close;      \
@@ -10,4 +10,3 @@
      s->read_f   = prefix ## read;       \
      s->mmap_f   = prefix ## mmap;       \
      s->munmap_f = prefix ## munmap;     \
- } while (0)
