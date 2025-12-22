@@ -150,7 +150,7 @@ Ensure any volume directories on the host are owned by the same user you specify
 
 ### Transcoding Issues
 - ✅ Verify hardware acceleration is properly configured;
-- ✅ Check Jellyfin logs for transcoding errors in your server;
+- ✅ Check Jellyfin log for transcoding errors in your server, it should in /path/to/config/log path;
 - ✅ Ensure your jellyfin settings is right. The option "Prioritize fMP4-HLS Media Container" must not be selected. If your server's graphics card (GPU) is older and does not support H.264 Low-Power encoding, or H.265/AV1 encoding, you cannot select these encoding formats in the transcoding settings. The same applies to Hardware Acceleration options. 
 
 ### Network Discovery Problems
