@@ -40,7 +40,7 @@ else
 fi
 
 # 关键目录递归修改所有者
-chown -R jellyfin:jellyfin \
+chown -R "$PUID:$PGID" \
     /config \
     /transcode
 
