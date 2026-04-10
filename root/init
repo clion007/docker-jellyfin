@@ -21,7 +21,7 @@ mkdir -p \
     /transcode
 
 # 修改用户的主组：如果 PGID 对应的组不存在，则修改；如果存在，直接使用
-if [ ! getent group "$PGID" >/dev/null ] && [ "$(getent group jellyfin | cut -d: -f3)" != "$PGID" ] ; then
+if [ ! getent group "$PGID" >/dev/null ] ; then
     echo "Changing jellyfin group GID from $(getent group jellyfin | cut -d: -f3) to $PGID"
     groupmod -g "$PGID" jellyfin
 else
@@ -34,9 +34,6 @@ fi
 if [ "$(id -u jellyfin)" != "$PUID" ]; then
     echo "Changing jellyfin user UID from $(id -u jellyfin) to $PUID"
     usermod -u "$PUID" -g "$PGID" jellyfin
-else
-    # 如果 UID 没变，但组 ID 变了，仍需更新用户的默认组
-    usermod -g "$PGID" jellyfin
 fi
 
 # 关键目录递归修改所有者
