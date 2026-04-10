@@ -20,7 +20,7 @@ mkdir -p \
     /data \
     /transcode
 
-# 修改用户的主组：如果 PGID 对应的组不存在，则修改；如果存在，直接使用
+# 修改用户的主组：如果 PGID 对应的组不存在，则修改；如果存在，将用户加入该组
 if [ ! getent group "$PGID" >/dev/null ] ; then
     echo "Changing jellyfin group GID from $(getent group jellyfin | cut -d: -f3) to $PGID"
     groupmod -g "$PGID" jellyfin
