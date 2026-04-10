@@ -272,6 +272,7 @@ RUN set -ex; \
   apk add --no-cache \
     --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/main \
     --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/community \
+    shadow \
     su-exec \
     icu-libs \
     libva-intel-driver \
@@ -279,13 +280,10 @@ RUN set -ex; \
     font-droid-nonlatin \
   ; \
   find /usr/share/fonts/droid-nonlatin/ -type f -not -name 'DroidSansFallbackFull.ttf' -delete; \
-  apk add --no-cache --virtual .user-deps \
-    shadow \
-  ; \
   \
   # set jellyfin process user and group
-  groupadd -g 101 jellyfin; \
-  useradd -u 100 -s /bin/nologin -M -g 101 jellyfin; \
+  groupadd -g 1000 jellyfin; \
+  useradd -u 1000 -s /bin/nologin -M -g 1000 jellyfin; \
   ln -s /usr/lib/jellyfin/jellyfin /usr/bin/jellyfin; \
   chown jellyfin:jellyfin /usr/bin/jellyfin; \
   \
@@ -293,7 +291,6 @@ RUN set -ex; \
   mkdir -p /config; \
   chown jellyfin:jellyfin /config; \
   \
-  apk del --no-network .user-deps; \
   rm -rf \
       /var/cache/apk/* \
       /var/tmp/* \
