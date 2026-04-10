@@ -229,8 +229,8 @@ RUN --mount=type=cache,target=/var/cache/apk \
     make -j $(nproc) install $FFMPEG_PREFIX; \
     \
     # build ffmpeg lib files
-    ../cplibfiles.sh $FFMPEG_PREFIX/bin/ffmpeg $FFMPEG_PREFIX/library; \
-    ../cplibfiles.sh $FFMPEG_PREFIX/bin/ffprobe $FFMPEG_PREFIX/library; \
+    ../cplibfiles.sh $FFMPEG_PREFIX/bin/ffmpeg $FFMPEG_PREFIX/lib; \
+    ../cplibfiles.sh $FFMPEG_PREFIX/bin/ffprobe $FFMPEG_PREFIX/lib; \
     # 删除构建依赖和缓存
     apk del --no-network .build-deps; \
     rm -rf \
@@ -262,7 +262,7 @@ ENV MALLOC_TRIM_THRESHOLD_=131072
 COPY --from=server /server $JELLYFIN_PATH
 COPY --from=web /web $JELLYFIN_WEB_PATH
 COPY --from=ffmpeg /ffmpeg/bin /usr/bin/
-COPY --from=ffmpeg /ffmpeg/library /
+COPY --from=ffmpeg /ffmpeg/lib /
 
 # add local files
 COPY --chmod=755 root/ /
