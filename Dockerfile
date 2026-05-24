@@ -83,7 +83,7 @@ WORKDIR /tmp/jellyfin-ffmpeg
 ADD https://github.com/jellyfin/jellyfin-ffmpeg/archive/refs/tags/v$FFMPEG_VERSION.tar.gz ../jellyfin-ffmpeg.tar.gz
 
 COPY --chmod=755 deplib/ ../
-COPY --chmod=755 patches/ ../patches/
+COPY --chmod=755 patches/ffmpeg/ ../patches/
 
 RUN --mount=type=cache,target=/var/cache/apk \
     set -ex; \
