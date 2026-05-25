@@ -14,11 +14,33 @@ WORKDIR /tmp/jellyfin
 
 ADD https://github.com/jellyfin/jellyfin/archive/refs/tags/v$JELLYFIN_VERSION.tar.gz ../jellyfin.tar.gz
 
+COPY --chmod=755 patches/jellyfin/ ../patches/
+
 RUN --mount=type=cache,target=/var/cache/apk \
     --mount=type=cache,target=/tmp/nuget \
     set -ex; \
     tar xf ../jellyfin.tar.gz --strip-components=1; \
-    # 设置 Nuget 缓存目录
+    \
+    # 应用补丁
+    set -- ../patches/*.patch; \
+    # 如果没有匹配，$1 会等于原始模式字符串
+    if [ "$1" != "../patches/*.patch" ]; then \
+      for patch in "$@"; do \
+        echo "Applying patch: $patch"; \
+        patch -p1 < "$patch" || { echo "ERROR: Patch $patch failed, continue"; } \
+      done; \
+    fi; \
+    \
+    # --- 安装 skiasharp 获取版本，并调整项目版本号 ---
+    apk add --no-cache --virtual .build-deps skiasharp; \
+    _skia_ver=$(apk version skiasharp | tail -n 1 | cut -d '=' -f 2 | tr -d ' '); \
+    _skia_ver=${_skia_ver/-*}; \
+    echo "Alpine skiasharp version: $_skia_ver"; \
+    # 修改 Directory.Packages.props 中的版本号
+    sed -i "s|<PackageVersion Include=\"SkiaSharp\" Version=\"[^\"]*\"|<PackageVersion Include=\"SkiaSharp\" Version=\"$_skia_ver\"|" Directory.Packages.props; \
+    sed -i "s|<PackageVersion Include=\"SkiaSharp.HarfBuzz\" Version=\"[^\"]*\"|<PackageVersion Include=\"SkiaSharp.HarfBuzz\" Version=\"$_skia_ver\"|" Directory.Packages.props; \
+    \
+    # 设置 Nuget 缓存目录，发布Jellyfin
     mkdir -p /tmp/nuget && export NUGET_PACKAGES=/tmp/nuget; \
     dotnet publish \
         Jellyfin.Server \
@@ -29,6 +51,10 @@ RUN --mount=type=cache,target=/var/cache/apk \
         "-p:DebugSymbols=false" \
         "-p:DebugType=none" \
     ; \
+    \
+    # 复制 Alpine 官方原生库链接文件
+    cp /usr/lib/libSkiaSharp.so /server/libSkiaSharp.so; \
+    apk del --no-network .build-deps; \
     rm -rf \
         /var/tmp/* \
         /tmp/*[!nuget] \
