@@ -11,6 +11,11 @@ PGID=${PGID:-$DEFAULT_PGID}
 
 echo "Starting with PUID=$PUID, PGID=$PGID"
 
+# 如果设置了 UMASK 环境变量，就应用它
+if [ -n "$UMASK" ]; then
+    umask "$UMASK"
+fi
+
 # 创建必要的目录（包括转码临时目录）
 mkdir -p \
     /config/log \
