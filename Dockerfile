@@ -32,7 +32,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
     fi; \
     \
     # --- 安装 skiasharp 获取版本，并调整项目版本号 ---
-    apk add --no-cache --virtual .build-deps skiasharp; \
+    apk add --no-cache --virtual .build-deps skiasharp patch; \
     _skia_ver=$(apk version skiasharp | tail -n 1 | cut -d '=' -f 2 | tr -d ' '); \
     _skia_ver=${_skia_ver/-*}; \
     echo "Alpine skiasharp version: $_skia_ver"; \
@@ -129,7 +129,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
         gmp-dev \
         imlib2-dev \
         intel-media-driver-dev \
-        intel-media-sdk-dev \
+        libvpl-dev \
         ladspa-dev \
         lame-dev \
         libass-dev \
@@ -196,7 +196,6 @@ RUN --mount=type=cache,target=/var/cache/apk \
       --prefix=$FFMPEG_PREFIX \
       --target-os=linux \
       --extra-version=Jellyfin \
-      --disable-asm \
       --disable-debug \
       --disable-doc \
       --disable-ffplay \
@@ -205,6 +204,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
       --disable-sdl2 \
       --disable-shared \
       --disable-xlib \
+      --enable-lto=auto \
       --enable-avfilter \
       --enable-fontconfig \
       --enable-gmp \
@@ -219,7 +219,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
       --enable-libfontconfig \
       --enable-libfreetype \
       --enable-libfribidi \
-      --enable-libmfx \
+      --enable-libvpl \
       --enable-libmp3lame \
       --enable-libopenmpt \
       --enable-libopus \
@@ -250,6 +250,8 @@ RUN --mount=type=cache,target=/var/cache/apk \
       --enable-vulkan \
     ; \
     make -j $(nproc) install $FFMPEG_PREFIX; \
+    # strip binaries to reduce image size
+    strip --strip-unneeded $FFMPEG_PREFIX/bin/ffmpeg $FFMPEG_PREFIX/bin/ffprobe; \
     \
     # build ffmpeg lib files
     ../cplibfiles.sh $FFMPEG_PREFIX/bin/ffmpeg $FFMPEG_PREFIX/lib; \
@@ -297,6 +299,7 @@ RUN set -ex; \
     icu-libs \
     libva-intel-driver \
     intel-media-driver \
+    onevpl-intel-gpu \
     font-droid-nonlatin \
   ; \
   find /usr/share/fonts/droid-nonlatin/ -type f -not -name 'DroidSansFallbackFull.ttf' -delete; \
