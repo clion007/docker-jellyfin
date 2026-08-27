@@ -68,6 +68,7 @@ jobs:
         file: Dockerfile
         context: .
         push: true
+        provenance: false
         build-args: |
           FFMPEG_VERSION=${{ steps.getVersion.outputs.ffmpegVersion }}
           JELLYFIN_VERSION=${{ steps.getVersion.outputs.jellyfinVersion }}
@@ -76,6 +77,8 @@ jobs:
           clion007/jellyfin:${{ steps.getVersion.outputs.jellyfinVersion }}
           registry.cn-chengdu.aliyuncs.com/clion/jellyfin:latest
           registry.cn-chengdu.aliyuncs.com/clion/jellyfin:${{ steps.getVersion.outputs.jellyfinVersion }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
     - name: Get Release Body
       id: getBody
