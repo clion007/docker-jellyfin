@@ -100,7 +100,6 @@ RUN --mount=type=cache,target=/var/cache/apk \
 # build jellyfin-ffmpeg
 FROM alpine AS ffmpeg
 
-ARG BRANCH="v3.22"
 ARG FFMPEG_VERSION
 ARG FFMPEG_PREFIX=/ffmpeg
 
@@ -114,8 +113,6 @@ COPY --chmod=755 patches/ffmpeg/ ../patches/
 RUN --mount=type=cache,target=/var/cache/apk \
     set -ex; \
     apk add --no-cache --virtual .build-deps \
-      --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/main \
-      --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/community \
         alpine-sdk \
         alsa-lib-dev \
         aom-dev \
@@ -269,7 +266,6 @@ FROM clion007/alpine
 
 LABEL mantainer="Clion Nihe Email: clion007@126.com"
 
-ARG BRANCH="edge"
 ARG JELLYFIN_PATH=/usr/lib/jellyfin/
 ARG JELLYFIN_WEB_PATH=/usr/share/jellyfin-web/
 
@@ -296,8 +292,6 @@ COPY --chmod=755 root/ /
 # install packages
 RUN set -ex; \
   apk add --no-cache \
-    --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/main \
-    --repository=http://dl-cdn.alpinelinux.org/alpine/$BRANCH/community \
     shadow \
     su-exec \
     icu-libs \
