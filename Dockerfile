@@ -1,8 +1,8 @@
 # syntax=docker/dockerfile:1.4
 
 # Docker build arguments
-ARG DOTNET_VERSION=9.0
-ARG NODEJS_VERSION=20
+ARG DOTNET_VERSION=10.0
+ARG NODEJS_VERSION=26
 
 # build jellyfin server
 FROM mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION}-alpine-amd64 AS server
@@ -15,13 +15,20 @@ WORKDIR /tmp/jellyfin
 ADD https://github.com/jellyfin/jellyfin/archive/refs/tags/v$JELLYFIN_VERSION.tar.gz ../jellyfin.tar.gz
 
 COPY --chmod=755 patches/jellyfin/ ../patches/
+COPY --chmod=755 deplib/ ../
 
 RUN --mount=type=cache,target=/var/cache/apk \
     --mount=type=cache,target=/tmp/nuget \
     set -ex; \
     tar xf ../jellyfin.tar.gz --strip-components=1; \
     \
-    # 应用补丁
+    # --- 安装 skiasharp 获取版本、patch 工具（应用补丁前先安装） ---
+    apk add --no-cache --virtual .build-deps skiasharp patch; \
+    _skia_ver=$(apk version skiasharp | tail -n 1 | cut -d '=' -f 2 | tr -d ' '); \
+    _skia_ver=${_skia_ver/-*}; \
+    echo "Alpine skiasharp version: $_skia_ver"; \
+    \
+    # 应用补丁（移除 NuGet 预编译 glibc 原生库，改用 Alpine musl 版）
     set -- ../patches/*.patch; \
     # 如果没有匹配，$1 会等于原始模式字符串
     if [ "$1" != "../patches/*.patch" ]; then \
@@ -31,11 +38,6 @@ RUN --mount=type=cache,target=/var/cache/apk \
       done; \
     fi; \
     \
-    # --- 安装 skiasharp 获取版本，并调整项目版本号 ---
-    apk add --no-cache --virtual .build-deps skiasharp patch; \
-    _skia_ver=$(apk version skiasharp | tail -n 1 | cut -d '=' -f 2 | tr -d ' '); \
-    _skia_ver=${_skia_ver/-*}; \
-    echo "Alpine skiasharp version: $_skia_ver"; \
     # 修改 Directory.Packages.props 中的版本号
     sed -i "s|<PackageVersion Include=\"SkiaSharp\" Version=\"[^\"]*\"|<PackageVersion Include=\"SkiaSharp\" Version=\"$_skia_ver\"|" Directory.Packages.props; \
     sed -i "s|<PackageVersion Include=\"SkiaSharp.HarfBuzz\" Version=\"[^\"]*\"|<PackageVersion Include=\"SkiaSharp.HarfBuzz\" Version=\"$_skia_ver\"|" Directory.Packages.props; \
@@ -47,13 +49,15 @@ RUN --mount=type=cache,target=/var/cache/apk \
         --self-contained \
         --configuration Release \
         --runtime linux-musl-x64 \
-        --output=/server \
+        --output=/server/usr/lib/jellyfin \
         "-p:DebugSymbols=false" \
         "-p:DebugType=none" \
     ; \
     \
-    # 复制 Alpine 官方原生库链接文件
-    cp /usr/lib/libSkiaSharp.so /server/libSkiaSharp.so; \
+    # 复制 Alpine 官方原生库链接文件（跟随符号链接复制真实文件）到系统库目录
+    cp -r -L /usr/lib/libSkiaSharp.so /server/usr/lib/libSkiaSharp.so; \
+    # 收集 libSkiaSharp 的动态依赖（jellyfin 本身是 self-contained，系统库由基础镜像提供）
+    ../cplibfiles.sh /server /server/usr/lib/libSkiaSharp.so; \
     apk del --no-network .build-deps; \
     rm -rf \
         /var/tmp/* \
@@ -91,7 +95,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
     npm ci --no-audit --unsafe-perm; \
     npm run build:production; \
     apk del --no-network .build-deps; \
-    mv dist /web; \
+    mv dist /web/usr/share/jellyfin-web; \
     rm -rf \
         /var/tmp/* \
         ../* \
@@ -101,7 +105,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
 FROM alpine AS ffmpeg
 
 ARG FFMPEG_VERSION
-ARG FFMPEG_PREFIX=/ffmpeg
+ARG FFMPEG=/ffmpeg
 
 WORKDIR /tmp/jellyfin-ffmpeg
 
@@ -115,7 +119,6 @@ RUN --mount=type=cache,target=/var/cache/apk \
     apk add --no-cache --virtual .build-deps \
         alpine-sdk \
         alsa-lib-dev \
-        aom-dev \
         bzip2-dev \
         coreutils \
         cunit-dev \
@@ -130,16 +133,13 @@ RUN --mount=type=cache,target=/var/cache/apk \
         imlib2-dev \
         intel-media-driver-dev \
         libvpl-dev \
-        ladspa-dev \
         lame-dev \
         libass-dev \
         libbluray-dev \
         libdrm-dev \
         libogg-dev \
-        libopenmpt-dev \
         libplacebo-dev \
         libpng-dev \
-        librist-dev \
         libsrt-dev \
         libtheora-dev \
         libtool \
@@ -149,7 +149,6 @@ RUN --mount=type=cache,target=/var/cache/apk \
         libvpx-dev \
         libwebp-dev \
         libxml2-dev \
-        lilv-dev \
         mesa-dev \
         musl-dev \
         nasm \
@@ -158,11 +157,9 @@ RUN --mount=type=cache,target=/var/cache/apk \
         opus-dev \
         patch \
         perl-dev \
-        rav1e-dev \
         shaderc-dev \
         svt-av1-dev \
         util-linux-dev \
-        v4l-utils-dev \
         vulkan-loader-dev \
         vulkan-headers \
         vulkan-tools \
@@ -193,7 +190,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
       done; \
     fi; \
     ./configure \
-      --prefix=$FFMPEG_PREFIX \
+      --prefix=$FFMPEG/usr \
       --target-os=linux \
       --extra-version=Jellyfin \
       --disable-debug \
@@ -209,28 +206,21 @@ RUN --mount=type=cache,target=/var/cache/apk \
       --enable-fontconfig \
       --enable-gmp \
       --enable-gpl \
-      --enable-ladspa \
-      --enable-libaom \
       --enable-libass \
       --enable-libbluray \
       --enable-libdav1d \
       --enable-libdrm \
       --enable-libfdk-aac \
-      --enable-libfontconfig \
       --enable-libfreetype \
       --enable-libfribidi \
       --enable-libvpl \
       --enable-libmp3lame \
-      --enable-libopenmpt \
       --enable-libopus \
       --enable-libplacebo \
-      --enable-librav1e \
-      --enable-librist \
       --enable-libshaderc \
       --enable-libsrt \
       --enable-libsvtav1 \
       --enable-libtheora \
-      --enable-libv4l2 \
       --enable-libvorbis \
       --enable-libvpx \
       --enable-libwebp \
@@ -238,7 +228,6 @@ RUN --mount=type=cache,target=/var/cache/apk \
       --enable-libx265 \
       --enable-libxml2 \
       --enable-libzimg \
-      --enable-lv2 \
       --enable-nonfree \
       --enable-opencl \
       --enable-openssl \
@@ -249,13 +238,12 @@ RUN --mount=type=cache,target=/var/cache/apk \
       --enable-version3 \
       --enable-vulkan \
     ; \
-    make -j $(nproc) install $FFMPEG_PREFIX; \
+    make -j $(nproc) install $FFMPEG/usr; \
     # strip binaries to reduce image size
-    strip --strip-unneeded $FFMPEG_PREFIX/bin/ffmpeg $FFMPEG_PREFIX/bin/ffprobe; \
+    strip --strip-unneeded $FFMPEG/usr/bin/ffmpeg $FFMPEG/usr/bin/ffprobe; \
     \
     # build ffmpeg lib files
-    ../cplibfiles.sh $FFMPEG_PREFIX/bin/ffmpeg $FFMPEG_PREFIX/lib; \
-    ../cplibfiles.sh $FFMPEG_PREFIX/bin/ffprobe $FFMPEG_PREFIX/lib; \
+    ../cplibfiles.sh $FFMPEG/ $FFMPEG/usr/bin/ffmpeg $FFMPEG/usr/bin/ffprobe; \
     # 删除构建依赖和缓存
     apk del --no-network .build-deps; \
     rm -rf \
@@ -267,9 +255,6 @@ RUN --mount=type=cache,target=/var/cache/apk \
 FROM clion007/alpine
 
 LABEL mantainer="Clion Nihe Email: clion007@126.com"
-
-ARG JELLYFIN_PATH=/usr/lib/jellyfin/
-ARG JELLYFIN_WEB_PATH=/usr/share/jellyfin-web/
 
 # Default environment variables for the Jellyfin invocation
 ENV JELLYFIN_LOG_DIR=/config/log \
@@ -283,10 +268,9 @@ ENV XDG_CACHE_HOME=${JELLYFIN_CACHE_DIR}
 ENV MALLOC_TRIM_THRESHOLD_=131072
 
 # add jellyfin files
-COPY --from=server /server $JELLYFIN_PATH
-COPY --from=web /web $JELLYFIN_WEB_PATH
-COPY --from=ffmpeg /ffmpeg/bin /usr/bin/
-COPY --from=ffmpeg /ffmpeg/lib /
+COPY --from=server /server /
+COPY --from=web /web /
+COPY --from=ffmpeg /ffmpeg /
 
 # add local files
 COPY --chmod=755 root/ /
