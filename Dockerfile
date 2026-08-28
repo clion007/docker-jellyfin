@@ -86,6 +86,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
       libpng-dev \
       gifsicle \
       automake \
+      git \
       libtool \
       musl-dev \
       nasm \
@@ -94,8 +95,9 @@ RUN --mount=type=cache,target=/var/cache/apk \
     tar xf ../jellyfin-web.tar.gz --strip-components=1; \
     npm ci --no-audit --unsafe-perm; \
     npm run build:production; \
+    mkdir -p /web/usr/share/jellyfin-web; \
+    mv dist/* /web/usr/share/jellyfin-web/; \
     apk del --no-network .build-deps; \
-    mv dist /web/usr/share/jellyfin-web; \
     rm -rf \
         /var/tmp/* \
         ../* \
