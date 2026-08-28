@@ -54,10 +54,14 @@ RUN --mount=type=cache,target=/var/cache/apk \
         "-p:DebugType=none" \
     ; \
     \
-    # 复制 Alpine 官方原生库链接文件（跟随符号链接复制真实文件）到系统库目录
+    # 复制 Alpine 官方原生库 libSkiaSharp.so（musl 版）到系统库目录
     cp -r -L /usr/lib/libSkiaSharp.so /server/usr/lib/libSkiaSharp.so; \
-    # 收集 libSkiaSharp 的动态依赖（jellyfin 本身是 self-contained，系统库由基础镜像提供）
-    ../cplibfiles.sh /server /server/usr/lib/libSkiaSharp.so; \
+    # libHarfBuzzSharp.so 由 NuGet 的 HarfBuzzSharp.NativeAssets.Linux (musl 版) 提供，
+    # publish 后出现在 jellyfin 输出目录，移动到系统库目录（jellyfin 目录保持干净）
+    cp -r -L /server/usr/lib/jellyfin/libHarfBuzzSharp.so /server/usr/lib/libHarfBuzzSharp.so; \
+    rm -f /server/usr/lib/jellyfin/libHarfBuzzSharp.so; \
+    # 收集 libSkiaSharp/libHarfBuzzSharp 的动态依赖（jellyfin 本身是 self-contained，系统库由基础镜像提供）
+    ../cplibfiles.sh /server /server/usr/lib/libSkiaSharp.so /server/usr/lib/libHarfBuzzSharp.so; \
     apk del --no-network .build-deps; \
     rm -rf \
         /var/tmp/* \
