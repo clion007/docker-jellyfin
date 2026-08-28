@@ -2,7 +2,7 @@
 
 # Docker build arguments
 ARG DOTNET_VERSION=9.0
-ARG NODEJS_VERSION=26
+ARG NODEJS_VERSION=20
 
 # build jellyfin server
 FROM mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION}-alpine-amd64 AS server
