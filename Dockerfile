@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.4
 
 # Docker build arguments
-ARG DOTNET_VERSION=10.0
+ARG DOTNET_VERSION=9.0
 ARG NODEJS_VERSION=26
 
 # build jellyfin server
