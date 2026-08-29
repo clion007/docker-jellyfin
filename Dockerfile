@@ -139,7 +139,6 @@ RUN --mount=type=cache,target=/var/cache/apk \
         imlib2-dev \
         intel-media-driver-dev \
         libvpl-dev \
-        lame-dev \
         libass-dev \
         libbluray-dev \
         libdrm-dev \
@@ -147,11 +146,9 @@ RUN --mount=type=cache,target=/var/cache/apk \
         libplacebo-dev \
         libpng-dev \
         libsrt-dev \
-        libtheora-dev \
         libtool \
         libva-dev \
         libva-intel-driver \
-        libvorbis-dev \
         libvpx-dev \
         libwebp-dev \
         libxml2-dev \
@@ -164,7 +161,6 @@ RUN --mount=type=cache,target=/var/cache/apk \
         patch \
         perl-dev \
         shaderc-dev \
-        svt-av1-dev \
         util-linux-dev \
         vulkan-loader-dev \
         vulkan-headers \
@@ -220,14 +216,10 @@ RUN --mount=type=cache,target=/var/cache/apk \
       --enable-libfreetype \
       --enable-libfribidi \
       --enable-libvpl \
-      --enable-libmp3lame \
       --enable-libopus \
       --enable-libplacebo \
       --enable-libshaderc \
       --enable-libsrt \
-      --enable-libsvtav1 \
-      --enable-libtheora \
-      --enable-libvorbis \
       --enable-libvpx \
       --enable-libwebp \
       --enable-libx264 \
