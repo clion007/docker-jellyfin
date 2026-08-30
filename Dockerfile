@@ -155,7 +155,6 @@ RUN --mount=type=cache,target=/var/cache/apk \
         mesa-dev \
         musl-dev \
         nasm \
-        opencl-dev \
         openssl-dev \
         opus-dev \
         patch \
@@ -227,7 +226,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
       --enable-libxml2 \
       --enable-libzimg \
       --enable-nonfree \
-      --enable-opencl \
+      --disable-opencl \
       --enable-openssl \
       --enable-pic \
       --enable-pthreads \
