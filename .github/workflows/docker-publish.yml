@@ -87,7 +87,6 @@ jobs:
         file: Dockerfile
         context: .
         push: true
-        provenance: false
         build-args: |
           FFMPEG_VERSION=${{ steps.getVersion.outputs.ffmpegVersion }}
           JELLYFIN_VERSION=${{ steps.getVersion.outputs.jellyfinVersion }}
