@@ -1,8 +1,8 @@
 # syntax=docker/dockerfile:1.4
 
 # Docker build arguments
-ARG DOTNET_VERSION=9.0
-ARG NODEJS_VERSION=20
+ARG DOTNET_VERSION=10.0
+ARG NODEJS_VERSION=24
 
 # build jellyfin server
 FROM mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION}-alpine-amd64 AS server
@@ -14,35 +14,12 @@ WORKDIR /tmp/jellyfin
 
 ADD https://github.com/jellyfin/jellyfin/archive/refs/tags/v$JELLYFIN_VERSION.tar.gz ../jellyfin.tar.gz
 
-COPY --chmod=755 patches/jellyfin/ ../patches/
-COPY --chmod=755 deplib/ ../
-
-RUN --mount=type=cache,target=/var/cache/apk \
-    --mount=type=cache,target=/tmp/nuget \
+RUN --mount=type=cache,target=/tmp/nuget \
     set -ex; \
     tar xf ../jellyfin.tar.gz --strip-components=1; \
     \
-    # --- 安装 skiasharp 获取版本、patch 工具（应用补丁前先安装） ---
-    apk add --no-cache --virtual .build-deps skiasharp patch; \
-    _skia_ver=$(apk version skiasharp | tail -n 1 | cut -d '=' -f 2 | tr -d ' '); \
-    _skia_ver=${_skia_ver/-*}; \
-    echo "Alpine skiasharp version: $_skia_ver"; \
-    \
-    # 应用补丁（移除 NuGet 预编译 glibc 原生库，改用 Alpine musl 版）
-    set -- ../patches/*.patch; \
-    # 如果没有匹配，$1 会等于原始模式字符串
-    if [ "$1" != "../patches/*.patch" ]; then \
-      for patch in "$@"; do \
-        echo "Applying patch: $patch"; \
-        patch -p1 < "$patch" || { echo "ERROR: Patch $patch failed, continue"; } \
-      done; \
-    fi; \
-    \
-    # 修改 Directory.Packages.props 中的版本号
-    sed -i "s|<PackageVersion Include=\"SkiaSharp\" Version=\"[^\"]*\"|<PackageVersion Include=\"SkiaSharp\" Version=\"$_skia_ver\"|" Directory.Packages.props; \
-    sed -i "s|<PackageVersion Include=\"SkiaSharp.HarfBuzz\" Version=\"[^\"]*\"|<PackageVersion Include=\"SkiaSharp.HarfBuzz\" Version=\"$_skia_ver\"|" Directory.Packages.props; \
-    \
-    # 设置 Nuget 缓存目录，发布Jellyfin
+    # NuGet 的 SkiaSharp/HarfBuzzSharp NativeAssets 自带 linux-musl-x64 native，
+    # publish 按 RID 自动选用，无需 Alpine skiasharp 包和补丁
     mkdir -p /tmp/nuget && export NUGET_PACKAGES=/tmp/nuget; \
     dotnet publish \
         Jellyfin.Server \
@@ -54,15 +31,6 @@ RUN --mount=type=cache,target=/var/cache/apk \
         "-p:DebugType=none" \
     ; \
     \
-    # 复制 Alpine 官方原生库 libSkiaSharp.so（musl 版）到系统库目录
-    cp -r -L /usr/lib/libSkiaSharp.so /server/usr/lib/libSkiaSharp.so; \
-    # libHarfBuzzSharp.so 由 NuGet 的 HarfBuzzSharp.NativeAssets.Linux (musl 版) 提供，
-    # publish 后出现在 jellyfin 输出目录，移动到系统库目录（jellyfin 目录保持干净）
-    cp -r -L /server/usr/lib/jellyfin/libHarfBuzzSharp.so /server/usr/lib/libHarfBuzzSharp.so; \
-    rm -f /server/usr/lib/jellyfin/libHarfBuzzSharp.so; \
-    # 收集 libSkiaSharp/libHarfBuzzSharp 的动态依赖（jellyfin 本身是 self-contained，系统库由基础镜像提供）
-    ../cplibfiles.sh /server /server/usr/lib/libSkiaSharp.so /server/usr/lib/libHarfBuzzSharp.so; \
-    apk del --no-network .build-deps; \
     rm -rf \
         /var/tmp/* \
         /tmp/*[!nuget] \
@@ -263,10 +231,6 @@ ENV XDG_CACHE_HOME=${JELLYFIN_CACHE_DIR}
 
 # https://github.com/dlemstra/Magick.NET/issues/707#issuecomment-785351620
 ENV MALLOC_TRIM_THRESHOLD_=131072
-
-# musl default thread stack is 128KB (glibc uses 8MB); .NET thread pool workers
-# segfault in musl libc on deep call stacks. Enlarge to 8MB to match glibc.
-ENV DOTNET_DefaultThreadStackSize=0x800000
 
 # add jellyfin files
 COPY --from=server /server /

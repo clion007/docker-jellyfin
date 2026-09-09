@@ -47,6 +47,25 @@ jobs:
           FFMPEG_VERSION=${{ inputs.FFMPEG_VERSION }}
         fi
         echo "ffmpegVersion=$FFMPEG_VERSION" >> $GITHUB_OUTPUT
+
+        # Detect required .NET SDK major.minor from jellyfin global.json
+        DOTNET_VERSION=$(wget -qO- -t1 -T2 "https://raw.githubusercontent.com/jellyfin/jellyfin/v$JELLYFIN_VERSION/global.json" | jq -r '.sdk.version' | cut -d. -f1-2)
+        echo "Detected jellyfin $JELLYFIN_VERSION requires dotnet: $DOTNET_VERSION"
+        if [ -z "$DOTNET_VERSION" ] || [ "$DOTNET_VERSION" = "null" ]; then
+          DOTNET_VERSION="10.0"
+          echo "WARN: dotnet detection failed, fallback to $DOTNET_VERSION"
+        fi
+        echo "dotnetVersion=$DOTNET_VERSION" >> $GITHUB_OUTPUT
+
+        # Detect required node major from jellyfin-web package.json engines
+        NODE_ENGINES=$(wget -qO- -t1 -T2 "https://raw.githubusercontent.com/jellyfin/jellyfin-web/v$JELLYFIN_VERSION/package.json" | jq -r '.engines.node')
+        NODEJS_VERSION=$(echo "$NODE_ENGINES" | grep -oE '[0-9]+' | head -1)
+        echo "Detected jellyfin-web $JELLYFIN_VERSION requires node: $NODEJS_VERSION"
+        if [ -z "$NODEJS_VERSION" ]; then
+          NODEJS_VERSION="24"
+          echo "WARN: node detection failed, fallback to $NODEJS_VERSION"
+        fi
+        echo "nodeVersion=$NODEJS_VERSION" >> $GITHUB_OUTPUT
      
     - name: Login to Docker Hub
       uses: docker/login-action@v4.6.0
@@ -72,6 +91,8 @@ jobs:
         build-args: |
           FFMPEG_VERSION=${{ steps.getVersion.outputs.ffmpegVersion }}
           JELLYFIN_VERSION=${{ steps.getVersion.outputs.jellyfinVersion }}
+          DOTNET_VERSION=${{ steps.getVersion.outputs.dotnetVersion }}
+          NODEJS_VERSION=${{ steps.getVersion.outputs.nodeVersion }}
         tags: |
           clion007/jellyfin:latest
           clion007/jellyfin:${{ steps.getVersion.outputs.jellyfinVersion }}
