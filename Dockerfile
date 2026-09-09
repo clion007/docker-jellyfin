@@ -264,6 +264,10 @@ ENV XDG_CACHE_HOME=${JELLYFIN_CACHE_DIR}
 # https://github.com/dlemstra/Magick.NET/issues/707#issuecomment-785351620
 ENV MALLOC_TRIM_THRESHOLD_=131072
 
+# musl default thread stack is 128KB (glibc uses 8MB); .NET thread pool workers
+# segfault in musl libc on deep call stacks. Enlarge to 8MB to match glibc.
+ENV DOTNET_DefaultThreadStackSize=0x800000
+
 # add jellyfin files
 COPY --from=server /server /
 COPY --from=web /web /
