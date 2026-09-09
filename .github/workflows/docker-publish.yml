@@ -99,6 +99,7 @@ jobs:
           registry.cn-chengdu.aliyuncs.com/clion/jellyfin:${{ steps.getVersion.outputs.jellyfinVersion }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
+        outputs: type=image,name=target,oci-mediatypes=false
 
     - name: Get Release Body
       id: getBody
